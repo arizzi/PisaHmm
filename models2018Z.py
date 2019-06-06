@@ -1,3 +1,5 @@
+from samples2018 import *
+name="Z"
 background={
 "DY0J":["DY0J_2018AMCPY"],
 "DY1J":["DY1J_2018AMCPY"],

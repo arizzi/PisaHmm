@@ -1,10 +1,11 @@
 import ROOT
+import sys,os
 #from samples2016 import samples
-from samples2018 import samples #as samples2
-#samples.update(samples2)
-from models2018Z import *
+import importlib
+model=importlib.import_module(sys.argv[1])
+samples=model.samples
 from labelDict import *  
-year=2018             
+year="+".join(model.data.keys())
 lumi = "%2.1f fb^{-1}" 
 from math import *
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
@@ -37,9 +38,9 @@ def makeText (x, y, someText, font) :
 
     
 def setHistoStyle (h, gr) :
-    h.SetFillColor(fillcolor[gr])
+    h.SetFillColor(model.fillcolor[gr])
     h.SetTitle("")
-    h.SetLineColor(linecolor[gr])
+    h.SetLineColor(model.linecolor[gr])
     h.SetFillStyle(1001) #NEW
     h.SetLineStyle(1) #NEW    
     
@@ -122,14 +123,14 @@ def totevents(s):
 
 
 f={}
-for group in signal :
-    for s in signal[group] :
+for group in model.signal :
+    for s in model.signal[group] :
         f[s]=ROOT.TFile.Open("out/%sHistos.root"%s)
-for group in background :
-    for b in background[group] :
+for group in model.background :
+    for b in model.background[group] :
         f[b]=ROOT.TFile.Open("out/%sHistos.root"%b)
-for group in data :
-    for d in data[group] :
+for group in model.data :
+    for d in model.data[group] :
         f[d]=ROOT.TFile.Open("out/%sHistos.root"%d)
 
 histoNames=list(set([x.GetName() for y in f.keys() for x in f[y].GetListOfKeys() ]))
@@ -179,8 +180,8 @@ def makeplot(hn):
 #   canvas[hn].GetPad(1).SetPad(0,0.25,1,1) 
    #for gr in sorted(background,key=lambda g:):
    lumitot=0
-   for gr in data:
-     for d in data[gr]:
+   for gr in model.data:
+     for d in model.data[gr]:
       lumitot+=samples[d]["lumi"]	
       if f[d] :
         h=f[d].Get(hn)
@@ -190,11 +191,11 @@ def makeplot(hn):
 	   if hn not in datasum :
 		datasum[hn]=h.Clone()
 		datasumSyst[hn]={}
-   		for sy in systematicsToPlot :
+   		for sy in model.systematicsToPlot :
                   datasumSyst[hn][sy]=h.Clone()
 	   else :
 		datasum[hn].Add(h)	
-   		for sy in systematicsToPlot :
+   		for sy in model.systematicsToPlot :
 		  hs=f[d].Get(findSyst(hn,sy,f[d]))
 		  if hs:
                     datasumSyst[hn][sy].Add(hs)
@@ -206,8 +207,8 @@ def makeplot(hn):
      myLegend.AddEntry(h,"data","P")
 #   print "Lumi tot", lumitot
 
-   for gr in backgroundSorted:
-     for b in background[gr]: 
+   for gr in model.backgroundSorted:
+     for b in model.background[gr]: 
       nevents=totevents(b)
       if f[b] :
 	h=f[b].Get(hn)
@@ -220,7 +221,7 @@ def makeplot(hn):
 		histosum[hn]=h.Clone()
 	        histoTH[hn]=h.Clone()   
 		histosumSyst[hn]={}
-   		for sy in systematicsToPlot :
+   		for sy in model.systematicsToPlot :
       		  hs=f[b].Get(findSyst(hn,sy,f[b]))
 	          if hs:
         	     hs.Scale(samples[b]["xsec"]/nevents*lumitot)
@@ -230,7 +231,7 @@ def makeplot(hn):
 	   else :
 		histosum[hn].Add(h)	
 		histoTH[hn].Add(h)
-   		for sy in systematicsToPlot :
+   		for sy in model.systematicsToPlot :
 		  hs=f[b].Get(findSyst(hn,sy,f[d]))
 		  if hs:
 	   	    hs.Scale(samples[b]["xsec"]/nevents*lumitot)
@@ -245,8 +246,8 @@ def makeplot(hn):
      myLegend.AddEntry(h,gr,"f")
 
    histosSignal[hn]={} 
-   for gr in signal:
-     for b in signal[gr]:
+   for gr in model.signal:
+     for b in model.signal[gr]:
       nevents=totevents(b)
       if f[b] :
         h=f[b].Get(hn)
@@ -259,7 +260,7 @@ def makeplot(hn):
            if hn not in histoSigsum :
                 histoSigsum[hn]=h.Clone()
 		histoSigsumSyst[hn]={}
-   		for sy in systematicsToPlot :
+   		for sy in model.systematicsToPlot :
                   hs=f[b].Get(findSyst(hn,sy,f[b]))
                   if hs:
                     hs.Scale(samples[b]["xsec"]/nevents*lumitot)
@@ -269,7 +270,7 @@ def makeplot(hn):
 
            else :
                 histoSigsum[hn].Add(h)
-   		for sy in systematicsToPlot :
+   		for sy in model.systematicsToPlot :
 		  hs=f[b].Get(findSyst(hn,sy,f[b]))
 		  if hs:
            	    hs.Scale(samples[b]["xsec"]/nevents*lumitot)
@@ -285,10 +286,10 @@ def makeplot(hn):
 	   exit(1)
      myLegend.AddEntry(h,gr,"f")            
                                             
-   for gr in signal:                        
-     for b in signal[gr]:                   
+   for gr in model.signal:                        
+     for b in model.signal[gr]:                   
         h=histosSignal[hn][b]               
-        h.SetLineColor(linecolor[gr])       
+        h.SetLineColor(model.linecolor[gr])       
         h.SetFillStyle(0)                   
         h.SetLineWidth(3)                   
         h.SetLineStyle(2)                   
@@ -327,8 +328,8 @@ def makeplot(hn):
 
 
    datastack[hn].Draw("E P same")
-   for gr in signal:                                                     
-     for b in signal[gr]: histosSignal[hn][b].Draw("hist same")          
+   for gr in model.signal:                                                     
+     for b in model.signal[gr]: histosSignal[hn][b].Draw("hist same")          
                                                                          
    t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
    t1 = makeText(0.15,0.91,"CMS", 61)                                                           
@@ -358,7 +359,7 @@ def makeplot(hn):
    ratio.SetAxisRange(-0.5,0.5,"Y")
    ratio.GetYaxis().SetNdivisions(5)
    ratiosy=[]
-   for j,sy in enumerate(systematicsToPlot):
+   for j,sy in enumerate(model.systematicsToPlot):
        ratiosy.append(histosumSyst[hn][sy].Clone())
        ratiosy[-1].Add(histosum[hn],-1.)
        ratiosy[-1].Divide(histosum[hn])
@@ -371,15 +372,13 @@ def makeplot(hn):
    canvas[hn].cd()
    myLegend_sy.Draw()
     
-#   systematics=[x for x in histoNames if x[:hn.find("___")]==hn[:hn.find("___")] and "__syst__" in x]
-#   print "available systematics",hn,systematics
-#  for s in systematics:
-#  getsum up , down
+   outpath="figure/%s/%s"%(year,model.name)
+   os.system("mkdir -p "+outpath)
    canvas[hn].GetPad(2).SetGridy()
-   canvas[hn].SaveAs("figure/2018/Z/%s.png"%hn)	   
+   canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
    #canvas[hn].SaveAs("%s.root"%hn)	   
    canvas[hn].GetPad(1).SetLogy(True)
-   canvas[hn].SaveAs("figure/2018/Z/%s_log.png"%hn)	   
+   canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)	   
 
 
 his=[x for x in histoNames if "__syst__" not in x]

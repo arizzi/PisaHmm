@@ -1,3 +1,5 @@
+from samples2018 import *
+name="H"
 background={
 "DY":["DY105_2018AMCPY"],
 "DYVBF":[ "DY105VBF_2018AMCPY"],
@@ -46,8 +48,8 @@ fillcolor={
 }
 
 #systematicsToPlot=["MuScaleUp"]
-systematicsToPlot=["JERUp","JERDown","JESUp","JESDown"]
 #systematicsToPlot=["LHEScaleWeightSafe0","LHEScaleWeightSafe1","LHEScaleWeightSafe3","JERUp","JERDown","JESUp","JESDown"]+["MuScaleUp","MuScaleDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 
 
 #TODO: separate systematics as
