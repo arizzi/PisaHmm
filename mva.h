@@ -21,7 +21,7 @@ class MVAWrapper {
         reader->AddVariable("impulsoZ",&a);
         reader->AddVariable("maxAbsEta",&a);
 
-        reader->BookMVA("BDTG", "Classification_BDTG_1704SeedGen.weights_30000Event_100Tree_2Deep_mll_MqqLog_mumujjPt_DEtajj_softN5_llZstar_llPt_cosMuMuJ2_mumujjPz_maxAbsEta.xml");
+        reader->BookMVA("BDTG", "BDT.xml");
 	readers.push_back(reader);
     }
 
