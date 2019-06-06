@@ -1,4 +1,4 @@
-# PisaHmm
+# Pisa VBF Hmumu with NAIL
 Analysis calculations and region definition are in [EventProcessing](eventprocessing.py) description 
 Here are the  [Histograms](histograms.py) to make for each region
 [Binning](histobinning.py) of histograms is defined with regular expresion matching
