@@ -8,5 +8,5 @@ Samples and cross sections are defined for [2016](samples2016.py),[2017](samples
 Models describing how to combine and group the samples, which samples to use etc are also defined in model files separatelly for the Z region ([2016](models2016Z.py),[2017](models2017Z.py),[2018](models2018Z.py) and the H region ([2016](models2016H.py),[2017](models2017H.py),[2018](models2018H.py)
 
 
-
+[Weights](weights.py) and [systematics](systematics.py) are defined in dedicated file and are enabled in the  analysis [steering code](vbfAna.py)
 
