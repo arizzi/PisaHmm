@@ -14,6 +14,17 @@ totev={}
 totevCount={}
 totevSkim={}
 hnForSys={}
+
+def makeLegend (yDown, yUp, name = "") :
+    myLegend= ROOT.TLegend(0.85, yDown, 1, yUp, name) 
+    myLegend.SetFillColor(0);                          
+    myLegend.SetBorderSize(0);                         
+    myLegend.SetTextFont(42);                          
+    myLegend.SetTextSize(0.025);   
+    return myLegend
+    
+    
+
 def makeText (x, y, someText, font) :
     tex = ROOT.TLatex(x,y,someText);
     tex.SetNDC();
@@ -142,11 +153,9 @@ ROOT.gStyle.SetOptStat(0)
 
 
 def makeplot(hn):
- myLegend= ROOT.TLegend(0.85, 0.4, 1, 0.9, "") 
- myLegend.SetFillColor(0);                          
- myLegend.SetBorderSize(0);                         
- myLegend.SetTextFont(42);                          
- myLegend.SetTextSize(0.025);                       
+ myLegend = makeLegend (0.4, 0.9)
+ myLegend_sy = makeLegend (0.1, 0.3)
+   
  if "__syst__" not in hn and "LHE" not in hn :
    #print "Making histo",hn
    histos[hn]=ROOT.THStack(hn,hn) 
@@ -301,7 +310,9 @@ def makeplot(hn):
    canvas[hn].cd(1)
    histos[hn].SetTitle("") 
    datastack[hn].Draw("E P")
-   datastack[hn].GetXaxis().SetTitle(hn)
+   #datastack[hn].GetXaxis().SetTitle(hn)
+   setStyle(datastack[hn].GetHistogram())
+   datastack[hn].Draw("E P")
    histos[hn].Draw("hist same")
 #  histos[hn].Draw("hist")                                                               
    histoTH[hn].SetLineWidth(0)                                                           
@@ -354,8 +365,12 @@ def makeplot(hn):
        ratiosy[-1].SetLineColor(1+j)
        #ratiosy[-1].SetLineStyle(j)
        ratiosy[-1].SetFillStyle(0)
+       myLegend_sy.AddEntry(ratiosy[-1],sy,"l")
        ratiosy[-1].Draw("same hist")
        print "Heu",hn,sy,histosumSyst[hn][sy].Integral(),histosum[hn].Integral(),lumitot,ratiosy[-1]
+   canvas[hn].cd()
+   myLegend_sy.Draw()
+    
 #   systematics=[x for x in histoNames if x[:hn.find("___")]==hn[:hn.find("___")] and "__syst__" in x]
 #   print "available systematics",hn,systematics
 #  for s in systematics:
