@@ -28,6 +28,7 @@ addLheScale(flow)
 addBtag(flow)
 addMuScale(flow)
 addCompleteJecs(flow)
+addPUvariation(flow)
 
 systematics=flow.variations #take all systematic variations
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
@@ -93,8 +94,10 @@ def f(ar):
 
 	   print "Defined"
 	 else :
-#	   if year == "2016":
-#		rdf=rdf.Define("Muon_sf","whayev")
+           if year == "2016":
+               rdf=rdf.Define("Muon_sf","(20.1/36.4*Muon_ISO_SF + 16.3/36.4*Muon_ISO_eraGH_SF)*(20.1/36.4*Muon_ID_SF + 16.3/36.4*Muon_ID_eraGH_SF)*(20.1/36.4*Muon_Trigger_SF + 16.3/36.4*Muon_Trigger_eraGH_SF)")
+           else :
+               rdf=rdf.Define("Muon_sf","Muon_ISO_SF*Muon_ID_SF*Muon_Trigger_SF")
 
 	   rdf=rdf.Define("isMC","true")
 #	   print list(rdf.GetColumnNames())
