@@ -33,6 +33,7 @@ def addCompleteJecs(flow):
         flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
         flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp") #name, target, replacement
         flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
+        flow.Systematic("JERMix","Jet_pt_touse","Jet_pt_mix") #name, target, replacement
 
 
 def addPUvariation(flow):
