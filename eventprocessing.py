@@ -16,16 +16,6 @@ flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<
 flow.Define("Jet_pt_touse","Jet_pt")
 
 #Higgs to mumu reconstruction
-flow.Selection("hasHiggs","Sum(GenPart_pdgId == 25) > 0")
-flow.Define("GenHiggs_idx","Nonzero(GenPart_pdgId == 25)", requires=["hasHiggs"])
-flow.SubCollection("QParton","GenPart",sel="GenPart_genPartIdxMother==At(Take(GenPart_genPartIdxMother,GenHiggs_idx),0,-100) && GenPart_pdgId!= 25")
-flow.Define("QParton_p4","@p4v(QParton)")
-flow.Distinct("QQ","QParton")
-flow.Selection("twoQ","nQParton>=2")
-flow.Define("QQ_p4","QQ0_p4+QQ1_p4",requires=["twoQ"])
-flow.Define("QQ_mass","MemberMap(QQ_p4,M())")
-flow.Define("HighestGenQQMass","At(QQ_mass,Argmax(QQ_mass),-99)")
-
 flow.DefaultConfig(muIsoCut=0.25,muIdCut=0,muPtCut=10, dzCut=0.2,dxyCut=0.05) #cuts value should not be hardcoded below but rather being declared here so that scans and optimizations are possible
 flow.Define("Muon_id","Muon_tightId*4+Muon_mediumId*2+Muon_softId") 
 flow.Define("Muon_iso","Muon_pfRelIso04_all")
@@ -41,15 +31,6 @@ flow.TakePair("Mu","SelectedMuon","MuMu","At(OppositeSignMuMu,0,-200)",requires=
 flow.Define("Higgs","Mu0_p4+Mu1_p4")
 flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
-flow.SubCollection("GenLepton","GenPart",sel="(abs(GenPart_pdgId)==13 || abs(GenPart_pdgId)==11 || abs(GenPart_pdgId)==15)")
-flow.MatchDeltaR("GenLepton","GenJet") 
-flow.SubCollection("GenJetVBFFilter","GenJet",sel="GenJet_GenLeptonDr>0.3 || GenJet_GenLeptonIdx==-1 ")
-flow.Define("GenJetVBFFilter_p4","@p4v(GenJetVBFFilter)")
-flow.Selection("twoVBFFilterGenJet","nGenJetVBFFilter > 1")
-flow.Define("VBFFilterjj_p4","At(GenJetVBFFilter_p4,0)+At(GenJetVBFFilter_p4,1)",requires=["twoVBFFilterGenJet"])
-flow.Define("VBFFilterjj_mass","VBFFilterjj_p4.M()")
-flow.Selection("VBFFilterFlag", "VBFFilterjj_mass>350")
-flow.Selection("VBFFilterAntiFlag", "!VBFFilterFlag")
 
 flow.Define("Jet_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Jet_pt_touse , Jet_eta, Jet_phi, Jet_mass)")
 #VBF Jets kinematics
@@ -103,9 +84,11 @@ flow.Define("NSoft5New",'''SoftActivityJetNjets5-Sum(
 )&&
 	   SoftActivityJet_pt > 5. 
 )''')
-flow.Define("NSoft5New2","SoftActivityJetNjets5-Sum(FootprintSAJet_pt>5)")
-flow.Define("NSoft2New2","SoftActivityJetNjets2-Sum(FootprintSAJet_pt>2)")
-flow.Define("NSoft10New2","SoftActivityJetNjets10-Sum(FootprintSAJet_pt>10)")
+
+#cross checks
+#flow.Define("NSoft5New2","SoftActivityJetNjets5-Sum(FootprintSAJet_pt>5)")
+#flow.Define("NSoft2New2","SoftActivityJetNjets2-Sum(FootprintSAJet_pt>2)")
+#flow.Define("NSoft10New2","SoftActivityJetNjets10-Sum(FootprintSAJet_pt>10)")
 flow.Define("FootHT","Sum(FootprintSAJet_pt)")
 flow.Define("SAHT","SoftActivityJetHT-Sum(FootprintSAJet_pt)")
 flow.Define("SAHT5","SoftActivityJetHT5-Sum(FootprintSAJet_pt*(FootprintSAJet_pt>5.f))")
@@ -166,4 +149,16 @@ flow.Selection("BDT0p8","BDTAtan>0.8")
 flow.Selection("BDT1p0","BDTAtan>1.0")
 flow.Selection("BDT1p1","BDTAtan>1.1")
 flow.Selection("BDT1p2","BDTAtan>1.2")
+
+#unused MC stuff
+flow.Selection("hasHiggs","Sum(GenPart_pdgId == 25) > 0")
+flow.Define("GenHiggs_idx","Nonzero(GenPart_pdgId == 25)", requires=["hasHiggs"])
+flow.SubCollection("QParton","GenPart",sel="GenPart_genPartIdxMother==At(Take(GenPart_genPartIdxMother,GenHiggs_idx),0,-100) && GenPart_pdgId!= 25")
+flow.Define("QParton_p4","@p4v(QParton)")
+flow.Distinct("QQ","QParton")
+flow.Selection("twoQ","nQParton>=2")
+flow.Define("QQ_p4","QQ0_p4+QQ1_p4",requires=["twoQ"])
+flow.Define("QQ_mass","MemberMap(QQ_p4,M())")
+flow.Define("HighestGenQQMass","At(QQ_mass,Argmax(QQ_mass),-99)")
+
 
