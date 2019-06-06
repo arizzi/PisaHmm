@@ -14,12 +14,23 @@ totev={}
 totevCount={}
 totevSkim={}
 hnForSys={}
+
+def makeLegend (yDown, yUp, name = "") :
+    myLegend= ROOT.TLegend(0.82, yDown, 1, yUp, name) 
+    myLegend.SetFillColor(0);                          
+    myLegend.SetBorderSize(0);                         
+    myLegend.SetTextFont(42);                          
+    myLegend.SetTextSize(0.025);   
+    return myLegend
+    
+    
+
 def makeText (x, y, someText, font) :
     tex = ROOT.TLatex(x,y,someText);
     tex.SetNDC();
     tex.SetTextAlign(35);
     tex.SetTextFont(font);
-    tex.SetTextSize(0.045);
+    tex.SetTextSize(0.05);
     tex.SetLineWidth(2);
     return tex
 
@@ -45,7 +56,7 @@ def makeRatioMCplot(h) :
     
 def setStyle(h, isRatio=False) :
     h.SetTitle("")
-    w = 0.055 * (2. if isRatio else 1.)
+    w = 0.055 * (2.5 if isRatio else 1.)
     h.GetYaxis().SetLabelSize(w)
     h.GetXaxis().SetLabelSize(w)
     h.GetYaxis().SetTitleSize(w)
@@ -142,11 +153,9 @@ ROOT.gStyle.SetOptStat(0)
 
 
 def makeplot(hn):
- myLegend= ROOT.TLegend(0.85, 0.4, 1, 0.9, "") 
- myLegend.SetFillColor(0);                          
- myLegend.SetBorderSize(0);                         
- myLegend.SetTextFont(42);                          
- myLegend.SetTextSize(0.025);                       
+ myLegend = makeLegend (0.4, 0.9)
+ myLegend_sy = makeLegend (0.1, 0.25)
+   
  if "__syst__" not in hn and "LHE" not in hn :
    #print "Making histo",hn
    histos[hn]=ROOT.THStack(hn,hn) 
@@ -154,14 +163,14 @@ def makeplot(hn):
    datastack[hn]=ROOT.THStack(hn,hn) 
 
    canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750)       
-   canvas[hn].SetRightMargin(.05);                        
+   #canvas[hn].SetRightMargin(.0);                        
    canvas[hn].Divide(1,2)                                 
-   canvas[hn].GetPad(2).SetPad(0.0,0.,0.85,0.3)           
-   canvas[hn].GetPad(1).SetPad(0.0,0.25,0.85,1.) 
+   canvas[hn].GetPad(2).SetPad(0.0,0.,0.90,0.25)           
+   canvas[hn].GetPad(1).SetPad(0.0,0.20,0.90,1.) 
 
    ROOT.gStyle.SetPadLeftMargin(0.15)                     
-   canvas[hn].GetPad(2).SetBottomMargin(0.3)              
-   canvas[hn].GetPad(2).SetTopMargin(0.05)                
+   canvas[hn].GetPad(2).SetBottomMargin(0.35)              
+   canvas[hn].GetPad(2).SetTopMargin(0.)                
                                                           
 
 #   canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750) 
@@ -301,7 +310,9 @@ def makeplot(hn):
    canvas[hn].cd(1)
    histos[hn].SetTitle("") 
    datastack[hn].Draw("E P")
-   datastack[hn].GetXaxis().SetTitle(hn)
+   #datastack[hn].GetXaxis().SetTitle(hn)
+   setStyle(datastack[hn].GetHistogram())
+   datastack[hn].Draw("E P")
    histos[hn].Draw("hist same")
 #  histos[hn].Draw("hist")                                                               
    histoTH[hn].SetLineWidth(0)                                                           
@@ -319,10 +330,10 @@ def makeplot(hn):
    for gr in signal:                                                     
      for b in signal[gr]: histosSignal[hn][b].Draw("hist same")          
                                                                          
-   t0 = makeText(0.75,0.80,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
-   t1 = makeText(0.15,0.95,"CMS", 61)                                                           
-   t2 = makeText(0.30,0.95,str(year), 42)                                                       
-   t3 = makeText(0.92,0.95,lumi%(lumitot/1000.)+" (13 TeV)", 42)                                
+   t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
+   t1 = makeText(0.15,0.91,"CMS", 61)                                                           
+   t2 = makeText(0.32,0.91,str(year), 42)                                                       
+   t3 = makeText(0.90,0.91,lumi%(lumitot/1000.)+"  (13 TeV)", 42)                                
    t0.Draw()                                                             
    t1.Draw()                                                             
    t2.Draw()                                                             
@@ -354,8 +365,12 @@ def makeplot(hn):
        ratiosy[-1].SetLineColor(1+j)
        #ratiosy[-1].SetLineStyle(j)
        ratiosy[-1].SetFillStyle(0)
+       myLegend_sy.AddEntry(ratiosy[-1],sy,"l")
        ratiosy[-1].Draw("same hist")
        print "Heu",hn,sy,histosumSyst[hn][sy].Integral(),histosum[hn].Integral(),lumitot,ratiosy[-1]
+   canvas[hn].cd()
+   myLegend_sy.Draw()
+    
 #   systematics=[x for x in histoNames if x[:hn.find("___")]==hn[:hn.find("___")] and "__syst__" in x]
 #   print "available systematics",hn,systematics
 #  for s in systematics:

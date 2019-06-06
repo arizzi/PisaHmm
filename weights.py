@@ -13,6 +13,6 @@ def addDefaultWeights(flow):
 
 def addMuEffWeight(flow):
     #flow.AddCppCode('#include "../hmmtools/hmm_code.h"')
-    flow.Define("muEffWeight","isMC?1.f:1.f")
-    flow.CentralWeight("muEffWeight",["twoMuons"])
+    flow.Define("muEffWeight","Mu0_sf*Mu1_sf",["twoOppositeSignMuons"])
+    flow.CentralWeight("muEffWeight",["twoOppositeSignMuons"])
 

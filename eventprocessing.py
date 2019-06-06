@@ -10,7 +10,7 @@ flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFrom
 #variables that we will add file by file before passing the RNode to the event processor
 flow.AddExpectedInput("year","int")
 flow.AddExpectedInput("isMC","bool")
-#flow.AddExpectedInput("Muon_sf","ROOT::VecOps::RVec<float>")
+flow.AddExpectedInput("Muon_sf","ROOT::VecOps::RVec<float>")
 
 flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
 flow.Define("Jet_pt_touse","Jet_pt")

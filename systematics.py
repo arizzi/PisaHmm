@@ -35,3 +35,6 @@ def addCompleteJecs(flow):
         flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
 
 
+def addPUvariation(flow):
+    flow.VariationWeight("puWeightDown","puWeight")  #name of the replacement, target
+    flow.VariationWeight("puWeightUp","puWeight") 
