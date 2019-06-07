@@ -12,7 +12,7 @@ labelRegion={
 
 labelVariable={
 "LeadMuon_pt"       : "p_{T}(#mulead)",
-"LeadMuon_eta"      : "#eta_{T}(#mu lead)",
+"LeadMuon_eta"      : "#eta(#mu lead)",
 "SubMuon_pt"        : "p_{T}(#mu sublead)",
 "SubMuon_eta"       : "#eta(#mu sublead)",
 "QJet0_eta"         : "#eta(leading jet)",
@@ -41,7 +41,7 @@ labelVariable={
 "SBClassifier"      : "BDT output",
 "BDTAtan"           : "BDTAtanh((BDT+1)/2)",
 "Higgs_m_uncalib"   : "M(#mu#mu) uncalib",
-"NSoft5New"         : "#eta_{T}(#mu lead)",
+"NSoft5New"         : "# soft jet p_{T}>5 equivalent version",
 "ll_zstar_log"      : "log(z*)",
 "SBClassifierZ"     : "BDT output (m=125)",
 "BDTAtanZ"          : "BDTAtanh((BDT+1)/2) (m=125)",
