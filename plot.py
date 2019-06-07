@@ -153,11 +153,14 @@ histosSignal={}
 ROOT.gStyle.SetOptStat(0)
 
 
-def makeplot(hn):
- myLegend = makeLegend (0.4, 0.9)
- myLegend_sy = makeLegend (0.1, 0.25)
-   
+def makeplot(hn,saveintegrals=True):
  if "__syst__" not in hn and "LHE" not in hn :
+   myLegend = makeLegend (0.4, 0.9)
+   myLegend_sy = makeLegend (0.1, 0.25)
+   outpath="figure/%s/%s"%(year,model.name)
+   os.system("mkdir -p "+outpath)
+   if saveintegrals:
+     ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn
    histos[hn]=ROOT.THStack(hn,hn) 
    histosSig[hn]=ROOT.THStack(hn,hn) 
@@ -205,15 +208,19 @@ def makeplot(hn):
 	   print "Cannot open",d,hn
 	   exit(1)
      myLegend.AddEntry(h,"data","P")
+     if saveintegrals:
+       ftxt.write("DATA \t%s \n"%(datasum[hn].Integral()))
 #   print "Lumi tot", lumitot
 
    for gr in model.backgroundSorted:
+     integral=0
      for b in model.background[gr]: 
       nevents=totevents(b)
       if f[b] :
 	h=f[b].Get(hn)
 	if h :
 	   h.Scale(samples[b]["xsec"]/nevents*lumitot)
+	   integral+=h.Integral()
 	   setHistoStyle (h, gr) 
 #	   dprint "adding", b, "to", hn 
 #	   i+=1
@@ -244,6 +251,8 @@ def makeplot(hn):
 	   print "Cannot open",b,hn
 	   exit(1)
      myLegend.AddEntry(h,gr,"f")
+     if saveintegrals:
+       ftxt.write("%s\t%s\t%s \n"%(gr,integral,integral/datasum[hn].Integral()))
 
    histosSignal[hn]={} 
    for gr in model.signal:
@@ -372,8 +381,6 @@ def makeplot(hn):
    canvas[hn].cd()
    myLegend_sy.Draw()
     
-   outpath="figure/%s/%s"%(year,model.name)
-   os.system("mkdir -p "+outpath)
    canvas[hn].GetPad(2).SetGridy()
    canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
    #canvas[hn].SaveAs("%s.root"%hn)	   
@@ -383,7 +390,7 @@ def makeplot(hn):
 
 his=[x for x in histoNames if "__syst__" not in x]
 print his[0]
-makeplot(his[0]) #do once for caching normalizations
+makeplot(his[0],True) #do once for caching normalizations and to dump integrals
 
 print "Preload"
 for ff in f:

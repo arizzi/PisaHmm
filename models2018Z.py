@@ -43,7 +43,7 @@ fillcolor={
 }
 
 #systematicsToPlot=["MuScaleUp"]
-systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 
 linecolor=fillcolor
 markercolor=fillcolor
