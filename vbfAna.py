@@ -84,8 +84,10 @@ def f(ar):
 	 else :
            if year == "2016":
                rdf=rdf.Define("Muon_sf","(20.1/36.4*Muon_ISO_SF + 16.3/36.4*Muon_ISO_eraGH_SF)*(20.1/36.4*Muon_ID_SF + 16.3/36.4*Muon_ID_eraGH_SF)*(20.1/36.4*Muon_Trigger_SF + 16.3/36.4*Muon_Trigger_eraGH_SF)")
+               rdf=rdf.Define("btagWeight","btagWeight_CMVA")
            else :
                rdf=rdf.Define("Muon_sf","Muon_ISO_SF*Muon_ID_SF*Muon_Trigger_SF")
+               rdf=rdf.Define("btagWeight","btagWeight_DeepCSVB")
 
 	   rdf=rdf.Define("isMC","true")
 	   if "LHEScaleWeight" not in list(rdf.GetColumnNames()):

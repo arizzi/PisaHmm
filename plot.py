@@ -220,6 +220,8 @@ def makeplot(hn,saveintegrals=True):
 	h=f[b].Get(hn)
 	if h :
 	   h.Scale(samples[b]["xsec"]/nevents*lumitot)
+	   error=0
+	   #integral+=h.IntegralAndError(0,h.GetNbinsX()+1,error)
 	   integral+=h.Integral()
 	   setHistoStyle (h, gr) 
 #	   dprint "adding", b, "to", hn 
@@ -252,7 +254,7 @@ def makeplot(hn,saveintegrals=True):
 	   exit(1)
      myLegend.AddEntry(h,gr,"f")
      if saveintegrals:
-       ftxt.write("%s\t%s\t%s \n"%(gr,integral,integral/datasum[hn].Integral()))
+       ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral, error,integral/datasum[hn].Integral()))
 
    histosSignal[hn]={} 
    for gr in model.signal:
