@@ -162,9 +162,9 @@ def makeplot(hn,saveintegrals=True):
    if saveintegrals:
      ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn
-   histos[hn]=ROOT.THStack(hn,hn) 
-   histosSig[hn]=ROOT.THStack(hn,hn) 
-   datastack[hn]=ROOT.THStack(hn,hn) 
+   histos[hn]=ROOT.THStack(hn,"") 
+   histosSig[hn]=ROOT.THStack(hn,"") 
+   datastack[hn]=ROOT.THStack(hn,"") 
 
    canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750)       
    #canvas[hn].SetRightMargin(.0);                        
