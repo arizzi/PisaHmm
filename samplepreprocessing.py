@@ -10,8 +10,9 @@ flow.MatchDeltaR("GenLepton","GenJet")
 flow.SubCollection("GenJetVBFFilter","GenJet",sel="GenJet_GenLeptonDr>0.3 || GenJet_GenLeptonIdx==-1 ")
 flow.Define("GenJetVBFFilter_p4","@p4v(GenJetVBFFilter)")
 flow.Selection("twoVBFFilterGenJet","nGenJetVBFFilter > 1")
-flow.Define("VBFFilterjj_p4","At(GenJetVBFFilter_p4,0)+At(GenJetVBFFilter_p4,1)",requires=["twoVBFFilterGenJet"])
-flow.Define("VBFFilterjj_mass","VBFFilterjj_p4.M()")
+flow.Selection("justPass","1") #this is a silly workaround for a problemi with central weight duplications
+flow.Define("VBFFilterjj_mass","twoVBFFilterGenJet?(At(GenJetVBFFilter_p4,0)+At(GenJetVBFFilter_p4,1)).M():-1",requires=["justPass"])
+#flow.Define("VBFFilterjj_mass","VBFFilterjj_p4.M()")
 flow.Selection("VBFFilterFlag", "VBFFilterjj_mass>350")
 flow.Selection("VBFFilterAntiFlag", "!VBFFilterFlag")
 

@@ -84,6 +84,7 @@ def f(ar):
 	 if s=="data" :
 	   rdf=rdf.Define("isMC","false")
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
+	   rdf=rdf.Define("LHE_NpNLO","0")
 	 else :
            if year == "2016":
                rdf=rdf.Define("Muon_sf","(20.1/36.4*Muon_ISO_SF + 16.3/36.4*Muon_ISO_eraGH_SF)*(20.1/36.4*Muon_ID_SF + 16.3/36.4*Muon_ID_eraGH_SF)*(20.1/36.4*Muon_Trigger_SF + 16.3/36.4*Muon_Trigger_eraGH_SF)")
@@ -97,6 +98,8 @@ def f(ar):
 	       print "ADDING FAKE LHE",f
 	       rdf=rdf.Define("LHEScaleWeight","ROOT::VecOps::RVec<float>(9,1)")
 	       rdf=rdf.Define("nLHEScaleWeight","uint32_t(0)")
+	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
+	       rdf=rdf.Define("LHE_NpNLO","-1")
 
 	 if "filter" in samples[s] :
 	   print "Prefiltering",s

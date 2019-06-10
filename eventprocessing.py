@@ -14,7 +14,7 @@ flow.AddExpectedInput("Muon_sf","ROOT::VecOps::RVec<float>")
 flow.AddExpectedInput("btagWeight","float")
 
 flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
-flow.Define("Jet_pt_touse","Jet_pt_nom")
+flow.Define("Jet_pt_touse","Jet_pt")
 flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 
 #Higgs to mumu reconstruction
