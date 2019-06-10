@@ -222,7 +222,7 @@ def makeplot(hn,saveintegrals=True):
 	   h.Scale(samples[b]["xsec"]/nevents*lumitot)
 	   error=0
 	   #integral+=h.IntegralAndError(0,h.GetNbinsX()+1,error)
-	   integral+=h.Integral()
+	   integral+=h.Integral(0,h.GetNbinsX()+1)
 	   setHistoStyle (h, gr) 
 #	   dprint "adding", b, "to", hn 
 #	   i+=1
