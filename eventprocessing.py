@@ -49,8 +49,8 @@ flow.Define("GenJet_p4","@p4v(GenJet)")
 flow.Distinct("JetPair","SelectedJet")
 #flow.TakePair("QJet","SelectedJet","JetPair","Argmax(MemberMap((JetPair0_p4+JetPair1_p4),M() ))",requires=["twoJets"])
 flow.Define("SortedSelectedJetIndices","Argsort(-SelectedJet_pt_touse)")
-flow.ObjectAt("QJet0","SelectedJet","SortedSelectedJetIndices[0]",requires=["twoJets"])
-flow.ObjectAt("QJet1","SelectedJet","SortedSelectedJetIndices[1]",requires=["twoJets"])
+flow.ObjectAt("QJet0","SelectedJet","At(SortedSelectedJetIndices,0)",requires=["twoJets"])
+flow.ObjectAt("QJet1","SelectedJet","At(SortedSelectedJetIndices,1)",requires=["twoJets"])
 
 #compute number of softjets removing signal footprint
 flow.Define("SoftActivityJet_mass","SoftActivityJet_pt*0")

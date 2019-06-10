@@ -28,6 +28,7 @@ addMuScale(flow)
 addCompleteJecs(flow)
 addPUvariation(flow)
 
+snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 
@@ -36,7 +37,9 @@ for sel in  histosWithSystematics:
 	print sel,":",histosWithSystematics[sel]
 print >> sys.stderr, "Number of known columns", len(flow.validCols)
 
-proc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"SignalRegion",nthreads)
+#pproc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"SignalRegion",nthreads)
+proc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"",nthreads)
+
 
 
 from samples2016 import samples as samples2016
@@ -81,6 +84,7 @@ def f(ar):
 	 if s=="data" :
 	   rdf=rdf.Define("isMC","false")
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
+	   rdf=rdf.Define("LHE_NpNLO","0")
 	 else :
            if year == "2016":
                rdf=rdf.Define("Muon_sf","ROOT::VecOps::RVec<float>((20.1/36.4*Muon_ISO_SF + 16.3/36.4*Muon_ISO_eraGH_SF)*(20.1/36.4*Muon_ID_SF + 16.3/36.4*Muon_ID_eraGH_SF)*(20.1/36.4*Muon_Trigger_SF + 16.3/36.4*Muon_Trigger_eraGH_SF))")
@@ -94,6 +98,8 @@ def f(ar):
 	       print "ADDING FAKE LHE",f
 	       rdf=rdf.Define("LHEScaleWeight","ROOT::VecOps::RVec<float>(9,1)")
 	       rdf=rdf.Define("nLHEScaleWeight","uint32_t(0)")
+	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
+	       rdf=rdf.Define("LHE_NpNLO","-1")
 
 	 if "filter" in samples[s] :
 	   print "Prefiltering",s
@@ -104,11 +110,13 @@ def f(ar):
    	    ou=procData(rdf)
 	 else :
             ou=proc(rdf)
-         #snaplist=["QJet0_pt","QJet1_pt","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
+#         snaplist=["QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
+
+         #snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2"]
          #branchList = ROOT.vector('string')()
 	 #map(lambda x : branchList.push_back(x), snaplist)
-         #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-         #ou.rdf.Filter("event==24331988").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
+#         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+         #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
          print ou.histos.size()
          fff=ROOT.TFile.Open("out/%sHistos.root"%(s),"recreate")
          ROOT.gROOT.ProcessLine('''
