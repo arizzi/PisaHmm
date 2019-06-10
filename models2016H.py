@@ -35,7 +35,7 @@ fillcolor={
 "DY": ROOT.kOrange,
 "EWKZ": ROOT.kViolet,
 "Top": ROOT.kGreen,
-"Other" : ROOT.kTeal,
+"Other" : ROOT.kGreen+1,
 "VBF H":ROOT.kRed,
 "gg H":ROOT.kRed+4,
 "ZH":ROOT.kPink+4,
