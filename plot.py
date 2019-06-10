@@ -149,8 +149,56 @@ histosumSyst={}
 histoSigsumSyst={}
 histosSignal={}
 
+integral={}
+error={}
+     
 #i=1
 ROOT.gStyle.SetOptStat(0)
+
+
+
+def fill_datasum(f, gr, d, histoSum, stack, stackSys, hn, myLegend, saveintegrals, ftxt, luminosity, data=False) :
+    if f[d] :
+        h=f[d].Get(hn)
+        if h:
+            if (data) : h.SetMarkerStyle(10)
+            else : 
+                h.Scale(samples[b]["xsec"]/nevents*lumitot)
+                error_b = 0
+                integral[gr]+=h.IntegralAndError(0,h.GetNbinsX()+1,ROOT.Double(error_b))
+                error[gr] = sqrt(error[gr]*error[gr] + error_b*error_b)
+                setHistoStyle (h, gr) 
+            if hn not in histoSum :
+                histoSum[hn]=h.Clone()
+                stackSys[hn]={}
+                for sy in model.systematicsToPlot :
+                    if not data :
+                        hs=f[d].Get(findSyst(hn,sy,f[d]))
+                        if hs:
+                            hs.Scale(samples[b]["xsec"]/nevents*lumitot)
+                            stackSys[hn][sy]=hs.Clone()
+                        else : stackSys[hn][sy]=h.Clone()
+                    else :
+                        stackSys[hn][sy]=h.Clone()
+            else :
+                histoSum[hn].Add(h)	
+                for sy in model.systematicsToPlot :
+                    hs=f[d].Get(findSyst(hn,sy,f[d]))
+                    if hs:
+                        stackSys[hn][sy].Add(hs)
+                    else :
+                        stackSys[hn][sy].Add(h)
+            stack[hn].Add(h)
+        else:
+            print "Cannot open",d,hn
+            exit(1)
+        if (data) : myLegend.AddEntry(h,"data","P")
+        else : myLegend.AddEntry(h,gr,"f")
+        if saveintegrals:
+            ftxt.write("DATA \t%s \n"%(histoSum[hn].Integral(0,histoSum[hn].GetNbinsX()+1)))
+            
+
+
 
 
 def makeplot(hn,saveintegrals=True):
@@ -213,16 +261,19 @@ def makeplot(hn,saveintegrals=True):
 #   print "Lumi tot", lumitot
 
    for gr in model.backgroundSorted:
-     integral=0
+     integral[gr]=0
+     error[gr]=0
      for b in model.background[gr]: 
       nevents=totevents(b)
+      #fill_datasum (f, gr, d, histoSum=histosum, stack=histos, stackSys=histosumSyst, hn, myLegend, saveintegrals, ftxt, luminosity = lumitot, data = False) 
       if f[b] :
 	h=f[b].Get(hn)
 	if h :
 	   h.Scale(samples[b]["xsec"]/nevents*lumitot)
-	   error=0
-	   #integral+=h.IntegralAndError(0,h.GetNbinsX()+1,error)
-	   integral+=h.Integral(0,h.GetNbinsX()+1)
+	   error_b = 0
+	   integral[gr]+=h.IntegralAndError(0,h.GetNbinsX()+1,ROOT.Double(error_b))
+	   error[gr] = sqrt(error[gr]*error[gr] + error_b*error_b)
+	   #integral+=h.ROOT.Double(Integral(0,h.GetNbinsX()+1)
 	   setHistoStyle (h, gr) 
 #	   dprint "adding", b, "to", hn 
 #	   i+=1
@@ -254,7 +305,7 @@ def makeplot(hn,saveintegrals=True):
 	   exit(1)
      myLegend.AddEntry(h,gr,"f")
      if saveintegrals:
-       ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral, error,integral/datasum[hn].Integral()))
+       ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr], error[gr],integral[gr]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
 
    histosSignal[hn]={} 
    for gr in model.signal:
