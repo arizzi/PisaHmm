@@ -14,7 +14,8 @@ from histobinning import binningrules
 flow.binningRules = binningrules
 
 flowData=copy.deepcopy(flow)
-procData=flowData.CreateProcessor("eventProcessorData",snaplist,histosPerSelection,snap,"SignalRegion",nthreads)
+#not running on data, commented out to speed up compile phase
+#procData=flowData.CreateProcessor("eventProcessorData",snaplist,histosPerSelection,snap,"SignalRegion",nthreads)
 
 #define some event weights
 from weights import *
