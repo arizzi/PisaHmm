@@ -10,6 +10,7 @@ lumi = "%2.1f fb^{-1}"
 from math import *
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
+import WorkSpace
 
 totev={}
 totevCount={}
@@ -146,7 +147,8 @@ histoSigsum={}
 datasumSyst={}
 histosumSyst={}
 histoSigsumSyst={}
-histosSignal={}
+histosDataAndMC={}
+all_histo_all_syst={}
 
 integral={}
 error={}
@@ -160,6 +162,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
     integral[gr]=0
     error[gr]=0
     for d in samplesToPlot[gr]: 
+      if makeWorkspace : all_histo_all_syst[d]={}
       nevents = 1 if data else totevents(d)
       lumi_over_nevents = lumi/nevents
       if f[d] :
@@ -181,9 +184,13 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         if hs:
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             stackSys[hn][sy]=hs.Clone()
-                        else : stackSys[hn][sy]=h.Clone()
+                            if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
+                        else : 
+                            stackSys[hn][sy]=h.Clone()
+                            if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
                     else :
                         stackSys[hn][sy]=h.Clone()
+                        if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
             else :
                 SumTH1[hn].Add(h)	
                 for sy in model.systematicsToPlot :
@@ -191,13 +198,16 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                     if hs:
                         if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         stackSys[hn][sy].Add(hs)
+                        if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
                     else :
                         stackSys[hn][sy].Add(h)
+                        if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
             stack[hn].Add(h)
+            all_histo_all_syst[d]["nom"]=h.Clone()
         else:
             print "Cannot open",d,hn
             exit(1)
-        if gr in model.signal : histosSignal[hn][d] = h.Clone()
+        if gr in model.signal or makeWorkspace : histosDataAndMC[hn][d] = h.Clone()
     if (data) : myLegend.AddEntry(h,"data","P")
     else : myLegend.AddEntry(h,gr,"f")
 
@@ -235,7 +245,7 @@ def makeplot(hn,saveintegrals=True):
      for d in model.data[gr]:
        lumitot+=samples[d]["lumi"]
    
-   histosSignal[hn]={} 
+   histosDataAndMC[hn]={} 
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
 
@@ -252,6 +262,9 @@ def makeplot(hn,saveintegrals=True):
    for gr in model.signal:
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
    
+   if makeWorkspace : 
+       WorkSpace.WorkSpace(all_histo_all_syst)
+       return 
    
    histosum[hn].Add(histoSigsum[hn])
    
@@ -259,7 +272,7 @@ def makeplot(hn,saveintegrals=True):
    
    for gr in model.signal:                        
      for b in model.signal[gr]:
-        h=histosSignal[hn][b]     
+        h=histosDataAndMC[hn][b]     
         histos[hn].Add(h.Clone())
         h.SetLineColor(model.linecolor[gr])       
         h.SetFillStyle(0)                   
@@ -298,7 +311,7 @@ def makeplot(hn,saveintegrals=True):
 
    datastack[hn].Draw("E P same")
    for gr in model.signal:                                                     
-     for b in model.signal[gr]: histosSignal[hn][b].Draw("hist same")          
+     for b in model.signal[gr]: histosDataAndMC[hn][b].Draw("hist same")          
                                                                          
    t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
    t1 = makeText(0.15,0.91,"CMS", 61)                                                           
@@ -348,9 +361,19 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)	   
 
 
+
+
+makeWorkspace = False
+try :
+    print "variable to fit ", sys.argv[2]
+    makeWorkspace = True
+except :
+    pass
+
+
 his=[x for x in histoNames if "__syst__" not in x]
 print his[0]
-makeplot(his[0],True) #do once for caching normalizations and to dump integrals
+makeplot(sys.argv[2] if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
 print "Preload"
 for ff in f:
@@ -358,14 +381,14 @@ for ff in f:
      f[ff].Get(h)
 print "Preload-done"
 
-if True:
+if not makeWorkspace:
  from multiprocessing import Pool
  runpool = Pool(20)
  #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
  runpool.map(makeplot, his[1:])
-else :
- for x in his[1:] :
-    makeplot(x)
+#else :
+ #for x in his[1:] :
+    #makeplot(x)
 
 tot=0
 for s in totevCount:
