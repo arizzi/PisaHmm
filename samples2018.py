@@ -25,7 +25,7 @@ samples={
 "STt_2018POWPY"             : {"files":[path2018+"ST_t_top_nano2018.root"],"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
 
-"data": {"files":[path2018+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
+#"data": {"files":[path2018+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
 
 
 "TT_2018AMCPY"      : {"files":[path2018+"TT_nano2018.root"],"xsec":809.},    #generator is different from 2016
