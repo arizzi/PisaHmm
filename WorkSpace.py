@@ -37,7 +37,7 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
 
 
 def WorkSpace(model, all_histo_all_syst) :
-    print "begin of WorkSpace "
+    print "WorkSpace creation"
     nBins = all_histo_all_syst["data"]["nom"].GetNbinsX()
     varName = all_histo_all_syst["data"]["nom"].GetName().split("___")[0]
     
@@ -89,9 +89,12 @@ def WorkSpace(model, all_histo_all_syst) :
     datacard.write( writeLine("VV_norm",    "lnN",    1.10,  listKeys, [ x for x in model.background["Other"] if x not in ["W2J_2018AMCPY","W1J_2018AMCPY","W0J_2018AMCPY"]]))
     
     
-    for sy in all_histo_all_syst[listKeys[0]] :
-        if sy is not "nom" : datacard.write( writeLine(sy, "shape",    1.000,  listKeys, listKeys))
+    for sy in [ x for x in all_histo_all_syst[listKeys[0]] if x.endswith("Up")] :
+        if "QCD" not in sy : datacard.write( writeLine(sy[:-2], "shape",    1.000,  listKeys, listKeys))
 
+    for sy in [ x for x in all_histo_all_syst[listKeys[0]] if "QCD" in x] :
+        for samp in listKeys :
+            datacard.write( writeLine(samp+"_"+sy[:-2], "shape",    1.000,  listKeys, [samp]))
 
     datacard.write( "mu autoMCStats 0 1\n\n")
     
@@ -102,7 +105,16 @@ def WorkSpace(model, all_histo_all_syst) :
         for sy in all_histo_all_syst[samp] :
             hname = varName + "_mu_" + samp
             if sy is not "nom" : 
+                if "QCD" in sy : 
+                    hname = hname + "_" + samp
                 hname = hname + "_" + sy
-            h = all_histo_all_syst[x][sy].Clone(hname)
+            h = all_histo_all_syst[samp][sy].Clone(hname)
             h.Write()
+    
+    h_data_obs = all_histo_all_syst["data"]["nom"].Clone(varName+"_mu_data_obs")
+    h_data_obs.Write()
+    
+    
+    
+    
     

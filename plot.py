@@ -12,6 +12,8 @@ ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
 import WorkSpace
 
+ROOT.gROOT.SetBatch(True)
+
 totev={}
 totevCount={}
 totevSkim={}
@@ -203,7 +205,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         stackSys[hn][sy].Add(h)
                         if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
             stack[hn].Add(h)
-            all_histo_all_syst[d]["nom"]=h.Clone()
+            if makeWorkspace : all_histo_all_syst[d]["nom"]=h.Clone()
         else:
             print "Cannot open",d,hn
             exit(1)
@@ -373,7 +375,7 @@ except :
 
 his=[x for x in histoNames if "__syst__" not in x]
 print his[0]
-makeplot(sys.argv[2] if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
+makeplot(sys.argv[2]+"___SignalRegion" if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
 print "Preload"
 for ff in f:
