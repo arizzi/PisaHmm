@@ -22,8 +22,11 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
     line = ""
     position = []
     for s in sampleWithSystematic : 
-        position.append(allSamples.index(s))
-    
+        try :
+            position.append(allSamples.index(s))
+        except :
+            pass
+        
     line += uncName + "\t\t"
     if len(uncName)<8 : line += "\t"
     line += uncType + "\t"
@@ -59,6 +62,12 @@ def WorkSpace(model, all_histo_all_syst) :
     for x in  model.background :    listBkg = listBkg + model.background[x]
     
     listKeys = listSig + listBkg
+
+    #remove samples with no predicted events
+    emptySamples = []
+    for x in listKeys :
+        if all_histo_all_syst[x]["nom"].Integral(0, nBins+1) <= 0. or all_histo_all_syst[x]["JESDown"].Integral(0, nBins+1) <= 0. or all_histo_all_syst[x]["JESUp"].Integral(0, nBins+1) <= 0. : emptySamples.append(x)
+    listKeys = [ x for x in listKeys if x not in emptySamples]
 
 
     datacard.write("bin \t \t \t \t")
