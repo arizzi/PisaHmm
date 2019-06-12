@@ -263,7 +263,7 @@ def makeplot(hn,saveintegrals=True):
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
    
    if makeWorkspace : 
-       WorkSpace.WorkSpace(all_histo_all_syst)
+       WorkSpace.WorkSpace(model, all_histo_all_syst)
        return 
    
    histosum[hn].Add(histoSigsum[hn])
