@@ -8,7 +8,7 @@ from eventprocessing import flow
 from histograms import histosPerSelection
 
 snap=[] 
-snaplist=["QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]
+snaplist=["QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log","DNNClassifier"]
 
 from histobinning import binningrules
 flow.binningRules = binningrules
@@ -22,11 +22,11 @@ addDefaultWeights(flow)
 addMuEffWeight(flow)
 
 from systematics import *
-addLheScale(flow)
-addBtag(flow)
-addMuScale(flow)
-addCompleteJecs(flow)
-addPUvariation(flow)
+#addLheScale(flow)
+#addBtag(flow)
+#addMuScale(flow)
+#addCompleteJecs(flow)
+#addPUvariation(flow)
 
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
