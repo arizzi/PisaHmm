@@ -10,6 +10,9 @@ lumi = "%2.1f fb^{-1}"
 from math import *
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
+import WorkSpace
+
+ROOT.gROOT.SetBatch(True)
 
 totev={}
 totevCount={}
@@ -142,15 +145,76 @@ histos={}
 histosum={}
 histosSig={}
 histoSigsum={}
-histoTH = {} 
 
 datasumSyst={}
 histosumSyst={}
 histoSigsumSyst={}
-histosSignal={}
+histosDataAndMC={}
+all_histo_all_syst={}
 
+integral={}
+error={}
+     
 #i=1
 ROOT.gStyle.SetOptStat(0)
+
+
+
+def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ftxt, lumi=0, data=False) :
+    integral[gr]=0
+    error[gr]=0
+    for d in samplesToPlot[gr]: 
+      if makeWorkspace : all_histo_all_syst[d]={}
+      nevents = 1 if data else totevents(d)
+      lumi_over_nevents = lumi/nevents
+      if f[d] :
+        h=f[d].Get(hn)
+        if h:
+            if data : h.SetMarkerStyle(10)
+            else : 
+                h.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                error_b = ROOT.Double(0)
+                integral[gr]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
+                error[gr] = sqrt(error[gr]*error[gr] + error_b*error_b)
+                setHistoStyle (h, gr) 
+            if hn not in SumTH1 :
+                SumTH1[hn]=h.Clone()
+                stackSys[hn]={}
+                for sy in model.systematicsToPlot :
+                    if not data :
+                        hs=f[d].Get(findSyst(hn,sy,f[d]))
+                        if hs:
+                            hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                            stackSys[hn][sy]=hs.Clone()
+                            if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
+                        else : 
+                            stackSys[hn][sy]=h.Clone()
+                            if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
+                    else :
+                        stackSys[hn][sy]=h.Clone()
+                        if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
+            else :
+                SumTH1[hn].Add(h)	
+                for sy in model.systematicsToPlot :
+                    hs=f[d].Get(findSyst(hn,sy,f[d]))
+                    if hs:
+                        if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                        stackSys[hn][sy].Add(hs)
+                        if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
+                    else :
+                        stackSys[hn][sy].Add(h)
+                        if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
+            stack[hn].Add(h)
+            if makeWorkspace : all_histo_all_syst[d]["nom"]=h.Clone()
+        else:
+            print "Cannot open",d,hn
+            exit(1)
+        if gr in model.signal or makeWorkspace : histosDataAndMC[hn][d] = h.Clone()
+    if (data) : myLegend.AddEntry(h,"data","P")
+    else : myLegend.AddEntry(h,gr,"f")
+
+
+
 
 
 def makeplot(hn,saveintegrals=True):
@@ -162,9 +226,9 @@ def makeplot(hn,saveintegrals=True):
    if saveintegrals:
      ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn
-   histos[hn]=ROOT.THStack(hn,hn) 
-   histosSig[hn]=ROOT.THStack(hn,hn) 
-   datastack[hn]=ROOT.THStack(hn,hn) 
+   histos[hn]=ROOT.THStack(hn,"") 
+   histosSig[hn]=ROOT.THStack(hn,"") 
+   datastack[hn]=ROOT.THStack(hn,"") 
 
    canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750)       
    #canvas[hn].SetRightMargin(.0);                        
@@ -177,129 +241,41 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].GetPad(2).SetTopMargin(0.)                
                                                           
 
-#   canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750) 
-#   canvas[hn].Divide(1,2)
-#   canvas[hn].GetPad(2).SetPad(0,0,1,0.25) 
-#   canvas[hn].GetPad(1).SetPad(0,0.25,1,1) 
-   #for gr in sorted(background,key=lambda g:):
+
    lumitot=0
    for gr in model.data:
      for d in model.data[gr]:
-      lumitot+=samples[d]["lumi"]	
-      if f[d] :
-        h=f[d].Get(hn)
-	if h:
-   	   h.SetMarkerStyle(10)
-	   datastack[hn].Add(h)
-	   if hn not in datasum :
-		datasum[hn]=h.Clone()
-		datasumSyst[hn]={}
-   		for sy in model.systematicsToPlot :
-                  datasumSyst[hn][sy]=h.Clone()
-	   else :
-		datasum[hn].Add(h)	
-   		for sy in model.systematicsToPlot :
-		  hs=f[d].Get(findSyst(hn,sy,f[d]))
-		  if hs:
-                    datasumSyst[hn][sy].Add(hs)
-		  else :
-                    datasumSyst[hn][sy].Add(h)
-        else:
-	   print "Cannot open",d,hn
-	   exit(1)
-     myLegend.AddEntry(h,"data","P")
-     if saveintegrals:
-       ftxt.write("DATA \t%s \n"%(datasum[hn].Integral()))
-#   print "Lumi tot", lumitot
+       lumitot+=samples[d]["lumi"]
+   
+   histosDataAndMC[hn]={} 
+   for gr in model.data:
+     fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
 
+   if saveintegrals:
+     ftxt.write("DATA \t%s \n"%(datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
+
+   
    for gr in model.backgroundSorted:
-     integral=0
-     for b in model.background[gr]: 
-      nevents=totevents(b)
-      if f[b] :
-	h=f[b].Get(hn)
-	if h :
-	   h.Scale(samples[b]["xsec"]/nevents*lumitot)
-	   error=0
-	   #integral+=h.IntegralAndError(0,h.GetNbinsX()+1,error)
-	   integral+=h.Integral(0,h.GetNbinsX()+1)
-	   setHistoStyle (h, gr) 
-#	   dprint "adding", b, "to", hn 
-#	   i+=1
-	   if hn not in histosum :
-		histosum[hn]=h.Clone()
-	        histoTH[hn]=h.Clone()   
-		histosumSyst[hn]={}
-   		for sy in model.systematicsToPlot :
-      		  hs=f[b].Get(findSyst(hn,sy,f[b]))
-	          if hs:
-        	     hs.Scale(samples[b]["xsec"]/nevents*lumitot)
-	             histosumSyst[hn][sy]=hs.Clone()
-		  else :
-                     histosumSyst[hn][sy]=h.Clone()
-	   else :
-		histosum[hn].Add(h)	
-		histoTH[hn].Add(h)
-   		for sy in model.systematicsToPlot :
-		  hs=f[b].Get(findSyst(hn,sy,f[d]))
-		  if hs:
-	   	    hs.Scale(samples[b]["xsec"]/nevents*lumitot)
-                    histosumSyst[hn][sy].Add(hs)
-		  else :
-		    #print "using unchanged histo"
-                    histosumSyst[hn][sy].Add(h)
-	   histos[hn].Add(h)
-        else:
-	   print "Cannot open",b,hn
-	   exit(1)
-     myLegend.AddEntry(h,gr,"f")
+     fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
      if saveintegrals:
-       ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral, error,integral/datasum[hn].Integral()))
+       ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr], error[gr],integral[gr]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
 
-   histosSignal[hn]={} 
+   
    for gr in model.signal:
-     for b in model.signal[gr]:
-      nevents=totevents(b)
-      if f[b] :
-        h=f[b].Get(hn)
-        if h :
-           h.Scale(samples[b]["xsec"]/nevents*lumitot)
-#           print "adding", b, "to", hn
-	   setHistoStyle (h, gr) 
- #          i+=1
-           histosSignal[hn][b] = h.Clone()  	
-           if hn not in histoSigsum :
-                histoSigsum[hn]=h.Clone()
-		histoSigsumSyst[hn]={}
-   		for sy in model.systematicsToPlot :
-                  hs=f[b].Get(findSyst(hn,sy,f[b]))
-                  if hs:
-                    hs.Scale(samples[b]["xsec"]/nevents*lumitot)
-                    histoSigsumSyst[hn][sy]=hs.Clone()
-                  else :
-	            histoSigsumSyst[hn][sy]=h.Clone()
+     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
+   
+   if makeWorkspace : 
+       WorkSpace.WorkSpace(model, all_histo_all_syst)
+       return 
+   
+   histosum[hn].Add(histoSigsum[hn])
+   
 
-           else :
-                histoSigsum[hn].Add(h)
-   		for sy in model.systematicsToPlot :
-		  hs=f[b].Get(findSyst(hn,sy,f[b]))
-		  if hs:
-           	    hs.Scale(samples[b]["xsec"]/nevents*lumitot)
-                    histoSigsumSyst[hn][sy].Add(hs)
-		  else :
-		    #print "Not found",hn+"__syst__"+sy
-                    histoSigsumSyst[hn][sy].Add(h)
-           histosSig[hn].Add(h)
-           histos[hn].Add(h)
-           histoTH[hn].Add(h)               
-        else:
-	   print "Cannot open",b,hn
-	   exit(1)
-     myLegend.AddEntry(h,gr,"f")            
-                                            
+   
    for gr in model.signal:                        
-     for b in model.signal[gr]:                   
-        h=histosSignal[hn][b]               
+     for b in model.signal[gr]:
+        h=histosDataAndMC[hn][b]     
+        histos[hn].Add(h.Clone())
         h.SetLineColor(model.linecolor[gr])       
         h.SetFillStyle(0)                   
         h.SetLineWidth(3)                   
@@ -310,14 +286,14 @@ def makeplot(hn,saveintegrals=True):
    lastBlind=-1
    for i in range(histosSig[hn].GetStack().Last().GetNbinsX()) :
 	if histosSig[hn].GetStack().Last().GetBinContent(i) > 0.1*sqrt(abs(histos[hn].GetStack().Last().GetBinContent(i))) and histosSig[hn].GetStack().Last().GetBinContent(i)/(0.1+abs(histos[hn].GetStack().Last().GetBinContent(i))) > 0.05 :
-		print "to blind",hn,i,abs(histos[hn].GetStack().Last().GetBinContent(i)), histosSig[hn].GetStack().Last().GetBinContent(i)	
+		#print "to blind",hn,i,abs(histos[hn].GetStack().Last().GetBinContent(i)), histosSig[hn].GetStack().Last().GetBinContent(i)	
 	        if i < firstBlind:
 		    firstBlind=i
                 lastBlind=i
    for i in range(firstBlind,lastBlind) :
        datastack[hn].GetStack().Last().SetBinContent(i,0)
        datasum[hn].SetBinContent(i,0)
-       print "blinded",i,hn
+       #print "blinded",i,hn
    myLegend.Draw() #NEW  
    canvas[hn].cd(1)
    histos[hn].SetTitle("") 
@@ -327,20 +303,17 @@ def makeplot(hn,saveintegrals=True):
    datastack[hn].Draw("E P")
    histos[hn].Draw("hist same")
 #  histos[hn].Draw("hist")                                                               
-   histoTH[hn].SetLineWidth(0)                                                           
-   histoTH[hn].SetFillColor(ROOT.kBlack);                                                
-   histoTH[hn].SetFillStyle(3004);                                                       
-   #if "log" in hn : histoTH[hn].GetYaxis().SetRangeUser(0.1,histoTH[hn].GetMaximum()*5) 
-   #else : histoTH[hn].GetYaxis().SetRangeUser(0.,histoTH[hn].GetMaximum()*1.2)          
-   #histoTH[hn].GetYaxis().SetRangeUser(0.1,histoTH[hn].GetMaximum()*2)                  
+   histosum[hn].SetLineWidth(0)                                                           
+   histosum[hn].SetFillColor(ROOT.kBlack);                                                
+   histosum[hn].SetFillStyle(3004);                                                                       
    setStyle(histos[hn].GetHistogram())
    canvas[hn].Update()                
-   histoTH[hn].Draw("same E2")        
+   histosum[hn].Draw("same E2")        
 
 
    datastack[hn].Draw("E P same")
    for gr in model.signal:                                                     
-     for b in model.signal[gr]: histosSignal[hn][b].Draw("hist same")          
+     for b in model.signal[gr]: histosDataAndMC[hn][b].Draw("hist same")          
                                                                          
    t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
    t1 = makeText(0.15,0.91,"CMS", 61)                                                           
@@ -364,7 +337,7 @@ def makeplot(hn,saveintegrals=True):
 #   ratio.SetLabelSize(datastack[hn].GetHistogram().GetLabelSize()*3)
 #   ratio.GetYaxis().SetLabelSize(datastack[hn].GetHistogram().GetLabelSize()*3)
    ratio.Draw()
-   ratioError = makeRatioMCplot(histoTH[hn])  
+   ratioError = makeRatioMCplot(histosum[hn])  
    ratioError.Draw("same E2")                 
 
    ratio.SetAxisRange(-0.5,0.5,"Y")
@@ -379,7 +352,7 @@ def makeplot(hn,saveintegrals=True):
        ratiosy[-1].SetFillStyle(0)
        myLegend_sy.AddEntry(ratiosy[-1],sy,"l")
        ratiosy[-1].Draw("same hist")
-       print "Heu",hn,sy,histosumSyst[hn][sy].Integral(),histosum[hn].Integral(),lumitot,ratiosy[-1]
+       #print "Heu",hn,sy,histosumSyst[hn][sy].Integral(),histosum[hn].Integral(),lumitot,ratiosy[-1]
    canvas[hn].cd()
    myLegend_sy.Draw()
     
@@ -390,9 +363,19 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)	   
 
 
+
+
+makeWorkspace = False
+try :
+    print "variable to fit ", sys.argv[2]
+    makeWorkspace = True
+except :
+    pass
+
+
 his=[x for x in histoNames if "__syst__" not in x]
 print his[0]
-makeplot(his[0],True) #do once for caching normalizations and to dump integrals
+makeplot(sys.argv[2]+"___SignalRegion" if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
 print "Preload"
 for ff in f:
@@ -400,14 +383,14 @@ for ff in f:
      f[ff].Get(h)
 print "Preload-done"
 
-if True:
+if not makeWorkspace:
  from multiprocessing import Pool
  runpool = Pool(20)
  #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
  runpool.map(makeplot, his[1:])
-else :
- for x in his[1:] :
-    makeplot(x)
+#else :
+ #for x in his[1:] :
+    #makeplot(x)
 
 tot=0
 for s in totevCount:

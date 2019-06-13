@@ -18,7 +18,7 @@ def addBtag(flow):
 #    flow.Define("SelectedJet_btagWeight_up","vector_map(btagWeightUp,SelectedJet_btagCSVV2,SelectedJet_pt,SelectedJet_eta)")
     #flow.Define("btagEventWeightUp","std::accumulate(SelectedJet_btagWeight.begin(),SelectedJet_btagWeight.end(),1, std::multiplies<double>())")
 #    flow.Systematic("BTagUp","SelectedJet_btagWeight","SelectedJet_btagWeight_up")
-#    flow.createVariationBranch("BTagUp",["btagEventWeight"])
+   #flow.createVariationBranch("BTagUp",["btagWeight"])
 #    flow.VariationWeight("btagEventWeight__syst__BTagUP","btagEventWeight")
 
 
@@ -33,6 +33,7 @@ def addCompleteJecs(flow):
         flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
         flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp") #name, target, replacement
         flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
+        #flow.Systematic("noJER","Jet_pt_touse","Jet_pt") #name, target, replacement
         flow.Systematic("JERMix","Jet_pt_touse","Jet_pt_mix") #name, target, replacement
 
 

@@ -129,7 +129,9 @@ flow.Define("mmjj_pt_log","log(mmjj_pt)")
 flow.Define("mmjj_pz","mmjj.Pz()")
 flow.Define("mmjj_pz_logabs","log(abs(mmjj_pz))")
 flow.Define("MaxJetAbsEta","std::max(std::abs(QJet0_eta), std::abs(QJet1_eta))")
-
+#flow.AddCppCode('\n#include "muresolution.h"\n')
+#flow.Define("Higss_mRelReso", "hRelResolution(LeadMuon_pt,LeadMuon_eta,SubMuon_pt,SubMuon_eta)")
+#flow.Define("Higgs_mReso","Higss_mRelReso*Higgs_m")
 
 flow.DefaultConfig(higgsMassWindowWidth=10,mQQcut=250,nominalHMass=125.03,btagCut=0.8)
 flow.Selection("MassWindow","abs(Higgs.M()-nominalHMass)<higgsMassWindowWidth")
@@ -162,5 +164,3 @@ flow.Selection("twoQ","nQParton>=2")
 flow.Define("QQ_p4","QQ0_p4+QQ1_p4",requires=["twoQ"])
 flow.Define("QQ_mass","MemberMap(QQ_p4,M())")
 flow.Define("HighestGenQQMass","At(QQ_mass,Argmax(QQ_mass),-99)")
-
-
