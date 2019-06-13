@@ -16,3 +16,5 @@ def addMuEffWeight(flow):
     flow.Define("muEffWeight","Mu0_sf*Mu1_sf",["twoOppositeSignMuons"])
     flow.CentralWeight("muEffWeight",["twoOppositeSignMuons"])
 
+def addReweightEWK(flow):
+    flow.CentralWeight("EWKreweight")

@@ -3,6 +3,7 @@ import ROOT
 nthreads=60
 import sys
 import copy
+ROOT.gROOT.ProcessLine(".x softactivity.h")
 
 from eventprocessing import flow
 from histograms import histosPerSelection
@@ -27,6 +28,9 @@ addBtag(flow)
 addMuScale(flow)
 addCompleteJecs(flow)
 addPUvariation(flow)
+addReweightEWK(flow)
+
+
 
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
@@ -101,6 +105,12 @@ def f(ar):
 	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
 	       rdf=rdf.Define("LHE_NpNLO","-1")
 
+	 if s.startswith("EWKZ") and s.endswith("MGPY") : 
+             #rdf=rdf.Define("EWKreweight","weightSofAct5(1)")
+             rdf=rdf.Define("EWKreweight","weightGenJet(nGenJet)")
+         else :
+             rdf=rdf.Define("EWKreweight","1.f")
+	 
 	 if "filter" in samples[s] :
 	   print "Prefiltering",s
            rdf=specificProcessors[s](rdf).rdf
