@@ -6,6 +6,7 @@
 
 class MVAWrapper {
  public:
+//    MVAWrapper(int ii=0) { for(int i=0;i<ii;i++) addReader();}
     MVAWrapper() {}
     void addReader(){
         TMVA::Reader * reader = new TMVA::Reader("Silent");
@@ -35,5 +36,7 @@ float eval(unsigned int i,std::vector<float> f){
         float a;
 };
 
+//MVAWrapper mva(64);
 MVAWrapper mva;
+
 #endif

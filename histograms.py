@@ -6,8 +6,8 @@ signalHistos=["SBClassifier","BDTAtan","LHE_NpNLO"]
 
 histosPerSelection={
 #"PreSel" : genericHistos+["Mqq"],
-"SignalRegion": signalHistos+ genericHistos+signalHistos+bdtInputHistos,
-#"ZRegion": signalHistosVariations+genericHistos+bdtInputHistos,
+"SignalRegion": signalHistos+ genericHistos+signalHistos, #+bdtInputHistos,
+"ZRegion": signalHistosVariations+genericHistos,#+bdtInputHistos,
 #"ZRegionNadya": genericHistos+signalHistosZ,
 "SideBand" : signalHistos#+signalHistosVariations+genericHistos,
 #"BDT0p8" : bdtInputHistos,

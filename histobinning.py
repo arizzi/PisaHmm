@@ -27,6 +27,7 @@ binningrules=[
 (".*AbsEta.*" , "%s , 0,5"%nbins),
 ("PV_npvs.*" , "%s , 0,60"%nbins),
 ("LeadingSAJet_pt.*" , "%s , -10 , 150"%16),
+("LHE_N.*" , "5 , -1 , 4"),
 
 ]
 

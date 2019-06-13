@@ -154,7 +154,7 @@ ROOT.gStyle.SetOptStat(0)
 
 
 def makeplot(hn,saveintegrals=True):
- if "__syst__" not in hn and "LHE" not in hn :
+ if "__syst__" not in hn :
    myLegend = makeLegend (0.4, 0.9)
    myLegend_sy = makeLegend (0.1, 0.25)
    outpath="figure/%s/%s"%(year,model.name)

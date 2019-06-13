@@ -138,8 +138,9 @@ def f(ar):
 
 #     return  os.system("./eventProcessor %s %s out/%s%s "%(4,f,s,i))  
 
+#from multiprocessing.pool import ThreadPool as Pool
 from multiprocessing import Pool
-runpool = Pool(20)
+runpool = Pool(10)
 
 print samples.keys()
 sams=samples.keys()
@@ -147,6 +148,9 @@ sams=samples.keys()
 #sams=["DY2J","TTlep"]
 #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
 toproc=[ (s,samples[s]["files"]) for s in sams  ]
+toproc=sorted(toproc,key=lambda x : sum(map(os.path.getsize,x[1])),reverse=True)
+print toproc
+
 if len(sys.argv[2:]) :
    toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
    
