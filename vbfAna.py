@@ -164,6 +164,6 @@ print toproc
 if len(sys.argv[2:]) :
    toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
    
-results=zip(runpool.map(f, toproc ),sams)
-print results
+results=zip(runpool.map(f, toproc ),[x[0] for x in toproc])
+print "Results",results
 print "To resubmit",[x[1] for x in results if x[0] ]

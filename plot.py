@@ -170,9 +170,10 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
       lumi_over_nevents = lumi/nevents
       if f[d] :
         h=f[d].Get(hn)
-        if h.GetName().split("___")[0] in model.rebin.keys() : 
-            h = (h.Rebin(len(model.rebin[h.GetName().split("___")[0]])-1,"hnew",array('d',model.rebin[h.GetName().split("___")[0]]))).Clone(h.GetName())
-        if h:
+        if  h:
+            if h.GetName().split("___")[0] in model.rebin.keys() : 
+	      print "Rebin",hn
+              h = (h.Rebin(len(model.rebin[h.GetName().split("___")[0]])-1,"hnew",array('d',model.rebin[h.GetName().split("___")[0]]))).Clone(h.GetName())
             if data : h.SetMarkerStyle(10)
             else : 
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
