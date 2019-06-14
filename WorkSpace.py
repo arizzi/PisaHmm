@@ -39,12 +39,12 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
 
 
 
-def WorkSpace(model, all_histo_all_syst) :
+def WorkSpace(model, all_histo_all_syst, year) :
     print "WorkSpace creation"
-    nBins = all_histo_all_syst["data"]["nom"].GetNbinsX()
-    varName = all_histo_all_syst["data"]["nom"].GetName().split("___")[0]
+    nBins = all_histo_all_syst["data"+year]["nom"].GetNbinsX()
+    varName = all_histo_all_syst["data"+year]["nom"].GetName().split("___")[0]
     
-    datacard=open("figure/datacard.txt","w")
+    datacard=open("figure/datacard"+year+".txt","w")
     
     datacard.write("imax 1  number of channels\n")
     datacard.write("jmax *  number of backgrounds\n")
@@ -53,7 +53,7 @@ def WorkSpace(model, all_histo_all_syst) :
     datacard.write("shapes * mu  fileCombine.root "+varName+"_$CHANNEL_$PROCESS "+varName+"_$CHANNEL_$PROCESS_$SYSTEMATIC\n")
     datacard.write("------------\n")
     datacard.write("bin mu\n")
-    datacard.write("observation "+str(all_histo_all_syst["data"]["nom"].Integral(0, nBins+1))+"\n")
+    datacard.write("observation "+str(all_histo_all_syst["data"+year]["nom"].Integral(0, nBins+1))+"\n")
     datacard.write("------------\n")
 
     listSig  = []
@@ -108,7 +108,7 @@ def WorkSpace(model, all_histo_all_syst) :
     datacard.write( "mu autoMCStats 0 1\n\n")
     
     
-    f = ROOT.TFile ("figure/fileCombine.root", "recreate")
+    f = ROOT.TFile ("figure/fileCombine"+year+".root", "recreate")
     f.cd()
     for samp in listKeys :
         for sy in all_histo_all_syst[samp] :
@@ -120,7 +120,7 @@ def WorkSpace(model, all_histo_all_syst) :
             h = all_histo_all_syst[samp][sy].Clone(hname)
             h.Write()
     
-    h_data_obs = all_histo_all_syst["data"]["nom"].Clone(varName+"_mu_data_obs")
+    h_data_obs = all_histo_all_syst["data"+year]["nom"].Clone(varName+"_mu_data_obs")
     h_data_obs.Write()
     
     

@@ -1,3 +1,5 @@
+from samples2017 import *
+name="H"
 background={
 #"DY":["DY105_2017AMCPY", "DY105VBF_2017AMCPY"],
 "DY":["DY105_2017AMCPY"],
@@ -15,7 +17,7 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","EWKZ"]
+backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
@@ -28,7 +30,7 @@ signal={
 }
 
 data={
-"2017":["data"]
+"2017":["data2017"]
 }
 
 import ROOT
@@ -46,7 +48,13 @@ fillcolor={
 }
 
 #systematicsToPlot=["MuScaleUp"]
-systematicsToPlot=["JERUp","JERDown","JESUp","JESDown"]
+systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 
 linecolor=fillcolor
 markercolor=fillcolor
+
+
+
+rebin = {
+    "BDTAtan" : [0 , 0.404 , 0.488 , 0.534 , 0.567333333333 , 0.595333333333 , 0.62 , 0.642 , 0.662 , 0.680666666667 , 0.698 , 0.714666666667 , 0.730666666667 , 0.746666666667 , 0.762666666667 , 0.778 , 0.793333333333 , 0.809333333333 , 0.825333333333 , 0.841333333333 , 0.858 , 0.875333333333 , 0.894 , 0.913333333333 , 0.934 , 0.956666666667 , 0.980666666667 , 1.00733333333 , 1.03733333333 , 1.072 , 1.11333333333 , 1.16666666667 , 1.238 , 1.35133333333 , 2.0 ]
+}

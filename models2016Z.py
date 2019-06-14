@@ -1,5 +1,5 @@
 from samples2016 import *
-name="H"
+name="Z"
 background={
 "DY":["DY105_2016AMCPY"],#["DY105_2016AMCPY"]
 "DYVBF":["DY105VBF_2016AMCPY"],

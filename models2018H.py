@@ -30,7 +30,7 @@ signal={
 }
 
 data={
-"2018":["data"]
+"2018":["data2018"]
 }
 
 import ROOT

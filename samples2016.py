@@ -25,7 +25,7 @@ samples={
 "STtbar_2016POW_MADSPIN_PY" : {"files":[path2016+"ST_t_antitop_nano2016.root"],"xsec":80.95}, ##or 26.38!??  80.95 is for inclusive decays (used), 26.38 is for lepton decays (not used)
 "STt_2016POW_MADSPIN_PY"    : {"files":[path2016+"ST_t_top_nano2016.root"],"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
-"data": {"files":[path2016+"SingleMuon_nano2016.root"],"lumi":35900.,"data":True},
+"data2016": {"files":[path2016+"SingleMuon_nano2016.root"],"lumi":35900.,"data":True},
 
 "TT_2016POWPY"      : {"files":[path2016+"TT_nano2016.root"],"xsec":809.},
 "TTlep_2016POWPY"   : {"files":[path2016+"TTTo2L2Nu_nano2016.root"],"xsec":85.65},

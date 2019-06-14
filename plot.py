@@ -171,9 +171,9 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
       if f[d] :
         h=f[d].Get(hn)
         if  h:
-            if h.GetName().split("___")[0] in model.rebin.keys() : 
+            if hn.split("___")[0] in model.rebin.keys() : 
 	      print "Rebin",hn
-              h = (h.Rebin(len(model.rebin[h.GetName().split("___")[0]])-1,"hnew",array('d',model.rebin[h.GetName().split("___")[0]]))).Clone(h.GetName())
+              h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
             if data : h.SetMarkerStyle(10)
             else : 
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
@@ -187,8 +187,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 for sy in model.systematicsToPlot :
                     if not data :
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
-                        if h.GetName().split("___")[0] in model.rebin.keys() : 
-                            hs = (hs.Rebin(len(model.rebin[h.GetName().split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[h.GetName().split("___")[0]]))).Clone(hs.GetName())
+                        if hn.split("___")[0] in model.rebin.keys() : 
+                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if hs:
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             stackSys[hn][sy]=hs.Clone()
@@ -204,9 +204,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 for sy in model.systematicsToPlot :
                     hs=f[d].Get(findSyst(hn,sy,f[d]))
                     if hs:
-                        if h.GetName().split("___")[0] in model.rebin.keys() : 
-                            hs = (hs.Rebin(len(model.rebin[h.GetName().split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[h.GetName().split("___")[0]]))).Clone(hs.GetName())
-                            #print len(model.rebin[h.GetName().split("___")[0]]),"hnew"+sy,array('d',model.rebin[h.GetName().split("___")[0]])
+                        if hn.split("___")[0] in model.rebin.keys() : 
+                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         stackSys[hn][sy].Add(hs)
                         if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
@@ -274,7 +273,7 @@ def makeplot(hn,saveintegrals=True):
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
    
    if makeWorkspace : 
-       WorkSpace.WorkSpace(model, all_histo_all_syst)
+       WorkSpace.WorkSpace(model, all_histo_all_syst, year)
        return 
    
    histosum[hn].Add(histoSigsum[hn])

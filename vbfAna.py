@@ -94,7 +94,7 @@ def f(ar):
      if rdf :
        try:
 	 rdf=rdf.Define("year",year)
-	 if s=="data" :
+	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Define("isMC","false")
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
@@ -114,7 +114,7 @@ def f(ar):
 	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
 	       rdf=rdf.Define("LHE_NpNLO","-1")
 
-	 if s.startswith("EWKZ") and s.endswith("MGPY") : 
+	 if s.startswith("EWKZ_") and s.endswith("MGPY") : 
              #rdf=rdf.Define("EWKreweight","weightSofAct5(1)")
              rdf=rdf.Define("EWKreweight","weightGenJet(nGenJet)")
          else :
@@ -125,7 +125,7 @@ def f(ar):
            rdf=specificProcessors[s](rdf).rdf
 	   rdf=rdf.Filter(samples[s]["filter"])
 
-	 if s=="data":
+	 if "lumi" in samples[s].keys() :
    	    ou=procData(rdf)
 	 else :
             ou=proc(rdf)
