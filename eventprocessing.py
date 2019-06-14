@@ -12,6 +12,7 @@ flow.AddExpectedInput("year","int")
 flow.AddExpectedInput("isMC","bool")
 flow.AddExpectedInput("Muon_sf","ROOT::VecOps::RVec<float>")
 flow.AddExpectedInput("btagWeight","float")
+flow.AddExpectedInput("EWKreweight","float")
 
 flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
 flow.Define("Jet_pt_touse","Jet_pt")
