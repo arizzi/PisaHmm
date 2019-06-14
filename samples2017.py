@@ -26,7 +26,7 @@ samples={
 "STtbar_2017POWPY"          : {"files":[path2017+"ST_t_antitop_nano2017.root"],"xsec":80.95}, ##or 26.38!??  80.95 is for inclusive decays (used), 26.38 is for lepton decays (not used)
 "STt_2017POWPY"             : {"files":[path2017+"ST_t_top_nano2017.root"],"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
-"data": {"files":[path2017+"SingleMuon_nano2017.root"],"lumi":41530.,"data":True},
+"data2017": {"files":[path2017+"SingleMuon_nano2017.root"],"lumi":41530.,"data":True},
 
 "TT_2017AMCPY"      : {"files":[path2017+"TT_nano2017.root"],"xsec":809.},    #generator is different from 2016
 "TT_2017MGPY"       : {"files":[path2017+"TT_madgraph_nano2017.root"],"xsec":809.},
