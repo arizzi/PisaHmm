@@ -8,6 +8,15 @@ ROOT.gROOT.ProcessLine(".x softactivity.h")
 from eventprocessing import flow
 from histograms import histosPerSelection
 
+used=[]
+for s in histosPerSelection:
+    used.append(s)
+    used.extend(histosPerSelection[s])
+used=list(set(used))
+
+ftxt=open("out/description.txt","w")
+ftxt.write(flow.Describe(used))
+
 snap=[] 
 snaplist=["QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]
 
