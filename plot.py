@@ -232,9 +232,9 @@ def makeplot(hn,saveintegrals=True):
    outpath="figure/%s/%s"%(year,model.name)
    os.system("mkdir -p "+outpath)
    os.system("cp out/description.txt "+outpath)
-   os.system("git rev-parse HEAD > "+outpath+"git_commit.txt")
-   os.system("git diff HEAD > "+outpath+"git_diff.txt")
-   os.system("git status HEAD > "+outpath+"git_status.txt")
+   os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
+   os.system("git diff HEAD > "+outpath+"/git_diff.txt")
+   os.system("git status HEAD > "+outpath+"/git_status.txt")
    if saveintegrals:
      ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn
