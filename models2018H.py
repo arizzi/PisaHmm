@@ -54,10 +54,12 @@ fillcolor={
 systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 
 
-#TODO: separate systematics as
-#shape only (remove normalization effects)
-#per group 
-#per sample
+
+
+from systematicGrouping import *
+systematicDetail = systematicGrouping(background, signal)
+
+
 
 
 
