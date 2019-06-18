@@ -44,7 +44,7 @@ def writeUncertainities (orderedUncertainties, lenght, position) :
     
 
     
-    
+
             
 def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic) :
     line = ""
