@@ -172,7 +172,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
         h=f[d].Get(hn)
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 
-	      print "Rebin",hn
+	      #print "Rebin",hn
               h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
             if data : h.SetMarkerStyle(10)
             else : 
@@ -273,14 +273,14 @@ def makeplot(hn,saveintegrals=True):
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
    
    if makeWorkspace : 
-       WorkSpace.WorkSpace(model, all_histo_all_syst, year)
+       WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
        return 
    
    histosum[hn].Add(histoSigsum[hn])
    
 
    
-   for gr in model.signal:                        
+   for gr in model.signal:
      for b in model.signal[gr]:
         h=histosDataAndMC[hn][b]     
         histos[hn].Add(h.Clone())
