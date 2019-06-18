@@ -16,8 +16,8 @@ binningrules=[
 (".*Higgs_mReso.*" , "%s , 0,20"%(nbins)),
 (".*_.*tag.*" , "%s , 0,1"%nbins),
 (".*Class.*" , "%s , -1,1"%nbins),
-(".*Atan.*" , "%s , 0,2"%(nbins*2)),
-(".*NNAtan.*" , "%s , 0,2"%(nbins*2)),
+(".*Atan.*" , "%s , 0,2"%(nbins*100)),
+(".*NNAtan.*" , "%s , 0,2"%(nbins*100)),
 (".*Soft.*" , "10 , -0.5,9.5"),
 (".*Mqq_log.*" , "%s , 0,10"%nbins),
 (".*zstar.*" , "%s , -2,2"%nbins),
@@ -29,6 +29,7 @@ binningrules=[
 (".*AbsEta.*" , "%s , 0,5"%nbins),
 ("PV_npvs.*" , "%s , 0,60"%nbins),
 ("LeadingSAJet_pt.*" , "%s , -10 , 150"%16),
+("LHE_N.*" , "5 , -1 , 4"),
 
 ]
 

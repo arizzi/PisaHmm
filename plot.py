@@ -8,6 +8,7 @@ from labelDict import *
 year="+".join(model.data.keys())
 lumi = "%2.1f fb^{-1}" 
 from math import *
+from array import array
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
 import WorkSpace
@@ -169,7 +170,10 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
       lumi_over_nevents = lumi/nevents
       if f[d] :
         h=f[d].Get(hn)
-        if h:
+        if  h:
+            if hn.split("___")[0] in model.rebin.keys() : 
+                #print "Rebin",hn
+                h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
             if data : h.SetMarkerStyle(10)
             else : 
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
@@ -183,6 +187,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 for sy in model.systematicsToPlot :
                     if not data :
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
+                        if hn.split("___")[0] in model.rebin.keys() : 
+                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if hs:
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             stackSys[hn][sy]=hs.Clone()
@@ -198,6 +204,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 for sy in model.systematicsToPlot :
                     hs=f[d].Get(findSyst(hn,sy,f[d]))
                     if hs:
+                        if hn.split("___")[0] in model.rebin.keys() : 
+                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         stackSys[hn][sy].Add(hs)
                         if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
@@ -218,11 +226,15 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
 
 
 def makeplot(hn,saveintegrals=True):
- if "__syst__" not in hn and "LHE" not in hn :
+ if "__syst__" not in hn :
    myLegend = makeLegend (0.4, 0.9)
    myLegend_sy = makeLegend (0.1, 0.25)
    outpath="figure/%s/%s"%(year,model.name)
    os.system("mkdir -p "+outpath)
+   os.system("cp out/description.txt "+outpath)
+   os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
+   os.system("git diff HEAD > "+outpath+"/git_diff.txt")
+   os.system("git status HEAD > "+outpath+"/git_status.txt")
    if saveintegrals:
      ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn
@@ -265,14 +277,14 @@ def makeplot(hn,saveintegrals=True):
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
    
    if makeWorkspace : 
-       WorkSpace.WorkSpace(model, all_histo_all_syst)
+       WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
        return 
    
    histosum[hn].Add(histoSigsum[hn])
    
 
    
-   for gr in model.signal:                        
+   for gr in model.signal:
      for b in model.signal[gr]:
         h=histosDataAndMC[hn][b]     
         histos[hn].Add(h.Clone())
@@ -284,13 +296,13 @@ def makeplot(hn,saveintegrals=True):
         myLegend.AddEntry(h,gr+" x20","l")       
    firstBlind=100000
    lastBlind=-1
-   for i in range(histosSig[hn].GetStack().Last().GetNbinsX()) :
-	if histosSig[hn].GetStack().Last().GetBinContent(i) > 0.1*sqrt(abs(histos[hn].GetStack().Last().GetBinContent(i))) and histosSig[hn].GetStack().Last().GetBinContent(i)/(0.1+abs(histos[hn].GetStack().Last().GetBinContent(i))) > 0.05 :
+   for i in range(histosSig[hn].GetStack().Last().GetNbinsX()+1) :
+	if histosSig[hn].GetStack().Last().GetBinContent(i) > 0.1*sqrt(abs(histos[hn].GetStack().Last().GetBinContent(i))) and histosSig[hn].GetStack().Last().GetBinContent(i)/(0.001+abs(histos[hn].GetStack().Last().GetBinContent(i))) > 0.05 :
 		#print "to blind",hn,i,abs(histos[hn].GetStack().Last().GetBinContent(i)), histosSig[hn].GetStack().Last().GetBinContent(i)	
 	        if i < firstBlind:
 		    firstBlind=i
                 lastBlind=i
-   for i in range(firstBlind,lastBlind) :
+   for i in range(firstBlind,lastBlind+1) :
        datastack[hn].GetStack().Last().SetBinContent(i,0)
        datasum[hn].SetBinContent(i,0)
        #print "blinded",i,hn

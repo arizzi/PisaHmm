@@ -27,7 +27,7 @@ signal={
 }
 
 data={
-"2018":["data"]
+"2018":["data2018"]
 }
 
 import ROOT
@@ -42,8 +42,11 @@ fillcolor={
 "gg H":ROOT.kRed+4,
 }
 
-#systematicsToPlot=["MuScaleUp"]
 systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+
+from rebinning import *
+#possibly change the rebinning here
 
 linecolor=fillcolor
 markercolor=fillcolor
+

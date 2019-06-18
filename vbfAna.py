@@ -3,12 +3,22 @@ import ROOT
 nthreads=60
 import sys
 import copy
+ROOT.gROOT.ProcessLine(".x softactivity.h")
 
 ROOT.gInterpreter.AddIncludePath("/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn") 
 ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
 
 from eventprocessing import flow
 from histograms import histosPerSelection
+
+used=[]
+for s in histosPerSelection:
+    used.append(s)
+    used.extend(histosPerSelection[s])
+used=list(set(used))
+
+ftxt=open("out/description.txt","w")
+ftxt.write(flow.Describe(used))
 
 snap=[] 
 snaplist=["QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]
@@ -30,6 +40,9 @@ addBtag(flow)
 addMuScale(flow)
 addCompleteJecs(flow)
 addPUvariation(flow)
+addReweightEWK(flow)
+
+
 
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
@@ -84,7 +97,7 @@ def f(ar):
      if rdf :
        try:
 	 rdf=rdf.Define("year",year)
-	 if s=="data" :
+	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Define("isMC","false")
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
@@ -104,12 +117,18 @@ def f(ar):
 	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
 	       rdf=rdf.Define("LHE_NpNLO","-1")
 
+	 if s.startswith("EWKZ_") and s.endswith("MGPY") : 
+             #rdf=rdf.Define("EWKreweight","weightSofAct5(1)")
+             rdf=rdf.Define("EWKreweight","weightGenJet(nGenJet)")
+         else :
+             rdf=rdf.Define("EWKreweight","1.f")
+	 
 	 if "filter" in samples[s] :
 	   print "Prefiltering",s
            rdf=specificProcessors[s](rdf).rdf
 	   rdf=rdf.Filter(samples[s]["filter"])
 
-	 if s=="data":
+	 if "lumi" in samples[s].keys() :
    	    ou=procData(rdf)
 	 else :
             ou=proc(rdf)
@@ -141,8 +160,9 @@ def f(ar):
 
 #     return  os.system("./eventProcessor %s %s out/%s%s "%(4,f,s,i))  
 
+#from multiprocessing.pool import ThreadPool as Pool
 from multiprocessing import Pool
-runpool = Pool(20)
+runpool = Pool(5)
 
 print samples.keys()
 sams=samples.keys()
@@ -150,9 +170,12 @@ sams=samples.keys()
 #sams=["DY2J","TTlep"]
 #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
 toproc=[ (s,samples[s]["files"]) for s in sams  ]
+toproc=sorted(toproc,key=lambda x : sum(map(os.path.getsize,x[1])),reverse=True)
+print toproc
+
 if len(sys.argv[2:]) :
    toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
    
-results=zip(runpool.map(f, toproc ),sams)
-print results
+results=zip(runpool.map(f, toproc ),[x[0] for x in toproc])
+print "Results",results
 print "To resubmit",[x[1] for x in results if x[0] ]

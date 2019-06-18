@@ -1,4 +1,5 @@
 from samples2018 import *
+from rebinning import *
 name="H"
 background={
 "DY":["DY105_2018AMCPY"],
@@ -17,7 +18,7 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","EWKZ"]
+backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
@@ -30,7 +31,7 @@ signal={
 }
 
 data={
-"2018":["data"]
+"2018":["data2018"]
 }
 
 import ROOT
@@ -53,12 +54,38 @@ fillcolor={
 systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 
 
-#TODO: separate systematics as
-#shape only (remove normalization effects)
-#per group 
-#per sample
+
+
+from systematicGrouping import *
+systematicDetail = systematicGrouping(background, signal)
+
+
+
+#default is correlated among all samples 
+#and correlated nuisance for norm+shape
+systematicDetail={
+"QCDScale" : {
+ 	"groups":background,
+        },
+"puWeight" : {
+	  "type": "ShapeOnly" #NormOnly, ShapeNorm
+	},
+"lumi":{
+	"type": "lnN",
+	"value":1.025
+    },
+"VVxsec":{
+	"type": "lnN",
+	"decorrelate":{"ZZ":["ZZ2l2q","ZZ2l2n"],"WW":[],"WZ":[]},
+	"value":1.10,
+	"groupvalue":{},
+	"samplevalue":{}
+   }
+}
+
 
 
 
 linecolor=fillcolor
 markercolor=fillcolor
+
