@@ -159,7 +159,7 @@ def f(ar):
 
 #from multiprocessing.pool import ThreadPool as Pool
 from multiprocessing import Pool
-runpool = Pool(10)
+runpool = Pool(5)
 
 print samples.keys()
 sams=samples.keys()

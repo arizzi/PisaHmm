@@ -172,8 +172,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
         h=f[d].Get(hn)
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 
-	      #print "Rebin",hn
-              h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
+                #print "Rebin",hn
+                h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
             if data : h.SetMarkerStyle(10)
             else : 
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
@@ -231,6 +231,10 @@ def makeplot(hn,saveintegrals=True):
    myLegend_sy = makeLegend (0.1, 0.25)
    outpath="figure/%s/%s"%(year,model.name)
    os.system("mkdir -p "+outpath)
+   os.system("cp out/description.txt "+outpath)
+   os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
+   os.system("git diff HEAD > "+outpath+"/git_diff.txt")
+   os.system("git status HEAD > "+outpath+"/git_status.txt")
    if saveintegrals:
      ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn

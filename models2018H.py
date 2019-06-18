@@ -61,6 +61,29 @@ systematicDetail = systematicGrouping(background, signal)
 
 
 
+#default is correlated among all samples 
+#and correlated nuisance for norm+shape
+systematicDetail={
+"QCDScale" : {
+ 	"groups":background,
+        },
+"puWeight" : {
+	  "type": "ShapeOnly" #NormOnly, ShapeNorm
+	},
+"lumi":{
+	"type": "lnN",
+	"value":1.025
+    },
+"VVxsec":{
+	"type": "lnN",
+	"decorrelate":{"ZZ":["ZZ2l2q","ZZ2l2n"],"WW":[],"WZ":[]},
+	"value":1.10,
+	"groupvalue":{},
+	"samplevalue":{}
+   }
+}
+
+
 
 
 linecolor=fillcolor
