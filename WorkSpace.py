@@ -3,6 +3,52 @@ import ROOT
 
 
 
+def writeSystematic (x, systematicDetail, all_histo_all_syst, listKeys, datacard, year) :
+    
+    print x, systematicDetail.keys(), systematicDetail[x].keys()
+    
+    if "decorrelate" not in systematicDetail[x].keys() : 
+        datacard.write( writeLine(x, systematicDetail[x]["type"],    1. if "value" not in systematicDetail[x].keys()  else systematicDetail[x]["value"],  listKeys, listKeys))
+    
+    else :
+        for g in  systematicDetail[x]["decorrelate"] :
+            if "samplevalue" in systematicDetail[x].keys() : 
+                print  systematicDetail[x].keys() 
+                
+                
+            elif "groupvalue" in systematicDetail[x].keys() : 
+                datacard.write( writeLine(x, systematicDetail[x]["type"],   systematicDetail[x]["groupvalue"][g],  listKeys, systematicDetail[x]["decorrelate"][g]))
+            
+            else :
+                datacard.write( writeLine(x, systematicDetail[x]["type"],    1. if "value" not in systematicDetail[x].keys()  else systematicDetail[x]["value"],  listKeys, systematicDetail[x]["decorrelate"][g]))
+            
+            
+            
+            
+            
+def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic) :
+    line = ""
+    position = []
+    #orderedUncertainties = []
+
+    
+    for n in range(len(allSamples)) :
+        for s in sampleWithSystematic : 
+            if allSamples[n].startswith(s) :
+                position.append(n)
+                #if len(uncertainty)>1 : orderedUncertainties.append(uncertainty[0] if len(uncertainty)==1 else uncertainty[n])
+        
+    line += uncName + "\t\t"
+    if len(uncName)<8 : line += "\t"
+    line += uncType + "\t"
+    line += writeUncertainities (uncertainty, len(allSamples), position)
+
+    return line + "\n";
+
+
+
+
+
 def writeUncertainities (uncertainty, lenght, position) :
     uncLine= ""; 
     for n in range(lenght) :
@@ -18,7 +64,7 @@ def writeUncertainities (uncertainty, lenght, position) :
     
     
     
-def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic) :
+def writeLine2 (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic) :
     line = ""
     position = []
     for s in sampleWithSystematic : 
@@ -39,7 +85,7 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
 
 
 
-def WorkSpace(model, all_histo_all_syst, year) :
+def createWorkSpace(model, all_histo_all_syst, year) :
     print "WorkSpace creation"
     nBins = all_histo_all_syst["data"+year]["nom"].GetNbinsX()
     varName = all_histo_all_syst["data"+year]["nom"].GetName().split("___")[0]
@@ -50,7 +96,7 @@ def WorkSpace(model, all_histo_all_syst, year) :
     datacard.write("jmax *  number of backgrounds\n")
     datacard.write("kmax *  number of nuisance parameters (sources of systematical uncertainties)\n")
     datacard.write("------------\n")
-    datacard.write("shapes * mu  fileCombine.root "+varName+"_$CHANNEL_$PROCESS "+varName+"_$CHANNEL_$PROCESS_$SYSTEMATIC\n")
+    datacard.write("shapes * mu  fileCombine"+year+".root "+varName+"_$CHANNEL_$PROCESS "+varName+"_$CHANNEL_$PROCESS_$SYSTEMATIC\n")
     datacard.write("------------\n")
     datacard.write("bin mu\n")
     datacard.write("observation "+str(all_histo_all_syst["data"+year]["nom"].Integral(0, nBins+1))+"\n")
@@ -91,19 +137,24 @@ def WorkSpace(model, all_histo_all_syst, year) :
 
 
 
-    datacard.write( writeLine("lumi_13TeV", "lnN",    1.025,  listKeys, listKeys))
-    datacard.write( writeLine("DY_norm",    "lnN",    1.05,  listKeys, model.background["DY"] + model.background["DYVBF"]))
-    datacard.write( writeLine("Top_norm",   "lnN",    1.10,  listKeys, model.background["Top"]))
-    #datacard.write( writeLine("ST_norm",    "lnN",    1.10,  listKeys, model.background["ST"]))
-    datacard.write( writeLine("VV_norm",    "lnN",    1.10,  listKeys, [ x for x in model.background["Other"] if x not in ["W2J_2018AMCPY","W1J_2018AMCPY","W0J_2018AMCPY"]]))
+    #datacard.write( writeLine("lumi_13TeV", "lnN",    1.025,  listKeys, listKeys))
+    #datacard.write( writeLine("DY_norm",    "lnN",    1.05,  listKeys, model.background["DY"] + model.background["DYVBF"]))
+    #datacard.write( writeLine("Top_norm",   "lnN",    1.10,  listKeys, model.background["Top"]))
+    ##datacard.write( writeLine("ST_norm",    "lnN",    1.10,  listKeys, model.background["ST"]))
+    #datacard.write( writeLine("VV_norm",    "lnN",    1.10,  listKeys, [ x for x in model.background["Other"] if x not in ["W2J_2018AMCPY","W1J_2018AMCPY","W0J_2018AMCPY"]]))
     
     
-    for sy in [ x for x in all_histo_all_syst[listKeys[0]] if x.endswith("Up")] :
-        if "QCD" not in sy : datacard.write( writeLine(sy[:-2], "shape",    1.000,  listKeys, listKeys))
+    #for sy in [ x for x in all_histo_all_syst[listKeys[0]] if x.endswith("Up")] :
+        #if "QCD" not in sy : datacard.write( writeLine(sy[:-2], "shape",    1.000,  listKeys, listKeys))
 
-    for sy in [ x for x in all_histo_all_syst[listKeys[0]] if "QCD" in x] :
-        for samp in listKeys :
-            datacard.write( writeLine(samp+"_"+sy[:-2], "shape",    1.000,  listKeys, [samp]))
+    #for sy in [ x for x in all_histo_all_syst[listKeys[0]] if "QCD" in x] :
+        #for samp in listKeys :
+            #datacard.write( writeLine(samp+"_"+sy[:-2], "shape",    1.000,  listKeys, [samp]))
+            
+            
+    for x in model.systematicDetail :
+        writeSystematic (x, model.systematicDetail, all_histo_all_syst, listKeys, datacard, year) 
+            
 
     datacard.write( "mu autoMCStats 0 1\n\n")
     
@@ -123,7 +174,7 @@ def WorkSpace(model, all_histo_all_syst, year) :
     h_data_obs = all_histo_all_syst["data"+year]["nom"].Clone(varName+"_mu_data_obs")
     h_data_obs.Write()
     
-    
+    print "WorkSpace end"
     
     
     

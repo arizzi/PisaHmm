@@ -4,7 +4,7 @@ background={
 "DY":["DY105_2016AMCPY"],#["DY105_2016AMCPY"]
 "DYVBF":["DY105VBF_2016AMCPY"],
 "EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
-"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
+#"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
 "Other":["W2J_2016AMCPY","W1J_2016AMCPY","W0J_2016AMCPY", 
          "WWdps_2016MGPY","WWJJlnln_2016MGPY","WLLJJln_2016MG_MADSPIN_PY",
          "WW2l2n_2016POWPY",#"WWlnqq_2016AMC_MADSPIN_PY",
@@ -17,7 +17,8 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+backgroundSorted=["Other","DY","DYVBF","EWKZ"]
+#backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
@@ -52,8 +53,47 @@ systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWei
 linecolor=fillcolor
 markercolor=fillcolor
 
+from rebinning import *
 
 
-rebin = {
-    "BDTAtan" : [0 , 0.404 , 0.488 , 0.534 , 0.567333333333 , 0.595333333333 , 0.62 , 0.642 , 0.662 , 0.680666666667 , 0.698 , 0.714666666667 , 0.730666666667 , 0.746666666667 , 0.762666666667 , 0.778 , 0.793333333333 , 0.809333333333 , 0.825333333333 , 0.841333333333 , 0.858 , 0.875333333333 , 0.894 , 0.913333333333 , 0.934 , 0.956666666667 , 0.980666666667 , 1.00733333333 , 1.03733333333 , 1.072 , 1.11333333333 , 1.16666666667 , 1.238 , 1.35133333333 , 2.0 ]
+legendGrouping = {}
+legendGrouping.update(background)
+legendGrouping.update(signal)
+
+
+#TODO: separate systematics as
+#shape only (remove normalization effects)
+#per group 
+#per sample
+
+#default is correlated among all samples 
+#and correlated nuisance for norm+shape
+systematicDetail={
+"QCDScale" : {
+        "type": "ShapeOnly", #NormOnly, ShapeNorm
+        "decorrelate":legendGrouping
+        },
+"puWeight" : {
+          "type": "ShapeOnly" #NormOnly, ShapeNorm
+        },
+"lumi":{
+        "type": "lnN",
+        "value":1.025
+    },
+"VVxsec":{
+        "type": "lnN",
+        "decorrelate":{"ZZ":["ZZ2l2q","ZZ2l2n","ZZ4l"],"WZ":["WZ1l3n","WZ2l2q","WZ3l1n"],"WW":["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]},
+        "value":1.10,
+        #"groupvalue":{},
+        #"samplevalue":{}
+   },
+"WJetsxsec":{
+        "type": "lnN",
+        "decorrelate":{"WJets":["W2J","W1J","W0J"]},
+        "value":1.10,
+        #"groupvalue":{},
+        #"samplevalue":{}
+   }
 }
+
+
