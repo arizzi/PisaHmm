@@ -5,7 +5,6 @@ import ROOT
 
 def writeSystematic (x, systematicDetail, all_histo_all_syst, listKeys, datacard, year) :
     
-    print x, systematicDetail.keys(), systematicDetail[x].keys()
     
     if "decorrelate" not in systematicDetail[x].keys() : 
         datacard.write( writeLine(x, systematicDetail[x]["type"],    1. if "value" not in systematicDetail[x].keys()  else systematicDetail[x]["value"],  listKeys, listKeys))
@@ -13,14 +12,17 @@ def writeSystematic (x, systematicDetail, all_histo_all_syst, listKeys, datacard
     else :
         for g in  systematicDetail[x]["decorrelate"] :
             if "samplevalue" in systematicDetail[x].keys() : 
-                print  systematicDetail[x].keys() 
+                datacard.write( writeLine(x, systematicDetail[x]["type"],   systematicDetail[x]["samplevalue"],  listKeys, systematicDetail[x]["decorrelate"][g]))
+                #if not set(listKeys).isdisjoint(systematicDetail[x]["decorrelate"][g]) : datacard.write( writeLine(x, systematicDetail[x]["type"],   systematicDetail[x]["samplevalue"],  listKeys, systematicDetail[x]["decorrelate"][g]))
                 
                 
             elif "groupvalue" in systematicDetail[x].keys() : 
                 datacard.write( writeLine(x, systematicDetail[x]["type"],   systematicDetail[x]["groupvalue"][g],  listKeys, systematicDetail[x]["decorrelate"][g]))
+                #if not set(listKeys).isdisjoint(systematicDetail[x]["decorrelate"][g]) : datacard.write( writeLine(x, systematicDetail[x]["type"],   systematicDetail[x]["groupvalue"][g],  listKeys, systematicDetail[x]["decorrelate"][g]))
             
             else :
                 datacard.write( writeLine(x, systematicDetail[x]["type"],    1. if "value" not in systematicDetail[x].keys()  else systematicDetail[x]["value"],  listKeys, systematicDetail[x]["decorrelate"][g]))
+                #if not set(listKeys).isdisjoint(systematicDetail[x]["decorrelate"][g]) : datacard.write( writeLine(x, systematicDetail[x]["type"],    1. if "value" not in systematicDetail[x].keys()  else systematicDetail[x]["value"],  listKeys, systematicDetail[x]["decorrelate"][g]))
             
             
             
@@ -29,19 +31,20 @@ def writeSystematic (x, systematicDetail, all_histo_all_syst, listKeys, datacard
 def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic) :
     line = ""
     position = []
-    #orderedUncertainties = []
+    orderedUncertainties = [0.]*len(allSamples)
 
     
     for n in range(len(allSamples)) :
         for s in sampleWithSystematic : 
             if allSamples[n].startswith(s) :
                 position.append(n)
-                #if len(uncertainty)>1 : orderedUncertainties.append(uncertainty[0] if len(uncertainty)==1 else uncertainty[n])
+                orderedUncertainties[n] = uncertainty[s] if hasattr(uncertainty, "keys") else uncertainty
         
     line += uncName + "\t\t"
     if len(uncName)<8 : line += "\t"
     line += uncType + "\t"
-    line += writeUncertainities (uncertainty, len(allSamples), position)
+    if len(uncType)<8 : line += "\t"
+    line += writeUncertainities (orderedUncertainties, len(allSamples), position)
 
     return line + "\n";
 
@@ -49,11 +52,11 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
 
 
 
-def writeUncertainities (uncertainty, lenght, position) :
+def writeUncertainities (orderedUncertainties, lenght, position) :
     uncLine= ""; 
     for n in range(lenght) :
         if n in position :
-            uncLine += str(uncertainty)
+            uncLine += str(orderedUncertainties[n])
         else : 
             uncLine += "-"
         uncLine += "\t\t"

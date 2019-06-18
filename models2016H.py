@@ -6,7 +6,7 @@ background={
 "EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
 #"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
 "Other":["W2J_2016AMCPY","W1J_2016AMCPY","W0J_2016AMCPY", 
-         "WWdps_2016MGPY","WWJJlnln_2016MGPY","WLLJJln_2016MG_MADSPIN_PY",
+         #"WWdps_2016MGPY","WWJJlnln_2016MGPY","WLLJJln_2016MG_MADSPIN_PY",
          "WW2l2n_2016POWPY",#"WWlnqq_2016AMC_MADSPIN_PY",
          "WZ1l1n2q_2016AMCPY","WZ1l3n_2016AMCPY","WZ2l2q_2016AMC_MADSPIN_PY","WZ3l1n_2016POWPY",
          "ZZ2l2q_2016POWPY"#,"ZZ2q2n_2016POWPY","ZZ4l_2016POWPY"
@@ -25,9 +25,9 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 signal={
 "VBF H":["vbfHmm_2016POWPY"],
 "gg H":["ggHmm_2016AMCPY"],
-"ZH":["zHmm_2016POWPY"],
-"WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
-"ttH":["ttHmm_2016POWPY"]
+#"ZH":["zHmm_2016POWPY"],
+#"WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
+#"ttH":["ttHmm_2016POWPY"]
 }
 
 data={
@@ -70,11 +70,11 @@ legendGrouping.update(signal)
 #and correlated nuisance for norm+shape
 systematicDetail={
 "QCDScale" : {
-        "type": "ShapeOnly", #NormOnly, ShapeNorm
+        "type": "ShapeOn", #NormOnly, ShapeNorm
         "decorrelate":legendGrouping
         },
 "puWeight" : {
-          "type": "ShapeOnly" #NormOnly, ShapeNorm
+          "type": "ShapeOn" #NormOnly, ShapeNorm
         },
 "lumi":{
         "type": "lnN",
@@ -82,9 +82,9 @@ systematicDetail={
     },
 "VVxsec":{
         "type": "lnN",
-        "decorrelate":{"ZZ":["ZZ2l2q","ZZ2l2n","ZZ4l"],"WZ":["WZ1l3n","WZ2l2q","WZ3l1n"],"WW":["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]},
+        "decorrelate":{"ZZ":["ZZ2l2q","ZZ2l2n","ZZ4l"],"WZ":["WZ1l3n","WZ2l2q","WZ3l1n", "WZ1l1n2q"],"WW":["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]},
         "value":1.10,
-        #"groupvalue":{},
+        "groupvalue":{"ZZ":2.,"WZ":3.,"WW":4.},
         #"samplevalue":{}
    },
 "WJetsxsec":{
@@ -92,7 +92,7 @@ systematicDetail={
         "decorrelate":{"WJets":["W2J","W1J","W0J"]},
         "value":1.10,
         #"groupvalue":{},
-        #"samplevalue":{}
+        "samplevalue":{"W2J":2.,"W1J":3.,"W0J":4.}
    }
 }
 
