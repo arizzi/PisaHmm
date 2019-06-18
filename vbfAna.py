@@ -4,6 +4,9 @@ nthreads=60
 import sys
 import copy
 
+ROOT.gInterpreter.AddIncludePath("/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn") 
+ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
+
 from eventprocessing import flow
 from histograms import histosPerSelection
 
