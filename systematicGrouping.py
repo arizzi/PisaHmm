@@ -56,7 +56,7 @@ def systematicGrouping (background, signal) :
         },
         "STxsec":{
                 "type": "lnN",
-                "decorrelate":{"DY":["STs_2017AMCPY","STwtbar_2017POWPY","STwt_2017POWPY","STtbar_2017POWPY","STt_2017POWPY"]},
+                "decorrelate":{"DY":["STs","STwtbar","STwt","STtbar","STt"]},
                 "value":1.05,
         },
         "JER":{
@@ -64,6 +64,10 @@ def systematicGrouping (background, signal) :
                 "value":1.0,
         },
         "JES":{
+                "type": "shape",
+                "value":1.0,
+        },
+        "MuScale":{
                 "type": "shape",
                 "value":1.0,
         }
