@@ -1,5 +1,5 @@
 import ROOT
-
+import os
 
 
 
@@ -77,7 +77,8 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     nBins = all_histo_all_syst["data"+year]["nom"].GetNbinsX()
     varName = all_histo_all_syst["data"+year]["nom"].GetName().split("___")[0]
     
-    datacard=open("figure/datacard"+year+".txt","w")
+    os.system("mkdir -p workspace")
+    datacard=open("workspace/datacard"+year+".txt","w")
     
     datacard.write("imax 1  number of channels\n")
     datacard.write("jmax *  number of backgrounds\n")
@@ -146,7 +147,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     datacard.write( "mu autoMCStats 0 1\n\n")
     
     
-    f = ROOT.TFile ("figure/fileCombine"+year+".root", "recreate")
+    f = ROOT.TFile ("workspace/fileCombine"+year+".root", "recreate")
     f.cd()
     for samp in listKeys :
         for sy in all_histo_all_syst[samp] :
