@@ -4,7 +4,7 @@ background={
 "DY":["DY105_2016AMCPY"],#["DY105_2016AMCPY"]
 "DYVBF":["DY105VBF_2016AMCPY"],
 "EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
-#"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
+"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
 "Other":["W2J_2016AMCPY","W1J_2016AMCPY","W0J_2016AMCPY", 
          #"WWdps_2016MGPY","WWJJlnln_2016MGPY","WLLJJln_2016MG_MADSPIN_PY",
          "WW2l2n_2016POWPY",#"WWlnqq_2016AMC_MADSPIN_PY",
@@ -17,8 +17,8 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","DY","DYVBF","EWKZ"]
-#backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+#backgroundSorted=["Other","DY","DYVBF","EWKZ"]
+backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 

@@ -47,7 +47,7 @@ def FindBinDown(hBackground, hSignal, binLimitUp, minNumberOfEventPerBin, MinNum
 
 
 
-variable = "BDTAtan"
+variable = "DNNAtan"
 year = sys.argv[1]
 
 if year == "2016" :
@@ -80,7 +80,7 @@ MinNumberOfBin_inBinning = int(binMinWidth/xMax*Nbins_binning)
 binLimitDown = Nbins_binning
 
 
-hSignal.Scale(samples[signalSample]["xsec"]*samples["data"]["lumi"]/totevents("/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim"+year+"_Z/VBF_HToMuMu_nano"+year+".root"))
+hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"]/totevents("/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim"+year+"_Z/VBF_HToMuMu_nano"+year+".root"))
 print "Total number of events:  ", hSignal.Integral(0, Nbins_binning+1)
         
 while binLimitDown>0 :
