@@ -1,5 +1,5 @@
-#ifndef MURESOLUTION_H
-#define MURESOLUTION_H
+#ifndef SOFTACTIVITY_H
+#define SOFTACTIVITY_H
 
 #include <TH1F.h>
 #include <TFile.h>
