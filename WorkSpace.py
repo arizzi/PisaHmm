@@ -141,7 +141,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
             
             
     for x in model.systematicDetail :
-        writeSystematic (x, model.systematicDetail, all_histo_all_syst, listKeys, datacard, year) 
+        if all(s in all_histo_all_syst[listKeys[0]].keys() for s in [x+"Down", x+"Up"]) or model.systematicDetail[x]["type"] is not "shape" : writeSystematic (x, model.systematicDetail, all_histo_all_syst, listKeys, datacard, year) 
             
 
     datacard.write( "mu autoMCStats 0 1\n\n")
