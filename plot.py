@@ -165,7 +165,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
     integral[gr]=0
     error[gr]=0
     for d in samplesToPlot[gr]: 
-      if makeWorkspace : all_histo_all_syst[d]={}
+      if makeWorkspace : all_histo_all_syst[hn][d]={}
       nevents = 1 if data else totevents(d)
       lumi_over_nevents = lumi/nevents
       if f[d] :
@@ -192,13 +192,13 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         if hs:
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             stackSys[hn][sy]=hs.Clone()
-                            if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
+                            if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
                         else : 
                             stackSys[hn][sy]=h.Clone()
-                            if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
+                            if makeWorkspace : all_histo_all_syst[hn][d][sy]=h.Clone()
                     else :
                         stackSys[hn][sy]=h.Clone()
-                        if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
+                        if makeWorkspace : all_histo_all_syst[hn][d][sy]=h.Clone()
             else :
                 SumTH1[hn].Add(h)	
                 for sy in model.systematicsToPlot :
@@ -208,12 +208,12 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         stackSys[hn][sy].Add(hs)
-                        if makeWorkspace : all_histo_all_syst[d][sy]=hs.Clone()
+                        if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
                     else :
                         stackSys[hn][sy].Add(h)
-                        if makeWorkspace : all_histo_all_syst[d][sy]=h.Clone()
+                        if makeWorkspace : all_histo_all_syst[hn][d][sy]=h.Clone()
             stack[hn].Add(h)
-            if makeWorkspace : all_histo_all_syst[d]["nom"]=h.Clone()
+            if makeWorkspace : all_histo_all_syst[hn][d]["nom"]=h.Clone()
         else:
             print "Cannot open",d,hn
             exit(1)
@@ -251,8 +251,8 @@ def makeplot(hn,saveintegrals=True):
    ROOT.gStyle.SetPadLeftMargin(0.15)                     
    canvas[hn].GetPad(2).SetBottomMargin(0.35)              
    canvas[hn].GetPad(2).SetTopMargin(0.)                
-                                                          
-
+                   
+   if makeWorkspace : all_histo_all_syst[hn] = {}
 
    lumitot=0
    for gr in model.data:
@@ -276,9 +276,8 @@ def makeplot(hn,saveintegrals=True):
    for gr in model.signal:
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
    
-   if makeWorkspace : 
-       WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
-       return 
+   if makeWorkspace : return 
+   
    
    histosum[hn].Add(histoSigsum[hn])
    
@@ -378,16 +377,15 @@ def makeplot(hn,saveintegrals=True):
 
 
 makeWorkspace = False
-try :
-    print "variable to fit ", sys.argv[2]
-    makeWorkspace = True
-except :
-    pass
+if len(sys.argv) > 2 : makeWorkspace = True
+variablesToFit = sys.argv[2:]
+if makeWorkspace : print "variablesToFit ", variablesToFit
+
 
 
 his=[x for x in histoNames if "__syst__" not in x]
 print his[0]
-makeplot(sys.argv[2]+"___SignalRegion" if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
+makeplot(variablesToFit[0] if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
 print "Preload"
 for ff in f:
@@ -395,7 +393,10 @@ for ff in f:
      f[ff].Get(h)
 print "Preload-done"
 
-if not makeWorkspace:
+if makeWorkspace:
+    for hn in variablesToFit[1:] :  makeplot(hn,True)
+    WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
+else :
  from multiprocessing import Pool
  runpool = Pool(20)
  #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
