@@ -47,6 +47,11 @@ systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWei
 from rebinning import *
 #possibly change the rebinning here
 
+from systematicGrouping import *
+systematicDetail = systematicGrouping(background, signal)
+
+
+
 linecolor=fillcolor
 markercolor=fillcolor
 
