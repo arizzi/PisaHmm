@@ -19,10 +19,10 @@ def systematicGrouping (background, signal) :
 
 
     systematicDetail={
-        "QCDScale" : {
-                "type": "shape", #NormOnly, ShapeNorm
-                "decorrelate":legendGrouping
-                },
+        #"QCDScale" : {
+                #"type": "shape", #NormOnly, ShapeNorm
+                #"decorrelate":legendGrouping
+                #},
         "puWeight" : {
                 "type": "shape" #NormOnly, ShapeNorm
                 },
@@ -67,10 +67,10 @@ def systematicGrouping (background, signal) :
                 "type": "shape",
                 "value":1.0,
         },
-        "MuScale":{
-                "type": "shape",
-                "value":1.0,
-        }
+        #"MuScale":{
+                #"type": "shape",
+                #"value":1.0,
+        #}
     }
     
     

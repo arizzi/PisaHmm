@@ -95,19 +95,19 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     
     print  all_histo_all_syst.keys() 
     for x in all_histo_all_syst.keys() : 
-        nBins[x] = all_histo_all_syst[x]["data"+year]["nom"].GetNbinsX()
+        nBins[x] = all_histo_all_syst[x]["data"+year]["nom"].GetNbinsX()-1
         varName[x] = all_histo_all_syst[x]["data"+year]["nom"].GetName().split("___")[0]
         region[x] = x.split("___")[-1]
     
     
     os.system("mkdir -p workspace")
-    datacard=open("workspace/datacard"+year+".txt","w")
+    datacard=open("workspace/datacard"+year+model.name+".txt","w")
     
     datacard.write("imax "+str(len(all_histo_all_syst.keys()))+"  number of channels\n")
     datacard.write("jmax *  number of backgrounds\n")
     datacard.write("kmax *  number of nuisance parameters (sources of systematical uncertainties)\n")
     datacard.write("------------\n")
-    for x in region.keys() : datacard.write("shapes * "+region[x]+"  fileCombine"+year+".root "+varName[x]+"_$CHANNEL_$PROCESS "+varName[x]+"_$CHANNEL_$PROCESS_$SYSTEMATIC\n")
+    for x in region.keys() : datacard.write("shapes * "+region[x]+"  fileCombine"+year+model.name+".root "+varName[x]+"_$CHANNEL_$PROCESS "+varName[x]+"_$CHANNEL_$PROCESS_$SYSTEMATIC\n")
     datacard.write("------------\n")
     datacard.write("bin \t\t")
     for x in region.keys() : datacard.write(region[x] + " \t" )
@@ -117,7 +117,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
 
     listSig  = []
     listBkg  = []
-    for s in  model.signal :        listSig = listSig + model.signal[s]
+    #for s in  model.signal :        listSig = listSig + model.signal[s]
     for s in  model.background :    listBkg = listBkg + model.background[s]
     
     listAllSample = listSig + listBkg
@@ -125,6 +125,8 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     processNumber = {}
     for n in range(len(listSig)) : processNumber[listSig[n]] = -n
     for n in range(len(listBkg)) : processNumber[listBkg[n]] = n+1
+        #if listBkg[n].startswith("EWK") : processNumber[listBkg[n]] = -n
+        #else : processNumber[listBkg[n]] = n+1
     
     #remove samples with no predicted events
     emptySamples = {}
@@ -173,7 +175,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     for x in region.keys() : datacard.write( region[x]+" autoMCStats 0 1\n\n")
     
     
-    f = ROOT.TFile ("workspace/fileCombine"+year+".root", "recreate")
+    f = ROOT.TFile ("workspace/fileCombine"+year+model.name+".root", "recreate")
     f.cd()
     for x in region.keys() : 
         for samp in availableSamples[x] :
