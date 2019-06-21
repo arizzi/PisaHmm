@@ -4,9 +4,16 @@ import sys
 
 
 def addLheScale(flow):  
-
+    flow.Define("LHERenUp","LHEScaleWeightSafe[7]")
+    flow.Define("LHERenDown","LHEScaleWeightSafe[1]")
+    flow.Define("LHEFacUp","LHEScaleWeightSafe[5]")
+    flow.Define("LHEFacDown","LHEScaleWeightSafe[3]")
+    flow.VariationWeight("LHERenUp")
+    flow.VariationWeight("LHERenDown")
+    flow.VariationWeight("LHEFacUp")
+    flow.VariationWeight("LHEFacDown")
     #we really need only 0,1,3
-    flow.VariationWeightArray("LHEScaleWeightSafe",4,filt=lambda sname,hname,wname : "__syst__" not in hname and "__syst__" not in sname ) #systematic variations are 1D, let's avoid systematics of systematic
+    #flow.VariationWeightArray("LHEScaleWeightSafe",4,filt=lambda sname,hname,wname : "__syst__" not in hname and "__syst__" not in sname ) #systematic variations are 1D, let's avoid systematics of systematic
     #this is not obvious as N replicas can change... think about it
     #flow.AddVariationWeightArray("LHEPdfWeight",30,filt=lambda hname,wname : "__syst__" not in hname ) #systematic variations are 1D, let's avoid systematics of systematic
 

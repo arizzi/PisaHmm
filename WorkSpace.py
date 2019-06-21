@@ -117,7 +117,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
 
     listSig  = []
     listBkg  = []
-    #for s in  model.signal :        listSig = listSig + model.signal[s]
+    for s in  model.signal :        listSig = listSig + model.signal[s]
     for s in  model.background :    listBkg = listBkg + model.background[s]
     
     listAllSample = listSig + listBkg

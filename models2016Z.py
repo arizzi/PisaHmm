@@ -1,8 +1,9 @@
 from samples2016 import *
 name="Z"
 background={
-"DY":["DY105_2016AMCPY"],#["DY105_2016AMCPY"]
-"DYVBF":["DY105VBF_2016AMCPY"],
+"DY0J":["DY0J_2016AMCPY"],
+"DY1J":["DY1J_2016AMCPY"],
+"DY2J":["DY2J_2016AMCPY"],
 "EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
 "Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
 "Other":["W2J_2016AMCPY","W1J_2016AMCPY","W0J_2016AMCPY", 
@@ -17,7 +18,7 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+backgroundSorted=["Other","Top","DY0J","DY1J","DY2J","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
@@ -35,8 +36,9 @@ data={
 
 import ROOT
 fillcolor={
-"DY": ROOT.kOrange,
-"DYVBF": ROOT.kOrange-3,
+"DY0J": ROOT.kOrange+2,
+"DY1J": ROOT.kOrange+1,
+"DY2J": ROOT.kOrange,
 "EWKZ": ROOT.kViolet,
 "Top": ROOT.kGreen,
 "Other" : ROOT.kGreen+1,
@@ -47,7 +49,7 @@ fillcolor={
 "ttH":ROOT.kRed-4,
 }
 
-systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithOutJER","puWeightUp","puWeightDown"]
 
 linecolor=fillcolor
 markercolor=fillcolor
