@@ -30,12 +30,12 @@ def makeLegend (yDown, yUp, name = "") :
     
     
 
-def makeText (x, y, someText, font) :
+def makeText (x, y, someText, font, size = 0.05) :
     tex = ROOT.TLatex(x,y,someText);
     tex.SetNDC();
     tex.SetTextAlign(35);
     tex.SetTextFont(font);
-    tex.SetTextSize(0.05);
+    tex.SetTextSize(size);
     tex.SetLineWidth(2);
     return tex
 
@@ -335,7 +335,12 @@ def makeplot(hn,saveintegrals=True):
    t2.Draw()                                                             
    t3.Draw()                                     
    datastack[hn].GetHistogram().SetMarkerStyle(10)                       
-
+   #tchi2 = makeText(0.8,0.5,"AAA", 61)     
+   #tKS   = makeText(0.7,0.5,str(datasum[hn].KolmogorovTest(histosum[hn])), 61)    
+   #tchi2.Draw()
+   #tKS.Draw()
+   
+   
    canvas[hn].Update()
    ratio=datasum[hn].Clone()
    ratio.Add(histosum[hn],-1.) 
@@ -345,8 +350,6 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].cd(2)
    setStyle(ratio, isRatio=True)
 
-#   ratio.SetLabelSize(datastack[hn].GetHistogram().GetLabelSize()*3)
-#   ratio.GetYaxis().SetLabelSize(datastack[hn].GetHistogram().GetLabelSize()*3)
    ratio.Draw()
    ratioError = makeRatioMCplot(histosum[hn])  
    ratioError.Draw("same E2")                 
@@ -367,6 +370,11 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].cd()
    myLegend_sy.Draw()
     
+   tchi2 = makeText(0.22,0.22,"#chi^{2}="+str(round(datasum[hn].Chi2Test(histosum[hn],"UWCHI2/NDF"),2)), 42, 0.025)     
+   tKS   = makeText(0.32,0.22,"KS="+str(round(datasum[hn].KolmogorovTest(histosum[hn]),2)), 42, 0.025) 
+   tchi2.Draw()
+   tKS.Draw()
+
    canvas[hn].GetPad(2).SetGridy()
    canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
    #canvas[hn].SaveAs("%s.root"%hn)	   
