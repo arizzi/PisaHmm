@@ -12,6 +12,20 @@ def addLheScale(flow):
     flow.VariationWeight("LHERenDown")
     flow.VariationWeight("LHEFacUp")
     flow.VariationWeight("LHEFacDown")
+
+
+
+def addPSWeights(flow):
+     flow.Define("PSWeightToFix","PSWeight[0]!=1.0f && genWeight!=LHEWeight_originalXWGTUP ")
+     flow.Define("PSWeightISRDown","PSWeightToFix?PSWeight[0]:PSWeight[0]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightFSRDown","PSWeightToFix?PSWeight[1]:PSWeight[1]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightISRUp","PSWeightToFix?PSWeight[2]:PSWeight[2]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightFSRUp","PSWeightToFix?PSWeight[3]:PSWeight[3]*LHEWeight_originalXWGTUP")
+     flow.VariationWeight("PSWeightISRUp")
+     flow.VariationWeight("PSWeightISRDown")
+     flow.VariationWeight("PSWeightFSRUp")
+     flow.VariationWeight("PSWeightFSRDown")
+
     #we really need only 0,1,3
     #flow.VariationWeightArray("LHEScaleWeightSafe",4,filt=lambda sname,hname,wname : "__syst__" not in hname and "__syst__" not in sname ) #systematic variations are 1D, let's avoid systematics of systematic
     #this is not obvious as N replicas can change... think about it
@@ -41,7 +55,7 @@ def addCompleteJecs(flow):
         flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp") #name, target, replacement
         flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
         #flow.Systematic("noJER","Jet_pt_touse","Jet_pt") #name, target, replacement
-        flow.Systematic("JERMix","Jet_pt_touse","Jet_pt_mix") #name, target, replacement
+        flow.Systematic("WithOutJER","Jet_pt_touse","Jet_pt") #name, target, replacement
 
 
 def addPUvariation(flow):

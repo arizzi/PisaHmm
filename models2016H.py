@@ -48,7 +48,7 @@ fillcolor={
 "ttH":ROOT.kRed-4,
 }
 
-systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithOutJER","puWeightUp","puWeightDown"]
 
 linecolor=fillcolor
 markercolor=fillcolor

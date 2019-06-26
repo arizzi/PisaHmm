@@ -1,3 +1,4 @@
+from samplepostprocessing import *
 path2017 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/"
 
 
@@ -82,6 +83,7 @@ samples={
 "vbfHmm_2017POWPY"      : {"files":[path2017+"VBF_HToMuMu_nano2017.root"],"xsec":0.0008210722},
 "vbfHmm_2017AMCPY"      : {"files":[path2017+"VBF_HToMuMu_amc_nano2017.root"],"xsec":0.0008210722},
 "vbfHmm_2017AMCPY2"     : {"files":[path2017+"VBF_HToMuMu_PSweights_amc_nano2017.root"],"xsec":0.0008210722},
+#"vbfHmm_2017AMCPY2"     : {"files":[path2017+"VBF_HToMuMu_PSweights_amc_nano2017.root"],"xsec":0.0008210722,"postproc":psWeights},
 
 "zHmm_2017POWPY"        : {"files":[path2017+"ZH_HToMuMu_nano2017.root"],"xsec":0.0008210722},
 "ttHmm_2017POWPY"       : {"files":[path2017+"ttHToMuMu_nano2017.root"],"xsec":0.0008210722},

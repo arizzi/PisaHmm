@@ -51,7 +51,7 @@ fillcolor={
 #systematicsToPlot=["MuScaleUp"]
 #systematicsToPlot=["LHEScaleWeightSafe0","LHEScaleWeightSafe1","LHEScaleWeightSafe3","JERUp","JERDown","JESUp","JESDown"]+["MuScaleUp","MuScaleDown"]
 #ystematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
-systematicsToPlot=["JERMix","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithOutJER","puWeightUp","puWeightDown"]
 
 
 

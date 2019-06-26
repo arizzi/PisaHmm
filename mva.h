@@ -10,7 +10,7 @@ class MVAWrapper {
     MVAWrapper() {}
     void addReader(){
         TMVA::Reader * reader = new TMVA::Reader("Silent");
-        reader->AddVariable("ll_mass",&a);
+/*        reader->AddVariable("ll_mass",&a);
         reader->AddVariable("MqqLog",&a);
         reader->AddVariable("mumujj_pt",&a);
         reader->AddVariable("DeltaEtaQQ",&a);
@@ -21,7 +21,29 @@ class MVAWrapper {
         reader->AddVariable("theta2",&a);
         reader->AddVariable("impulsoZ",&a);
         reader->AddVariable("maxAbsEta",&a);
+*/
+//mll_MqqLog_Rpt_DEtajj_Zstar_softN5_minEtaHQ
 
+/*        reader->AddVariable("ll_mass",&a);
+        reader->AddVariable("MqqLog",&a);
+        reader->AddVariable("Rpt",&a);
+        reader->AddVariable("DeltaEtaQQ",&a);
+        reader->AddVariable("ll_star",&a);
+        reader->AddVariable("softActivityEWK_njets5",&a);
+        reader->AddVariable("min(EtaHQ1,EtaHQ2)",&a);
+        //reader->AddSpectator("weightEWK",&a);
+       // reader->AddSpectator("genweight",&a);
+        reader->BookMVA("BDTG", "BDT.xml");
+	readers.push_back(reader);*/
+        reader->AddVariable("ll_mass",&a);   
+        reader->AddVariable("MqqLog",&a);
+        reader->AddVariable("Rpt",&a);
+        reader->AddVariable("DeltaEtaQQ",&a);
+        reader->AddVariable("ll_zstar",&a);
+        reader->AddVariable("softActivityEWK_njets5",&a);   
+        reader->AddVariable("min(EtaHQ1,EtaHQ2)",&a);
+        reader->AddSpectator("weightEWK",&a);
+        reader->AddSpectator("genweight",&a);
         reader->BookMVA("BDTG", "BDT.xml");
 	readers.push_back(reader);
     }

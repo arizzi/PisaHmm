@@ -27,7 +27,7 @@ from histobinning import binningrules
 flow.binningRules = binningrules
 
 flowData=copy.deepcopy(flow)
-procData=flowData.CreateProcessor("eventProcessorData",snaplist,histosPerSelection,snap,"SignalRegion",nthreads)
+procData=flowData.CreateProcessor("eventProcessorData",[],histosPerSelection,snap,"SignalRegion",nthreads)
 
 #define some event weights
 from weights import *
@@ -36,6 +36,7 @@ addMuEffWeight(flow)
 
 from systematics import *
 addLheScale(flow)
+addPSWeights(flow)
 addBtag(flow)
 addMuScale(flow)
 addCompleteJecs(flow)
@@ -54,7 +55,7 @@ for sel in  histosWithSystematics:
 print >> sys.stderr, "Number of known columns", len(flow.validCols)
 
 #pproc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"SignalRegion",nthreads)
-proc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"",nthreads)
+proc=flow.CreateProcessor("eventProcessor",[],histosWithSystematics,snap,"",nthreads)
 
 
 
@@ -65,19 +66,28 @@ from samples2018 import samples as samples2018
 year=sys.argv[1]
 if year == "2016":
    samples=samples2016
+   trigger="HLT_IsoMu24 || HLT_IsoTkMu24"
 if year == "2017":
    samples=samples2017
+   trigger="HLT_IsoMu27"
 if year == "2018":
    samples=samples2018
+   trigger="HLT_IsoMu24"
  
 
 from samplepreprocessing import flow as preflow
-specificProcessors={}
+specificPreProcessors={}
+specificPostProcessors={}
 for s in samples :
    if "filter" in samples[s].keys():
-	print "Specific processor for" ,s
-	specificProcessors[s]=preflow.CreateProcessor(s+"Processor",[samples[s]["filter"]],{samples[s]["filter"]:[samples[s]["filter"]]},[],samples[s]["filter"],nthreads)
+	print "Specific pre processor for" ,s
+	specificPreProcessors[s]=preflow.CreateProcessor(s+"Processor",[samples[s]["filter"]],{samples[s]["filter"]:[samples[s]["filter"]]},[],samples[s]["filter"],nthreads)
+   if "postproc" in samples[s].keys():
+       print "Specific post processor for" ,s
+       flowSpec=copy.deepcopy(flow)
+       specificPostProcessors[s]=samples[s]["postproc"](flowSpec,proc.produces,histosWithSystematics,snaplist,snap,nthreads)
 
+	
 import psutil
 def f(ar):
 #f,s,i=ar
@@ -97,6 +107,7 @@ def f(ar):
      if rdf :
        try:
 	 rdf=rdf.Define("year",year)
+	 rdf=rdf.Define("TriggerSel",trigger)
 	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Define("isMC","false")
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
@@ -110,10 +121,16 @@ def f(ar):
                rdf=rdf.Define("btagWeight","btagWeight_DeepCSVB")
 
 	   rdf=rdf.Define("isMC","true")
+	   if "LHEWeight_originalXWGTUP" not in list(rdf.GetColumnNames()):
+	       rdf=rdf.Define("LHEWeight_originalXWGTUP","genWeight")
 	   if "LHEScaleWeight" not in list(rdf.GetColumnNames()):
 	       print "ADDING FAKE LHE",f
 	       rdf=rdf.Define("LHEScaleWeight","ROOT::VecOps::RVec<float>(9,1)")
 	       rdf=rdf.Define("nLHEScaleWeight","uint32_t(0)")
+	   if "PSWeight" not in list(rdf.GetColumnNames()):
+	       print "ADDING FAKE PS WEIGHT",f
+	       rdf=rdf.Define("PSWeight","ROOT::VecOps::RVec<float>(9,1)")
+	       rdf=rdf.Define("nPSWeight","uint32_t(1)")
 	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
 	       rdf=rdf.Define("LHE_NpNLO","-1")
 
@@ -125,13 +142,18 @@ def f(ar):
 	 
 	 if "filter" in samples[s] :
 	   print "Prefiltering",s
-           rdf=specificProcessors[s](rdf).rdf
+           rdf=specificPreProcessors[s](rdf).rdf
 	   rdf=rdf.Filter(samples[s]["filter"])
 
 	 if "lumi" in samples[s].keys() :
    	    ou=procData(rdf)
 	 else :
             ou=proc(rdf)
+	 ouspec=None
+         if s in specificPostProcessors.keys():
+	    print "adding postproc",s
+	    ouspec=specificPostProcessors[s](ou.rdf)
+	    print "added"
 #         snaplist=["QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
 
          #snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2"]
@@ -139,15 +161,23 @@ def f(ar):
 	 #map(lambda x : branchList.push_back(x), snaplist)
 #         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
-         print ou.histos.size()
+         print ou.histos.size()#,ouspec.histos.size()
          fff=ROOT.TFile.Open("out/%sHistos.root"%(s),"recreate")
          ROOT.gROOT.ProcessLine('''
      ROOT::EnableImplicitMT(%s);
      '''%nthreads)
+	 if ouspec is not None :
+	    print "Postproc hisots"
+            for h in ouspec.histos :
+                h.GetValue()
+                fff.cd()
+                h.Write()
          for h in ou.histos :
+#	    print "histo"
 	    h.GetValue()
 	    fff.cd()
  	    h.Write()
+	 
          fff.Write()
          fff.Close()
 	 return 0
