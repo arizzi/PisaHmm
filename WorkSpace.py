@@ -72,7 +72,8 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
             n+=1
     
     
-        
+    if len(position)==0 : return ""
+
     line += uncName + "\t\t"
     if len(uncName)<8 : line += "\t"
     line += uncType + "\t"

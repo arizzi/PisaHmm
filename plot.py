@@ -30,12 +30,12 @@ def makeLegend (yDown, yUp, name = "") :
     
     
 
-def makeText (x, y, someText, font) :
+def makeText (x, y, someText, font, size = 0.05) :
     tex = ROOT.TLatex(x,y,someText);
     tex.SetNDC();
     tex.SetTextAlign(35);
     tex.SetTextFont(font);
-    tex.SetTextSize(0.05);
+    tex.SetTextSize(size);
     tex.SetLineWidth(2);
     return tex
 
@@ -126,6 +126,14 @@ def totevents(s):
 
 
 
+def writeYields(ftxt, gr, integral, error, dataEvents) :
+    line = "%s\t%s +- %s\t%s "%(gr,round(integral[gr]["nom"],5), round(error[gr],5),round(integral[gr]["nom"]/dataEvents,5))
+    for sy in integral[gr].keys()  : 
+        if sy is not 'nom' : line+="\t%s "%(round(integral[gr][sy],5))
+    ftxt.write(line+"\n")
+
+
+
 f={}
 for group in model.signal :
     for s in model.signal[group] :
@@ -160,9 +168,36 @@ error={}
 ROOT.gStyle.SetOptStat(0)
 
 
+#def superImposedPlot (stackB, stackS, outpath)  :
+    #directory = outpath+"/superImposed"
+    #os.system("mkdir -p "+directory)
+    #canvas=ROOT.TCanvas("canvas_","",900,750) 
+    
+
+    #stackB.GetHists()[0].DrawNormalized()
+
+    #for hb in stackB.GetHists() :
+        #hb.DrawNormalized("same")
+    #for hs in stackS.GetHists() :
+        #hs.DrawNormalized("same")
+    
+    #canvas.Print(directory+"/a.png")
+    
+
+def addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) :
+    if sy not in stackSys[hn].keys() : stackSys[hn][sy]=hs.Clone()
+    else : stackSys[hn][sy].Add(hs)
+    
+    if sy not in integral[gr].keys() : integral[gr][sy]=hs.Integral(0,hs.GetNbinsX()+1)
+    else : integral[gr][sy]+=hs.Integral(0,hs.GetNbinsX()+1)
+    
+    if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
+    
+
 
 def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ftxt, lumi=0, data=False) :
-    integral[gr]=0
+    integral[gr]={}
+    integral[gr]["nom"]=0
     error[gr]=0
     for d in samplesToPlot[gr]: 
       if makeWorkspace : all_histo_all_syst[hn][d]={}
@@ -178,7 +213,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
             else : 
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
                 error_b = ROOT.Double(0)
-                integral[gr]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
+                integral[gr]["nom"]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
                 error[gr] = sqrt(error[gr]*error[gr] + error_b*error_b)
                 setHistoStyle (h, gr) 
             if hn not in SumTH1 :
@@ -191,14 +226,11 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if hs:
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
-                            stackSys[hn][sy]=hs.Clone()
-                            if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
+                            addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else : 
-                            stackSys[hn][sy]=h.Clone()
-                            if makeWorkspace : all_histo_all_syst[hn][d][sy]=h.Clone()
+                            addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
-                        stackSys[hn][sy]=h.Clone()
-                        if makeWorkspace : all_histo_all_syst[hn][d][sy]=h.Clone()
+                        addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
             else :
                 SumTH1[hn].Add(h)	
                 for sy in model.systematicsToPlot :
@@ -207,17 +239,19 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         if hn.split("___")[0] in model.rebin.keys() : 
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
-                        stackSys[hn][sy].Add(hs)
-                        if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
+                        addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
-                        stackSys[hn][sy].Add(h)
-                        if makeWorkspace : all_histo_all_syst[hn][d][sy]=h.Clone()
+                        addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
             stack[hn].Add(h)
             if makeWorkspace : all_histo_all_syst[hn][d]["nom"]=h.Clone()
         else:
             print "Cannot open",d,hn
             exit(1)
         if gr in model.signal or makeWorkspace : histosDataAndMC[hn][d] = h.Clone()
+    if not data : writeYields(ftxt, gr, integral, error, datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1))
+    #if not data : 
+        #ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr]["nom"], error[gr],integral[gr]["nom"]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
+        #for sy in integral[gr].keys() : ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr]["nom"], error[gr],integral[gr]["nom"]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
     if (data) : myLegend.AddEntry(h,"data","P")
     else : myLegend.AddEntry(h,gr,"f")
 
@@ -235,8 +269,8 @@ def makeplot(hn,saveintegrals=True):
    os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
    os.system("git diff HEAD > "+outpath+"/git_diff.txt")
    os.system("git status HEAD > "+outpath+"/git_status.txt")
-   if saveintegrals:
-     ftxt=open(outpath+"/%s.txt"%(hn),"w")
+   #if saveintegrals:
+   ftxt=open(outpath+"/%s.txt"%(hn),"w")
    #print "Making histo",hn
    histos[hn]=ROOT.THStack(hn,"") 
    histosSig[hn]=ROOT.THStack(hn,"") 
@@ -263,19 +297,24 @@ def makeplot(hn,saveintegrals=True):
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
 
-   if saveintegrals:
-     ftxt.write("DATA \t%s \n"%(datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
+   DataYieldLine = "sample \t yield  \t\tfraction"
+   for sy in model.systematicsToPlot : 
+       DataYieldLine = DataYieldLine + "\t" + sy + "\t"
+   ftxt.write(DataYieldLine+"\n")
+   #if saveintegrals:
+   ftxt.write("DATA \t%s \n"%(datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
 
    
    for gr in model.backgroundSorted:
      fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
-     if saveintegrals:
-       ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr], error[gr],integral[gr]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
+
 
    
    for gr in model.signal:
-     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
-   
+     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot)
+
+     
+   #superImposedPlot (histos[hn], histosSig[hn], outpath) 
    if makeWorkspace : return 
    
    
@@ -336,6 +375,8 @@ def makeplot(hn,saveintegrals=True):
    t3.Draw()                                     
    datastack[hn].GetHistogram().SetMarkerStyle(10)                       
 
+   
+   
    canvas[hn].Update()
    ratio=datasum[hn].Clone()
    ratio.Add(histosum[hn],-1.) 
@@ -345,8 +386,6 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].cd(2)
    setStyle(ratio, isRatio=True)
 
-#   ratio.SetLabelSize(datastack[hn].GetHistogram().GetLabelSize()*3)
-#   ratio.GetYaxis().SetLabelSize(datastack[hn].GetHistogram().GetLabelSize()*3)
    ratio.Draw()
    ratioError = makeRatioMCplot(histosum[hn])  
    ratioError.Draw("same E2")                 
@@ -367,6 +406,11 @@ def makeplot(hn,saveintegrals=True):
    canvas[hn].cd()
    myLegend_sy.Draw()
     
+   tchi2 = makeText(0.22,0.22,"#chi^{2}="+str(round(datasum[hn].Chi2Test(histosum[hn],"UWCHI2/NDF"),2)), 42, 0.025)     
+   tKS   = makeText(0.32,0.22,"KS="+str(round(datasum[hn].KolmogorovTest(histosum[hn]),2)), 42, 0.025) 
+   tchi2.Draw()
+   tKS.Draw()
+
    canvas[hn].GetPad(2).SetGridy()
    canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
    #canvas[hn].SaveAs("%s.root"%hn)	   
