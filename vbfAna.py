@@ -103,12 +103,14 @@ def f(ar):
      map(lambda x : vf.push_back(x), f)
      for x in vf:
 	print x
+     import jsonreader 
      rdf=ROOT.RDataFrame("Events",vf)
      if rdf :
        try:
 	 rdf=rdf.Define("year",year)
 	 rdf=rdf.Define("TriggerSel",trigger)
 	 if "lumi" in samples[s].keys()  :
+	   rdf=rdf.Filter("passJson(run,luminosityBlock)","jsonFilter")
 	   rdf=rdf.Define("isMC","false")
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
