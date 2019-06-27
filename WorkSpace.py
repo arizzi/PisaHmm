@@ -15,15 +15,16 @@ def writeSystematic (syst, systematicDetail, all_histo_all_syst, availableSample
     else :
         for g in  systematicDetail[syst]["decorrelate"] :
             sampleWithSystematic = [s.split("_")[0] for s in systematicDetail[syst]["decorrelate"][g]]
+            systName = syst+(g if len(systematicDetail[syst]["decorrelate"].keys())>1 else "")
             if "samplevalue" in systematicDetail[syst].keys() : 
-                datacard.write( writeLine(syst, systematicDetail[syst]["type"],   systematicDetail[syst]["samplevalue"],  availableSamples, sampleWithSystematic))
+                datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["samplevalue"],  availableSamples, sampleWithSystematic))
                 
                 
             elif "groupvalue" in systematicDetail[syst].keys() : 
-                datacard.write( writeLine(syst, systematicDetail[syst]["type"],   systematicDetail[syst]["groupvalue"][g],  availableSamples, sampleWithSystematic))
+                datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["groupvalue"][g],  availableSamples, sampleWithSystematic))
             
             else :
-                datacard.write( writeLine(syst, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, sampleWithSystematic))
+                datacard.write( writeLine(systName, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, sampleWithSystematic))
             
             
             
