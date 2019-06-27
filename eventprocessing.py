@@ -17,7 +17,7 @@ flow.AddExpectedInput("TriggerSel","bool")
 
 flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
 flow.Define("PSWeightSafe","nPSWeight>=4?PSWeight:std::vector<float>(4,1)")
-flow.Define("Jet_pt_touse","Jet_pt_nom")
+flow.Define("Jet_pt_touse","Jet_pt")
 flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 
 #Higgs to mumu reconstruction
@@ -124,6 +124,9 @@ flow.Define("theta2","Higgs.Vect().Dot(QJet1_p4.Vect())/QJet1_p4.Vect().R()/Higg
 flow.ObjectAt("LeadMuon","SelectedMuon","0",requires=["twoMuons"])
 flow.ObjectAt("SubMuon","SelectedMuon","1",requires=["twoMuons"])
 flow.Define("Higgs_pt","Higgs.Pt()")
+flow.Define("pTbalanceLead","QJet0_pt/Higgs_pt")
+flow.Define("pTbalance","qq.Pt()/Higgs_pt")
+flow.Define("pTbalanceAll","SumDef(SelectedJet_p4).pt()/Higgs_pt")
 flow.Define("Higgs_m","Higgs.M()")
 flow.Define("Higgs_m_uncalib","HiggsUncalib.M()")
 flow.Define("Mqq_log","log(Mqq)")
@@ -145,7 +148,7 @@ flow.Selection("PreSel","VBFRegion && twoOppositeSignMuons && Max(SelectedJet_bt
 flow.Selection("SideBand","Higgs_m < 150 && Higgs_m > 110 && ! MassWindow && VBFRegion &&  qqDeltaEta > 2.5",requires=["VBFRegion","PreSel"])
 flow.Selection("SignalRegion","VBFRegion && MassWindow &&  qqDeltaEta > 2.5", requires=["VBFRegion","MassWindow","PreSel"])
 flow.Selection("ZRegion","VBFRegion && MassWindowZ  && qqDeltaEta > 2.5", requires=["VBFRegion","MassWindowZ","PreSel"])
-flow.Selection("ZRegionNadya","VBFRegion && MassWindowZ && QJet0_pt_touse> 50 && QJet1_pt_touse > 30 ", requires=["VBFRegion","MassWindowZ","PreSel"])
+flow.Selection("ZRegionSMP","VBFRegion && MassWindowZ && QJet0_pt_touse> 50 && QJet1_pt_touse > 30 ", requires=["VBFRegion","MassWindowZ","PreSel"])
 flow.Selection("TwoJetsTwoMu","twoJets && twoOppositeSignMuons", requires=["twoJets","twoOppositeSignMuons"])
 
 #with bug
@@ -167,7 +170,8 @@ flow.Selection("BDTNoMN1p0","BDTAtanNoMassNoNSJ>1.0")
 flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
 
 flow.AddCppCode('\n#include "eval_lwtnn.h"\n')
-flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
+#flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
+flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")
 flow.Define("DNNAtan","atanh(DNNClassifier)")
 
 #unused MC stuff

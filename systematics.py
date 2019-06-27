@@ -49,13 +49,30 @@ def addMuScale(flow):
     flow.Systematic("MuScaleUp","Muon_corrected_pt","Muon_correctedUp_pt") #name, target, replacement
 
 def addCompleteJecs(flow):
-        flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown") #name, target, replacement
-        flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp") #name, target, replacement
-        flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
-        flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp") #name, target, replacement
-        flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
-        #flow.Systematic("noJER","Jet_pt_touse","Jet_pt") #name, target, replacement
-        flow.Systematic("WithOutJER","Jet_pt_touse","Jet_pt") #name, target, replacement
+      # flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown") #name, target, replacement
+      # flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp") #name, target, replacement
+      # flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
+      # flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp") #name, target, replacement
+      # flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
+      # #flow.Systematic("noJER","Jet_pt_touse","Jet_pt") #name, target, replacement
+      # flow.Systematic("WithOutJER","Jet_pt_touse","Jet_pt") #name, target, replacement
+       flow.Define("Jet_genPt","TakeDef(GenJet_pt,Jet_genJetIdx,Jet_pt)") 
+       flow.Define("Jet_jerSF","(Jet_pt_nom-Jet_genPt)/(Jet_pt-Jet_genPt+(Jet_pt==Jet_genPt)*(Jet_pt_nom-Jet_pt))") 
+       flow.Define("Jet_jerDownSF","(Jet_pt_jerDown-Jet_genPt)/(Jet_pt-Jet_genPt+(Jet_pt==Jet_genPt)*10.f)") 
+       flow.Define("Jet_jerUpSF","(Jet_pt_jerUp-Jet_genPt)/(Jet_pt-Jet_genPt+(Jet_pt==Jet_genPt)*10.f)") 
+       flow.Define("Jet_pt_jerDown_touse","Jet_genPt+(Jet_pt_touse-Jet_genPt)*(Jet_jerDownSF/Jet_jerSF)") 
+       flow.Define("Jet_pt_jerUp_touse","Jet_genPt+(Jet_pt_touse-Jet_genPt)*(Jet_jerUpSF/Jet_jerSF)+(Jet_genPt==Jet_pt)*Map(Jet_pt, [](float sigma) {return float(gRandom->Gaus(0,0.15*sigma));} )") 
+       flow.Define("Jet_pt_jesTotalDown_touse","Jet_pt_touse*Jet_pt_jesTotalDown/Jet_pt_nom") 
+       flow.Define("Jet_pt_jesTotalUp_touse","Jet_pt_touse*Jet_pt_jesTotalUp/Jet_pt_nom") 
+#       flow.Define("Jet_pt_jerDown_touseLimited","((Jet_pt_jerDown_touse/Jet_pt_touse)>0.8&& (Jet_pt_jerDown_touse/Jet_pt_touse)<1.2)?Jet_pt_jerDown_touse:Jet_pt_touse"	
+#       flow.Define("Jet_pt_jerDown_touseLimited","((Jet_pt_jerDown_touse/Jet_pt_touse)>0.8&& (Jet_pt_jerDown_touse/Jet_pt_touse)<1.2)?Jet_pt_jerDown_touse:Jet_pt_touse"	
+
+       flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown_touse") #name, target, replacement 
+#      flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp_touse") #name, target, replacement 
+       flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
+       flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown_touse") #name, target, replacement 
+       flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp_touse") #name, target, replacement 
+       #flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
 
 
 def addPUvariation(flow):
