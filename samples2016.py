@@ -69,20 +69,30 @@ samples={
 #"WZ_2017AMCPY": {"files":[path2016+"WZ_nano2016.root"],"xsec":47.13}, 
 #"WW_2017AMCPY": {"files":[path2016+"WW_nano2016.root"],"xsec":118.7}, 
 
-"ggHmm_2016AMCPY"       : {"files":[path2016+"GluGlu_HToMuMu_amc_nano2016.root"],"xsec":0.009582794}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
-"ggHmm_2016POWPY"       : {"files":[path2016+"GluGlu_HToMuMu_nano2016.root"],"xsec":0.009582794},
 
-"vbfHmm_2016POWPY"      : {"files":[path2016+"VBF_HToMuMu_nano2016.root"],"xsec":0.0008210722},
-"vbfHmm_2016POWHERWIG"  : {"files":[path2016+"VBF_HToMuMu_herwigpp_nano2016.root"],"xsec":0.0008210722},
-"vbfHmm_2016AMCPY"      : {"files":[path2016+"VBF_HToMuMu_amc_nano2016.root"],"xsec":0.0008210722},
-"vbfHmm_2016AMCHERWIG"  : {"files":[path2016+"VBF_HToMuMu_amc_herwigpp_nano2016.root"],"xsec":0.0008210722},
 
-"zHmm_2016POWPY"        : {"files":[path2016+"ZH_HToMuMu_nano2016.root"],"xsec":0.0008210722},
-"ttHmm_2016POWPY"       : {"files":[path2016+"ttHToMuMu_nano2016.root"],"xsec":0.0008210722},
-"WplusHmm_2016POWPY"    : {"files":[path2016+"WplusH_HToMuMu_nano2016.root"],"xsec":0.0008210722},
-"WminusHmm_2016POWPY"   : {"files":[path2016+"WminusH_HToMuMu_nano2016.root"],"xsec":0.0008210722},
+"ggHmm_2016AMCPY"       : {"files":[path2016+"GluGlu_HToMuMu_amc_nano2016.root"],"xsec":0.010571}, 
+"ggHmm_2016POWPY"       : {"files":[path2016+"GluGlu_HToMuMu_nano2016.root"],"xsec":0.010571},
+
+"vbfHmm_2016POWPY"      : {"files":[path2016+"VBF_HToMuMu_nano2016.root"],"xsec":0.0008229632},
+"vbfHmm_2016POWHERWIG"  : {"files":[path2016+"VBF_HToMuMu_herwigpp_nano2016.root"],"xsec":0.0008229632},
+"vbfHmm_2016AMCPY"      : {"files":[path2016+"VBF_HToMuMu_amc_nano2016.root"],"xsec":0.0008229632},
+"vbfHmm_2016AMCHERWIG"  : {"files":[path2016+"VBF_HToMuMu_amc_herwigpp_nano2016.root"],"xsec":0.0008229632},
+
+"zHmm_2016POWPY"        : {"files":[path2016+"ZH_HToMuMu_nano2016.root"],"xsec":0.00019201024},
+"ttHmm_2016POWPY"       : {"files":[path2016+"ttHToMuMu_nano2016.root"],"xsec":0.00011034496},
+"WplusHmm_2016POWPY"    : {"files":[path2016+"WplusH_HToMuMu_nano2016.root"],"xsec":0.000182784},
+"WminusHmm_2016POWPY"   : {"files":[path2016+"WminusH_HToMuMu_nano2016.root"],"xsec":0.00011593728},
 
 
 }
 
- 
+#-----Hmumu xSec------
+#ggH: 48.58 * 2.176 / 10000.  = 0.010571
+#VBF: 3.782 * 2.176 / 10000.  = 0.0008229632
+#W+H: 0.840 * 2.176 / 10000.  = 0.000182784
+#W-H: 0.5328 * 2.176 / 10000. = 0.00011593728
+#ZH : 0.8824 * 2.176 / 10000. = 0.00019201024
+#ttH: 0.5071 * 2.176 / 10000. = 0.00011034496
+
+
