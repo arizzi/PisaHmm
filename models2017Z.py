@@ -44,7 +44,8 @@ fillcolor={
 "gg H":ROOT.kRed+4,
 }
 
-systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","JERUp","JERDown","JESUp","JESDown","WithOutJER","puWeightUp","puWeightDown"]
+#systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 
 linecolor=fillcolor
 markercolor=fillcolor
