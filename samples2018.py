@@ -72,32 +72,35 @@ samples={
 #"WW_2018AMCPY": {"files":[path2018+"WW_nano2018.root"],"xsec":118.7}, 
 
 
-"ggHmm_2018AMCPY"       : {"files":[path2018+"GluGlu_HToMuMu_amc_nano2018.root"],"xsec":0.010571},
-"ggHmm_2018POWPY"       : {"files":[path2018+"GluGlu_HToMuMu_nano2018.root"],"xsec":0.010571},
 
-"vbfHmm_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008229632},
-#"vbfHmm_PSw_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008229632}, # it exists but it has not been hadded
-"vbfHmm_2018AMCPY"      : {"files":[path2018+"VBF_HToMuMu_amc_nano2018.root"],"xsec":0.0008229632},
+"ggHmm_2018AMCPY"       : {"files":[path2018+"GluGlu_HToMuMu_amc_nano2018.root"],"xsec":0.009582794}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
+"ggHmm_2018POWPY"       : {"files":[path2018+"GluGlu_HToMuMu_nano2018.root"],"xsec":0.009582794},
+
+"vbfHmm_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008210722},
+#"vbfHmm_PSw_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008210722}, # it exists but it has not been hadded
+"vbfHmm_2018AMCPY"      : {"files":[path2018+"VBF_HToMuMu_amc_nano2018.root"],"xsec":0.0008210722},
 
 
 "zHmm_2018POWPY"        : {"files":[path2018+"ZH_HToMuMu_nano2018.root"],"xsec":0.00019201024},
 "ttHmm_2018POWPY"       : {"files":[path2018+"ttHToMuMu_nano2018.root"],"xsec":0.00011034496},
 "WplusHmm_2018POWPY"    : {"files":[path2018+"WplusH_HToMuMu_nano2018.root"],"xsec":0.000182784},
 "WminusHmm_2018POWPY"   : {"files":[path2018+"WminusH_HToMuMu_nano2018.root"],"xsec":0.00011593728},
+#"vbfHtautau_2018POWPY"  : {"files":[path2018+"VBFHToTauTau_nano2018"],"xsec":0.23720704},
+
 
 
 }
 
 
 
-#-----Hmumu xSec------
+#----- Hmumu xSec 125.00 ------
 #ggH: 48.58 * 2.176 / 10000.  = 0.010571
 #VBF: 3.782 * 2.176 / 10000.  = 0.0008229632
 #W+H: 0.840 * 2.176 / 10000.  = 0.000182784
 #W-H: 0.5328 * 2.176 / 10000. = 0.00011593728
 #ZH : 0.8824 * 2.176 / 10000. = 0.00019201024
 #ttH: 0.5071 * 2.176 / 10000. = 0.00011034496
-
+#VBFHtautau: 3.782 * 6.272 / 100.  = 0.23720704
 
 
 
