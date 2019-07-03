@@ -14,6 +14,7 @@ flow.AddExpectedInput("Muon_sf","ROOT::VecOps::RVec<float>")
 flow.AddExpectedInput("btagWeight","float")
 flow.AddExpectedInput("EWKreweight","float")
 flow.AddExpectedInput("TriggerSel","bool")
+flow.AddExpectedInput("lhefactor","float")
 
 flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
 flow.Define("PSWeightSafe","nPSWeight>=4?PSWeight:std::vector<float>(4,1)")

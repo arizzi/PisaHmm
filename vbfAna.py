@@ -115,6 +115,10 @@ def f(ar):
 	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
 	 else :
+	   if  s in  ["DY0J_2018AMCPY","DY0J_2017AMCPY","DY1J_2017AMCPY","DY1J_2018AMCPY"] :
+	       rdf=rdf.Define("lhefactor","2.f") 
+	   else:
+	       rdf=rdf.Define("lhefactor","1.f") 
            if year == "2016":
                rdf=rdf.Define("Muon_sf","(20.1f/36.4f*Muon_ISO_SF + 16.3f/36.4f*Muon_ISO_eraGH_SF)*(20.1f/36.4f*Muon_ID_SF + 16.3f/36.4f*Muon_ID_eraGH_SF)*(20.1f/36.4f*Muon_Trigger_SF + 16.3f/36.4f*Muon_Trigger_eraGH_SF)")
                rdf=rdf.Define("btagWeight","btagWeight_CMVA")
@@ -156,13 +160,13 @@ def f(ar):
 	    print "adding postproc",s
 	    ouspec=specificPostProcessors[s](ou.rdf)
 	    print "added"
-         snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_jerSF","Jet_jerDownSF","Jet_jerUpSF","Jet_pt_jerDown_touse","Jet_pt_jerUp_touse","Jet_pt_jesTotalDown_touse","Jet_pt_jesTotalUp_touse","Jet_genPt"]
+         snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_genPt","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 #"QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
 
          #snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2"]
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
-         if False and "lumi" not in samples[s].keys()  :
+         if "lumi" not in samples[s].keys()  :
            ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
          print ou.histos.size()#,ouspec.histos.size()

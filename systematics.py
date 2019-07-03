@@ -4,10 +4,10 @@ import sys
 
 
 def addLheScale(flow):  
-    flow.Define("LHERenUp","LHEScaleWeightSafe[7]")
-    flow.Define("LHERenDown","LHEScaleWeightSafe[1]")
-    flow.Define("LHEFacUp","LHEScaleWeightSafe[5]")
-    flow.Define("LHEFacDown","LHEScaleWeightSafe[3]")
+    flow.Define("LHERenUp","LHEScaleWeightSafe[6+int(nLHEScaleWeight>8)]*lhefactor")
+    flow.Define("LHERenDown","LHEScaleWeightSafe[1]*lhefactor")
+    flow.Define("LHEFacUp","LHEScaleWeightSafe[4+int(nLHEScaleWeight>8)]*lhefactor")
+    flow.Define("LHEFacDown","LHEScaleWeightSafe[3]*lhefactor")
     flow.VariationWeight("LHERenUp")
     flow.VariationWeight("LHERenDown")
     flow.VariationWeight("LHEFacUp")
