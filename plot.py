@@ -318,7 +318,8 @@ def makeplot(hn,saveintegrals=True):
    if makeWorkspace : return 
    
    
-   histosum[hn].Add(histoSigsum[hn])
+   #histosumNoSig[hn]= histosum[hn].Clone()
+  # histosum[hn].Add(histoSigsum[hn])
    
 
    
@@ -413,9 +414,10 @@ def makeplot(hn,saveintegrals=True):
 
    canvas[hn].GetPad(2).SetGridy()
    canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
-   #canvas[hn].SaveAs("%s.root"%hn)	   
+   canvas[hn].SaveAs(outpath+"/%s.root"%hn)	   
    canvas[hn].GetPad(1).SetLogy(True)
    canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)	   
+   canvas[hn].SaveAs(outpath+"/%s_log.root"%hn)	   
 
 
 

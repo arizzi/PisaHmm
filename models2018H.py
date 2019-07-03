@@ -6,6 +6,7 @@ background={
 "DYVBF":[ "DY105VBF_2018AMCPY"],
 #"DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"],
 "EWKZ":["EWKZ_2018MGPY","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
+#"EWKZ":["EWKZint_2018MGPY","EWKZ105_2018MGHERWIG"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
 "Top":["STs_2018AMCPY","STwtbar_2018POWPY","STwt_2018POWPY","STtbar_2018POWPY","STt_2018POWPY","TTlep_2018POWPY","TTsemi_2018POWPY","TThad_2018POWPY"],
 "Other":["W2J_2018AMCPY","W0J_2018AMCPY",     # ,"W1J_2018AMCPY"   to be added when ready
          "WWdps_2018MGPY","WWJJlnln_2018MGPY","WLLJJln_2018MG_MADSPIN_PY",

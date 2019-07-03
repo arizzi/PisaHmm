@@ -121,11 +121,13 @@ def f(ar):
 	       rdf=rdf.Define("lhefactor","1.f") 
            if year == "2016":
                rdf=rdf.Define("Muon_sf","(20.1f/36.4f*Muon_ISO_SF + 16.3f/36.4f*Muon_ISO_eraGH_SF)*(20.1f/36.4f*Muon_ID_SF + 16.3f/36.4f*Muon_ID_eraGH_SF)*(20.1f/36.4f*Muon_Trigger_SF + 16.3f/36.4f*Muon_Trigger_eraGH_SF)")
-               rdf=rdf.Define("btagWeight","btagWeight_CMVA")
            else :
                rdf=rdf.Define("Muon_sf","Muon_ISO_SF*Muon_ID_SF*Muon_Trigger_SF")
+	   if "btagWeight_DeepCSVB" in  list(rdf.GetColumnNames()) :
                rdf=rdf.Define("btagWeight","btagWeight_DeepCSVB")
-
+	   else :
+               rdf=rdf.Define("btagWeight","btagWeight_CMVA")
+	
 	   rdf=rdf.Define("isMC","true")
 	   if "LHEWeight_originalXWGTUP" not in list(rdf.GetColumnNames()):
 	       rdf=rdf.Define("LHEWeight_originalXWGTUP","genWeight")

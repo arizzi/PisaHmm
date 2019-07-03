@@ -16,6 +16,7 @@ samples={
 
 #"EWKZ_2018MGHERWIG" : {"files":[path2018+"EWK_LLJJ_herwig_nano2018.root"],"xsec":1.664},   # DY1J 2018 NANOAOD does not exist yet 
 "EWKZ_2018MGPY"     : {"files":[path2018+"EWK_LLJJ_pythia8_nano2018.root"],"xsec":1.664},
+"EWKZ105_2018MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
 "EWKZint_2018MGPY"  : {"files":[path2018+"EWK_LLJJ_INT_nano2018.root"],"xsec":0.128},
 
 "STs_2018AMCPY"             : {"files":[path2018+"ST_s_nano2018.root"],"xsec":3.36},
