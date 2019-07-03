@@ -12,6 +12,7 @@ from array import array
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
 import WorkSpace
+import postfitPlot
 
 ROOT.gROOT.SetBatch(True)
 
@@ -132,6 +133,78 @@ def writeYields(ftxt, gr, integral, error, dataEvents) :
         if sy is not 'nom' : line+="\t%s "%(round(integral[gr][sy],5))
     ftxt.write(line+"\n")
 
+def setName (d, sv) :
+    if "decorrelate" not in model.systematicDetail[sv].keys() : return sv
+    else :
+        for g in model.systematicDetail[sv]["decorrelate"].keys() :
+            for x in model.systematicDetail[sv]["decorrelate"][g] :
+                if d.startswith(x) : return sv+g
+    return  "notSysToApply" #this means that the systematic sv does not affect the sample d.    e.g. d=DY  sv= VVxsec
+    
+    
+    
+def computeSingleSystVariation(d, hn, sv, syVar="nom") :
+    x = postFit.postfitValue(sv, syVar)
+    histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["sum"].Clone()
+    histoSingleSyst[hn][d][sv]["variation"].Scale(postFit.smoothStepFunc(x))
+    histoSingleSyst[hn][d][sv]["variation"].Add(histoSingleSyst[hn][d][sv]["diff"])
+    histoSingleSyst[hn][d][sv]["variation"].Scale(0.5 * x)
+    return histoSingleSyst[hn][d][sv]["variation"]
+
+def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
+    for sv in model.systematicDetail.keys() :
+        svName = setName(d, sv)
+        if svName == "notSysToApply" : continue
+        hsUp=h.Clone()
+        hsDown=h.Clone()
+        if model.systematicDetail[sv]["type"]=="lnN" :
+            hsUp.Scale(model.systematicDetail[sv]["value"])
+            hsDown.Scale(1./model.systematicDetail[sv]["value"])
+        if model.systematicDetail[sv]["type"]=="shape" :
+            if all(x in model.systematicsToPlot for x in [sv+"Up", sv+"Down"]): 
+                hsUp=f[d].Get(findSyst(hn,sv+"Up",f[d]))
+                hsDown=f[d].Get(findSyst(hn,sv+"Down",f[d]))
+                if hsUp and hsDown :
+                    if hn.split("___")[0] in model.rebin.keys() : 
+                        hsUp = (hsUp.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sv,array('d',model.rebin[hn.split("___")[0]]))).Clone(hsUp.GetName())
+                        hsDown = (hsDown.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sv,array('d',model.rebin[hn.split("___")[0]]))).Clone(hsDown.GetName())
+            
+        histoSingleSyst[hn][d][svName] = {}
+        histoSingleSyst[hn][d][svName]["Up"] = hsUp.Clone()
+        histoSingleSyst[hn][d][svName]["Down"] = hsDown.Clone()
+        
+    for sv in histoSingleSyst[hn][d].keys() :
+        hDiff = histoSingleSyst[hn][d][sv]["Up"].Clone()
+        hSum  = histoSingleSyst[hn][d][sv]["Up"].Clone()
+        hDiff.Add(histoSingleSyst[hn][d][sv]["Down"], -1)
+        hSum.Add(histoSingleSyst[hn][d][sv]["Down"])
+        if "diff" not in histoSingleSyst[hn][d].keys() :  
+            histoSingleSyst[hn][d][sv]["diff"] =  hDiff.Clone()
+            histoSingleSyst[hn][d][sv]["sum"]  =  hSum.Clone()
+        else :
+            histoSingleSyst[hn][d][sv]["diff"].Add(hDiff)
+            histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
+        histoSingleSyst[hn][d][sv]["sum"].Add(h, -2)
+        
+
+        if "variation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
+        else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv))
+    #print "systematics ----   ", d, histoSingleSyst[hn][d].keys()
+
+
+def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
+        
+    if len(histoSingleSyst[hn][d].keys()) == 0 : computeSingleSyst(model, f, d, hn, h, histoSingleSyst)
+
+    if sy.endswith("Up") or sy.endswith("Down") :
+        hv = histoSingleSyst[hn][d]["nominalVariation"].Clone()
+        hv.Add(histoSingleSyst[hn][d][sy[:-2] if sy.endswith("Up") else sy[:-4]]["variation"], -1.)
+        hv.Add(computeSingleSystVariation(d, hn, sy[:-2] if sy.endswith("Up") else sy[:-4], "Up" if sy.endswith("Up") else "Down"))
+        return hv
+    else : return  histoSingleSyst[hn][d]["nominalVariation"]
+
+
+
 
 
 f={}
@@ -163,9 +236,14 @@ all_histo_all_syst={}
 
 integral={}
 error={}
-     
+
+histoSingleSyst={}
+
 #i=1
 ROOT.gStyle.SetOptStat(0)
+
+
+postFit = postfitPlot.PostFit()
 
 
 #def superImposedPlot (stackB, stackS, outpath)  :
@@ -205,12 +283,14 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
       lumi_over_nevents = lumi/nevents
       if f[d] :
         h=f[d].Get(hn)
+        histoSingleSyst[hn][d] = {}
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 
                 #print "Rebin",hn
                 h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
             if data : h.SetMarkerStyle(10)
             else : 
+                if postfit : h.Add(fitVariation(model, f, d, hn, h, histoSingleSyst))
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
                 error_b = ROOT.Double(0)
                 integral[gr]["nom"]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
@@ -225,6 +305,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         if hn.split("___")[0] in model.rebin.keys() : 
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if hs:
+                            if postfit : hs.Add(fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else : 
@@ -238,6 +319,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                     if hs:
                         if hn.split("___")[0] in model.rebin.keys() : 
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
+                        if postfit : hs.Add(fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                         if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
@@ -293,6 +375,7 @@ def makeplot(hn,saveintegrals=True):
      for d in model.data[gr]:
        lumitot+=samples[d]["lumi"]
    
+   histoSingleSyst[hn] = {}
    histosDataAndMC[hn]={} 
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
@@ -419,10 +502,15 @@ def makeplot(hn,saveintegrals=True):
 
 
 
-
+variablesToFit = []
 makeWorkspace = False
-if len(sys.argv) > 2 : makeWorkspace = True
-variablesToFit = sys.argv[2:]
+postfit = False
+if len(sys.argv) > 2 : 
+    if sys.argv[2] == "postfit" :
+        postfit = True
+    else :
+        makeWorkspace = True
+        variablesToFit = sys.argv[2:]
 if makeWorkspace : print "variablesToFit ", variablesToFit
 
 
@@ -441,14 +529,11 @@ if makeWorkspace:
     for hn in variablesToFit[1:] :  makeplot(hn,True)
     WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
 else :
- if True :
    from multiprocessing import Pool
    runpool = Pool(20)
    #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
    runpool.map(makeplot, his[1:])
- else :
-   for x in his[1:] :
-     makeplot(x)
+
 
 tot=0
 for s in totevCount:
