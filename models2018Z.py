@@ -43,7 +43,7 @@ fillcolor={
 }
 
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
-systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"] #,"LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 
 from rebinning import *
 #possibly change the rebinning here

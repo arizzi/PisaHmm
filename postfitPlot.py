@@ -8,7 +8,7 @@ class PostFit :
     def __init__(self):
         self.smoothRegion = 1
         self.postFitParam =  {}
-        json_file = open('/scratch/mandorli/Hmumu/restartFromAndrea4/nail/PisaHmm/impacts.json')
+        json_file = open('workspace/impacts.json')
         self.outputFit = json.load(json_file)
         for sy in self.outputFit["params"] :
             if not sy["name"].startswith("prop") :
