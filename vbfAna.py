@@ -1,6 +1,6 @@
 from nail.nail import *
 import ROOT
-nthreads=60
+nthreads=20
 import sys
 import copy
 ROOT.gROOT.ProcessLine(".x softactivity.h")
@@ -156,12 +156,14 @@ def f(ar):
 	    print "adding postproc",s
 	    ouspec=specificPostProcessors[s](ou.rdf)
 	    print "added"
-#         snaplist=["QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
+         snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_jerSF","Jet_jerDownSF","Jet_jerUpSF","Jet_pt_jerDown_touse","Jet_pt_jerUp_touse","Jet_pt_jesTotalDown_touse","Jet_pt_jesTotalUp_touse","Jet_genPt"]
+#"QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
 
          #snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2"]
-         #branchList = ROOT.vector('string')()
-	 #map(lambda x : branchList.push_back(x), snaplist)
-#         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+         branchList = ROOT.vector('string')()
+	 map(lambda x : branchList.push_back(x), snaplist)
+         if False and "lumi" not in samples[s].keys()  :
+           ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
          print ou.histos.size()#,ouspec.histos.size()
          fff=ROOT.TFile.Open("out/%sHistos.root"%(s),"recreate")

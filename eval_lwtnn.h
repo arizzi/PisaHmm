@@ -18,7 +18,7 @@ class LwtnnWrapper{
         LwtnnWrapper()
         {
 //             std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/final_file_lwtnn2.json");
-            std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/final_file_newIN.json");
+            std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json");
             graph_ = new lwt::LightweightGraph(lwt::parse_json_graph(input));
         }
         

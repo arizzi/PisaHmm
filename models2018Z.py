@@ -42,7 +42,8 @@ fillcolor={
 "gg H":ROOT.kRed+4,
 }
 
-systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithOutJER","puWeightUp","puWeightDown"]
+#systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
+systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 
 from rebinning import *
 #possibly change the rebinning here

@@ -441,13 +441,14 @@ if makeWorkspace:
     for hn in variablesToFit[1:] :  makeplot(hn,True)
     WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
 else :
- from multiprocessing import Pool
- runpool = Pool(20)
- #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
- runpool.map(makeplot, his[1:])
-#else :
- #for x in his[1:] :
-    #makeplot(x)
+ if True :
+   from multiprocessing import Pool
+   runpool = Pool(20)
+   #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
+   runpool.map(makeplot, his[1:])
+ else :
+   for x in his[1:] :
+     makeplot(x)
 
 tot=0
 for s in totevCount:
