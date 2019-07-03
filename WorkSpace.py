@@ -136,8 +136,8 @@ def createWorkSpace(model, all_histo_all_syst, year) :
         emptySamples[x] = []
         for s in listAllSample :
             #if all_histo_all_syst[s]["nom"].Integral(0, nBins+1) <= 0. or all_histo_all_syst[s]["JESDown"].Integral(0, nBins+1) <= 0. or all_histo_all_syst[s]["JESUp"].Integral(0, nBins+1) <= 0. : emptySamples[x].append(s)
-            if all_histo_all_syst[x][s]["nom"].Integral(0, nBins[x]+1) <= 0. or all_histo_all_syst[x][s]["JESDown"].Integral(0, nBins[x]+1) <= 0. or all_histo_all_syst[x][s]["JESUp"].Integral(0, nBins[x]+1) <= 0. : emptySamples[x].append(s)
-            #if  "vbf" not in s and "lep" not in s and "VBF" not in s: emptySamples[x].append(s)
+            #if all_histo_all_syst[x][s]["nom"].Integral(0, nBins[x]+1) <= 0. or all_histo_all_syst[x][s]["JESDown"].Integral(0, nBins[x]+1) <= 0. or all_histo_all_syst[x][s]["JESUp"].Integral(0, nBins[x]+1) <= 0. : emptySamples[x].append(s)
+            if not all(all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) >= 0. for sy in all_histo_all_syst[x][s].keys()) : emptySamples[x].append(s)
         availableSamples[x] = [ s for s in listAllSample if s not in emptySamples[x]]
 
 
