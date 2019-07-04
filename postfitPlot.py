@@ -2,13 +2,12 @@ import json
 
 
 
-
-
 class PostFit :
     def __init__(self):
         self.smoothRegion = 1
         self.postFitParam =  {}
         json_file = open('/scratch/mandorli/Hmumu/restartFromAndrea4/nail/PisaHmm/impacts.json')
+        
         self.outputFit = json.load(json_file)
         for sy in self.outputFit["params"] :
             if not sy["name"].startswith("prop") :
@@ -28,7 +27,7 @@ class PostFit :
     def postfitValue (self, syName, syVar) :
         if syName in self.postFitParam.keys() :   
             if syVar in self.postFitParam[syName].keys() : 
-                return self.smoothStepFunc(self.postFitParam[syName][syVar])
-        print syName, syVar
+                return self.postFitParam[syName][syVar]
+        #print syName, syVar
         return 0.
 
