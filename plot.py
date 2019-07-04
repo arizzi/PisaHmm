@@ -360,8 +360,9 @@ def makeplot(hn,saveintegrals=True):
    os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
    os.system("git diff HEAD > "+outpath+"/git_diff.txt")
    os.system("git status HEAD > "+outpath+"/git_status.txt")
-   #if saveintegrals:
-   ftxt=open(outpath+"/%s.txt"%(hn),"w")
+   YieldFileName = outpath+"/"+hn+".txt"
+   if postfit : YieldFileName = outpath+"/"+hn+"_postFit.txt"
+   ftxt=open(YieldFileName,"w")
    #print "Making histo",hn
    histos[hn]=ROOT.THStack(hn,"") 
    histosSig[hn]=ROOT.THStack(hn,"") 
@@ -504,12 +505,13 @@ def makeplot(hn,saveintegrals=True):
    tKS.Draw()
 
    canvas[hn].GetPad(2).SetGridy()
-   canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
+   if postfit : canvas[hn].SaveAs(outpath+"/%s_postFit.png"%hn)	   
+   else :       canvas[hn].SaveAs(outpath+"/%s.png"%hn)   
    #canvas[hn].SaveAs("%s.root"%hn)	   
    canvas[hn].GetPad(1).SetLogy(True)
-   canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)	   
-
-
+   if postfit : canvas[hn].SaveAs(outpath+"/%s_log_postFit.png"%hn)	   
+   else :       canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)   
+   
 
 variablesToFit = []
 makeWorkspace = False
