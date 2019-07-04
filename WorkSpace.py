@@ -3,30 +3,81 @@ import os
 
 
 
-def writeSystematic (syst, systematicDetail, all_histo_all_syst, availableSamples, datacard, year) :
+def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_syst, availableSamples, datacard, year) :
     
-    listSamp = []
-    for x in availableSamples : listSamp = listSamp + availableSamples[x]
+    f = ROOT.TFile (fname, "RECREATE")
+    f.cd()
     
-    
-    if "decorrelate" not in systematicDetail[syst].keys() : 
-        datacard.write( writeLine(syst, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, [s.split("_")[0] for s in set(listSamp)]))
-    
-    else :
-        for g in  systematicDetail[syst]["decorrelate"] :
-            sampleWithSystematic = [s.split("_")[0] for s in systematicDetail[syst]["decorrelate"][g]]
-            systName = syst+(g if len(systematicDetail[syst]["decorrelate"].keys())>1 else "")
-            if "samplevalue" in systematicDetail[syst].keys() : 
-                datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["samplevalue"],  availableSamples, sampleWithSystematic))
+    for x in region.keys() : 
+        hname = ""
+        for samp in availableSamples[x] :
+            hname = varName[x] + "_" + region[x] + "_" + samp
+            h = all_histo_all_syst[x][samp]["nom"].Clone(hname)
+            h.Write()
+        h_data_obs = all_histo_all_syst[x]["data"+year]["nom"].Clone(varName[x]+"_"+region[x]+"_data_obs")
+        h_data_obs.Write()
+        
+    for syst in systematicDetail :
+        systName = syst
+        listSamp = []
+        systnameDict = {}
+        for x in region.keys() : 
+            systnameDict[x] = {}
+            for samp in availableSamples[x] :
+                systnameDict[x][samp] = {}
+                for sy in all_histo_all_syst[x][samp] :
+                    systnameDict[x][samp][sy] = sy
+                            
+        for x in availableSamples : listSamp = listSamp + availableSamples[x]
+
+        sampleWithSystematic = [s.split("_")[0] for s in set(listSamp)]
+        allSampleWithOneSystematic = sampleWithSystematic
+        if "decorrelate" not in systematicDetail[syst].keys() : 
+            datacard.write( writeLine(syst, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, sampleWithSystematic))
+
+        else :
+            allSampleWithOneSystematic = []
+            for g in  systematicDetail[syst]["decorrelate"] :
+                sampleWithSystematic = [s.split("_")[0] for s in systematicDetail[syst]["decorrelate"][g]]
+                allSampleWithOneSystematic = allSampleWithOneSystematic + sampleWithSystematic
+                systName = syst+(g if len(systematicDetail[syst]["decorrelate"].keys())>1 else "")
                 
                 
-            elif "groupvalue" in systematicDetail[syst].keys() : 
-                datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["groupvalue"][g],  availableSamples, sampleWithSystematic))
-            
-            else :
-                datacard.write( writeLine(systName, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, sampleWithSystematic))
-            
-            
+                for x in region.keys() : 
+                    for samp in availableSamples[x] :
+                        for sy in all_histo_all_syst[x][samp] :
+                            for s in sampleWithSystematic : 
+                                if samp.startswith(s) : 
+                                    if sy.endswith("Up") :   systnameDict[x][samp][sy] = systName + "Up"
+                                    if sy.endswith("Down") : systnameDict[x][samp][sy] = systName + "Down"
+                            
+
+                
+                if "samplevalue" in systematicDetail[syst].keys() : 
+                    datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["samplevalue"],  availableSamples, sampleWithSystematic))
+                    
+                    
+                elif "groupvalue" in systematicDetail[syst].keys() : 
+                    datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["groupvalue"][g],  availableSamples, sampleWithSystematic))
+                
+                else :
+                    datacard.write( writeLine(systName, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, sampleWithSystematic))
+    
+    
+        for x in region.keys() : 
+            hname = ""
+            for samp in availableSamples[x] :
+                for sy in all_histo_all_syst[x][samp] :
+                    print syst, samp, sy, allSampleWithOneSystematic
+                    if (not sy.startswith(syst)) or all(not samp.startswith(s) for s in allSampleWithOneSystematic) : continue
+                    print "file ", x, "\t", samp,"\t",  systName, "\t", sy, allSampleWithOneSystematic
+                    hname = varName[x] + "_" + region[x] + "_" + samp
+                    hname = hname + "_" + systnameDict[x][samp][sy]# + ("Up" if sy.endswith("Up") else "Down")
+
+                    h = all_histo_all_syst[x][samp][sy].Clone(hname)
+                    h.Write()
+    
+    f.Close()
             
             
 
@@ -166,32 +217,33 @@ def createWorkSpace(model, all_histo_all_syst, year) :
 
 
 
-
+    #f = ROOT.TFile ("workspace/fileCombine"+year+model.name+".root", "recreate")
+    #f.cd()      
             
-            
-    for syst in model.systematicDetail :
-        writeSystematic (syst, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
-        #if all(s in all_histo_all_syst[all_histo_all_syst.keys()[0]][availableSamples[0]].keys() for s in [syst+"Down", syst+"Up"]) or model.systematicDetail[syst]["type"] is not "shape" : writeSystematic (syst, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
+    #for syst in model.systematicDetail :
+    writeSystematic ("workspace/fileCombine"+year+model.name+".root", region, varName, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
+    #if all(s in all_histo_all_syst[all_histo_all_syst.keys()[0]][availableSamples[0]].keys() for s in [syst+"Down", syst+"Up"]) or model.systematicDetail[syst]["type"] is not "shape" : writeSystematic (syst, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
             
 
     for x in region.keys() : datacard.write( region[x]+" autoMCStats 0 1\n\n")
     
     
-    f = ROOT.TFile ("workspace/fileCombine"+year+model.name+".root", "recreate")
-    f.cd()
-    for x in region.keys() : 
-        for samp in availableSamples[x] :
-            for sy in all_histo_all_syst[x][samp] :
-                hname = varName[x] + "_" + region[x] + "_" + samp
-                if sy is not "nom" : 
-                    if "QCD" in sy : 
-                        hname = hname + "_" + samp
-                    hname = hname + "_" + sy
-                h = all_histo_all_syst[x][samp][sy].Clone(hname)
-                h.Write()
+    #f = ROOT.TFile ("workspace/fileCombine"+year+model.name+".root", "update")
+    #f.cd()
+    #for x in region.keys() : 
+        ##for samp in availableSamples[x] :
+            ##for sy in all_histo_all_syst[x][samp] :
+                ##hname = varName[x] + "_" + region[x] + "_" + samp
+                ##if sy is not "nom" : 
+                    ##if "QCD" in sy : 
+                        ##hname = hname + "_" + samp
+                    ##hname = hname + "_" + sy
+                ##print "file ",x, "\t", samp, "\t", sy, "\t", hname
+                ##h = all_histo_all_syst[x][samp][sy].Clone(hname)
+                ##h.Write()
     
-        h_data_obs = all_histo_all_syst[x]["data"+year]["nom"].Clone(varName[x]+"_"+region[x]+"_data_obs")
-        h_data_obs.Write()
+        #h_data_obs = all_histo_all_syst[x]["data"+year]["nom"].Clone(varName[x]+"_"+region[x]+"_data_obs")
+        #h_data_obs.Write()
     
     print "WorkSpace end"
     
