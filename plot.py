@@ -2,7 +2,18 @@ import ROOT
 import sys,os
 #from samples2016 import samples
 import importlib
-model=importlib.import_module(sys.argv[1])
+import postfitPlot
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("model", help="model to plot")
+parser.add_argument("-p", "--postfit", help="plot postfit plot", action="store_true")
+parser.add_argument("-v", "--variablesToFit", nargs="*")
+parser.print_help()
+args = parser.parse_args()
+
+
+model=importlib.import_module(args.model)
 samples=model.samples
 from labelDict import *  
 year="+".join(model.data.keys())
@@ -12,7 +23,6 @@ from array import array
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
 import WorkSpace
-import postfitPlot
 
 ROOT.gROOT.SetBatch(True)
 
@@ -135,6 +145,7 @@ def writeYields(ftxt, gr, integral, error, dataEvents) :
 
 def setName (d, sv) :
     if "decorrelate" not in model.systematicDetail[sv].keys() : return sv
+    elif model.systematicDetail[sv]["decorrelate"] : return sv
     else :
         for g in model.systematicDetail[sv]["decorrelate"].keys() :
             for x in model.systematicDetail[sv]["decorrelate"][g] :
@@ -186,11 +197,9 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
             histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
         histoSingleSyst[hn][d][sv]["sum"].Add(h, -2)
         
-
-        if "variation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
+        if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
         else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv))
-    #print "systematics ----   ", d, histoSingleSyst[hn][d].keys()
-
+        
 
 def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
         
@@ -398,10 +407,10 @@ def makeplot(hn,saveintegrals=True):
 
      
    #superImposedPlot (histos[hn], histosSig[hn], outpath) 
-   if makeWorkspace : return 
+   #if makeWorkspace : return 
    
    
-   histosum[hn].Add(histoSigsum[hn])
+   #histosum[hn].Add(histoSigsum[hn])
    
 
    
@@ -504,14 +513,16 @@ def makeplot(hn,saveintegrals=True):
 
 variablesToFit = []
 makeWorkspace = False
+if args.variablesToFit != None : 
+    variablesToFit = args.variablesToFit
+    makeWorkspace = True
 postfit = False
-if len(sys.argv) > 2 : 
-    if sys.argv[2] == "postfit" :
-        postfit = True
-    else :
-        makeWorkspace = True
-        variablesToFit = sys.argv[2:]
-if makeWorkspace : print "variablesToFit ", variablesToFit
+postfit = args.postfit
+
+
+print "postfit", postfit
+print "makeWorkspace", makeWorkspace
+print "variablesToFit", variablesToFit
 
 
 
