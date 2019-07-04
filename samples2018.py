@@ -1,4 +1,5 @@
-path2018 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
+path2018 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
+path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
 
 samples={
 #"DY105Inclusuve_2018AMCPY"     : {"files":[path2018+"DYJetsToLL_M-105To160-amcatnloFXFX_nano2018.root"],"xsec": 41.81},
@@ -10,13 +11,13 @@ samples={
 "DY105VBF_2018MGPY"   : {"files":[path2018+"DYJetsToLL_M-105To160-madgraphMLM_VBFFilter_nano2018.root"],"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag"},
 
 "DY0J_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_0J_nano2018.root"],"xsec": 4620.52},
-"DY1J_2018AMCPY"  : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/DYJetsToLL_1J_nano2017.root"],"xsec":859.59},    # DY1J 2018 NANOAOD does not exist yet 
+"DY1J_2018AMCPY"  : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_tmp/DYJetsToLL_1J_nano2017.root"],"xsec":859.59},    # DY1J 2018 NANOAOD does not exist yet 
 "DY2J_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_2J_nano2018.root"],"xsec":338.26},
 "DYM50_2018AMCPY" : {"files":[path2018+"DYJetstoLL_amc_M-50_nano2018.root"],"xsec":5765.40},
 
 #"EWKZ_2018MGHERWIG" : {"files":[path2018+"EWK_LLJJ_herwig_nano2018.root"],"xsec":1.664},   # DY1J 2018 NANOAOD does not exist yet 
 "EWKZ_2018MGPY"     : {"files":[path2018+"EWK_LLJJ_pythia8_nano2018.root"],"xsec":1.664},
-"EWKZ105_2018MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
+#"EWKZ105_2018MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
 "EWKZint_2018MGPY"  : {"files":[path2018+"EWK_LLJJ_INT_nano2018.root"],"xsec":0.128},
 
 "STs_2018AMCPY"             : {"files":[path2018+"ST_s_nano2018.root"],"xsec":3.36},
@@ -26,7 +27,7 @@ samples={
 "STt_2018POWPY"             : {"files":[path2018+"ST_t_top_nano2018.root"],"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
 
-"data2018": {"files":[path2018+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
+"data2018": {"files":[path2018data+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
 
 
 "TT_2018AMCPY"      : {"files":[path2018+"TT_nano2018.root"],"xsec":809.},    #generator is different from 2016

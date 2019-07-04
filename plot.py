@@ -103,7 +103,7 @@ def findSyst(hn,sy,f) :
     if h3 in allh:
 	 hnForSys[hn][sy]=h3
 	 return h3
-    print "none matching"
+    print "none matching",hn,sy,f
     return ""
 
 def totevents(s):
@@ -398,7 +398,7 @@ def makeplot(hn,saveintegrals=True):
 
      
    #superImposedPlot (histos[hn], histosSig[hn], outpath) 
-   if makeWorkspace : return 
+###   if makeWorkspace : return 
    
    
    #histosumNoSig[hn]= histosum[hn].Clone()

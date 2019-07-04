@@ -88,7 +88,9 @@ def systematicGrouping (background, signal) :
                 "value":1.0,
         }
     }
-    
+    from jesnames import jes2016
+    jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
+    systematicDetail.update(jes)
     
     return systematicDetail
 

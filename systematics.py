@@ -48,7 +48,8 @@ def addMuScale(flow):
     flow.Systematic("MuScaleDown","Muon_corrected_pt","Muon_correctedDown_pt") #name, target, replacement
     flow.Systematic("MuScaleUp","Muon_corrected_pt","Muon_correctedUp_pt") #name, target, replacement
 
-def addCompleteJecs(flow):
+
+def addBasicJecs(flow):
       # flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown") #name, target, replacement
       # flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp") #name, target, replacement
       # flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
@@ -73,6 +74,14 @@ def addCompleteJecs(flow):
        flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown_touse") #name, target, replacement 
        flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp_touse") #name, target, replacement 
        #flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
+
+from jesnames import jes2016
+def addCompleteJecs(flow):
+    for j in jes2016:
+       print "jes2016:",j
+       flow.Define("%s_touse"%j,"Jet_pt_touse*%s/Jet_pt_nom"%j)
+       flow.Systematic(j[10:],"Jet_pt_touse","%s_touse"%j)
+
 
 
 def addPUvariation(flow):

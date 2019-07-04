@@ -9,7 +9,7 @@ ROOT.gInterpreter.AddIncludePath("/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn
 ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
 
 from eventprocessing import flow
-from histograms import histosPerSelection
+from histograms import histosPerSelection,histosPerSelectionFullJecs
 
 used=[]
 for s in histosPerSelection:
@@ -38,8 +38,8 @@ from systematics import *
 addLheScale(flow)
 addPSWeights(flow)
 addBtag(flow)
+addBasicJecs(flow)
 addMuScale(flow)
-addCompleteJecs(flow)
 addPUvariation(flow)
 addReweightEWK(flow)
 
@@ -48,6 +48,14 @@ addReweightEWK(flow)
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
+addCompleteJecs(flow)
+histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
+
+for region in histosWithFullJecs:
+   if region not in histosWithSystematics :
+	histosWithSystematics[region]=histosWithFullJecs[region]
+   else:
+	histosWithSystematics[region]=list(set(histosWithSystematics[region]+histosWithFullJecs[region]))
 
 print "The following histograms will be created in the following regions"
 for sel in  histosWithSystematics:

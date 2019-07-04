@@ -20,4 +20,8 @@ histosPerSelection={
 #"BDT1p2" : bdtInputHistos,
 #"TwoJetsTwoMu" : genericHistos
 }
-
+histosPerSelectionFullJecs={
+"SignalRegion":["BDTAtan"],
+"SideBand":["BDTAtanNoMass"],
+"ZRegion":["BDTAtanNoMass"],
+}
