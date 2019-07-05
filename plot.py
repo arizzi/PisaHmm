@@ -189,17 +189,18 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
         hSum  = histoSingleSyst[hn][d][sv]["Up"].Clone()
         hDiff.Add(histoSingleSyst[hn][d][sv]["Down"], -1)
         hSum.Add(histoSingleSyst[hn][d][sv]["Down"])
+        hSum.Add(h, -2)
+        
         if "diff" not in histoSingleSyst[hn][d].keys() :  
             histoSingleSyst[hn][d][sv]["diff"] =  hDiff.Clone()
             histoSingleSyst[hn][d][sv]["sum"]  =  hSum.Clone()
         else :
             histoSingleSyst[hn][d][sv]["diff"].Add(hDiff)
             histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
-        histoSingleSyst[hn][d][sv]["sum"].Add(h, -2)
+        
         
         if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
         else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv))
-        
 
 def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
         
@@ -353,7 +354,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
 def makeplot(hn,saveintegrals=True):
  if "__syst__" not in hn :
    myLegend = makeLegend (0.4, 0.9)
-   myLegend_sy = makeLegend (0.1, 0.25)
+   myLegend_sy = makeLegend (0.1, 0.15 + 0.015*len(model.systematicsToPlot))
    outpath="figure/%s/%s"%(year,model.name)
    os.system("mkdir -p "+outpath)
    os.system("cp out/description.txt "+outpath)
