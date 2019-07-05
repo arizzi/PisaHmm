@@ -198,7 +198,7 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
             histoSingleSyst[hn][d][sv]["diff"].Add(hDiff)
             histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
         
-        
+        print d, sv
         if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
         else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv))
 
@@ -206,10 +206,11 @@ def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
         
     if len(histoSingleSyst[hn][d].keys()) == 0 : computeSingleSyst(model, f, d, hn, h, histoSingleSyst)
 
-    if sy.endswith("Up") or sy.endswith("Down") :
+    sv = sy.replace("Up", "").replace("Down", "")
+    if sv in model.systematicDetail and (sy.endswith("Up") or sy.endswith("Down") ):
         hv = histoSingleSyst[hn][d]["nominalVariation"].Clone()
-        hv.Add(histoSingleSyst[hn][d][sy[:-2] if sy.endswith("Up") else sy[:-4]]["variation"], -1.)
-        hv.Add(computeSingleSystVariation(d, hn, sy[:-2] if sy.endswith("Up") else sy[:-4], "Up" if sy.endswith("Up") else "Down"))
+        hv.Add(histoSingleSyst[hn][d][sv]["variation"], -1.)
+        hv.Add(computeSingleSystVariation(d, hn, sv, "Up" if sy.endswith("Up") else "Down"))
         return hv
     else : return  histoSingleSyst[hn][d]["nominalVariation"]
 
@@ -241,7 +242,7 @@ histoSigsum={}
 datasumSyst={}
 histosumSyst={}
 histoSigsumSyst={}
-histosDataAndMC={}
+histosSignal={}
 all_histo_all_syst={}
 
 integral={}
@@ -339,7 +340,9 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
         else:
             print "Cannot open",d,hn
             exit(1)
-        if gr in model.signal or makeWorkspace : histosDataAndMC[hn][d] = h.Clone()
+        if gr in model.signal : 
+            if gr not in histosSignal[hn].keys() : histosSignal[hn][gr] = h.Clone()
+            else : histosSignal[hn][gr].Add(h)
     if not data : writeYields(ftxt, gr, integral, error, datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1))
     #if not data : 
         #ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr]["nom"], error[gr],integral[gr]["nom"]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
@@ -387,7 +390,7 @@ def makeplot(hn,saveintegrals=True):
        lumitot+=samples[d]["lumi"]
    
    histoSingleSyst[hn] = {}
-   histosDataAndMC[hn]={} 
+   histosSignal[hn]={} 
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
 
@@ -417,8 +420,7 @@ def makeplot(hn,saveintegrals=True):
 
    
    for gr in model.signal:
-     for b in model.signal[gr]:
-        h=histosDataAndMC[hn][b]     
+        h=histosSignal[hn][gr]     
         histos[hn].Add(h.Clone())
         h.SetLineColor(model.linecolor[gr])       
         h.SetFillStyle(0)                   
@@ -456,8 +458,7 @@ def makeplot(hn,saveintegrals=True):
 
 
    datastack[hn].Draw("E P same")
-   for gr in model.signal:                                                     
-     for b in model.signal[gr]: histosDataAndMC[hn][b].Draw("hist same")          
+   for gr in model.signal:     histosSignal[hn][gr].Draw("hist same")                                                
                                                                          
    t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
    t1 = makeText(0.15,0.91,"CMS", 61)                                                           
