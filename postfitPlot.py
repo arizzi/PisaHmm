@@ -6,7 +6,8 @@ class PostFit :
     def __init__(self):
         self.smoothRegion = 1
         self.postFitParam =  {}
-        json_file = open('/scratch/mandorli/Hmumu/restartFromAndrea4/nail/PisaHmm/impacts.json')
+        #json_file = open('/scratch/mandorli/Hmumu/restartFromAndrea4/nail/PisaHmm/impactsZTotal.json')
+        json_file = open('/scratch/mandorli/Hmumu/restartFromAndrea4/nail/PisaHmm/impactsSIDE.json')
         
         self.outputFit = json.load(json_file)
         for sy in self.outputFit["params"] :
