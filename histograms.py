@@ -23,5 +23,6 @@ histosPerSelection={
 histosPerSelectionFullJecs={
 "SignalRegion":["BDTAtan"],
 "SideBand":["BDTAtanNoMass"],
-"ZRegion":["BDTAtanNoMass"],
+"ZRegion":["BDTAtanNoMass","pTbalanceAll"],
+"ZRegionSMP":["BDTAtanNoMass","pTbalanceAll"],
 }

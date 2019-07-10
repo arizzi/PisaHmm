@@ -2,8 +2,6 @@ import json
 
 
 
-
-
 class PostFit :
     def __init__(self):
         self.smoothRegion = 1
@@ -28,7 +26,7 @@ class PostFit :
     def postfitValue (self, syName, syVar) :
         if syName in self.postFitParam.keys() :   
             if syVar in self.postFitParam[syName].keys() : 
-                return self.smoothStepFunc(self.postFitParam[syName][syVar])
-        print syName, syVar
+                return self.postFitParam[syName][syVar]
+        #print syName, syVar
         return 0.
 

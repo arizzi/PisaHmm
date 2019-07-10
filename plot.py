@@ -2,7 +2,18 @@ import ROOT
 import sys,os
 #from samples2016 import samples
 import importlib
-model=importlib.import_module(sys.argv[1])
+import postfitPlot
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("model", help="model to plot")
+parser.add_argument("-p", "--postfit", help="plot postfit plot", action="store_true")
+parser.add_argument("-v", "--variablesToFit", nargs="*")
+parser.print_help()
+args = parser.parse_args()
+
+
+model=importlib.import_module(args.model)
 samples=model.samples
 from labelDict import *  
 year="+".join(model.data.keys())
@@ -12,7 +23,6 @@ from array import array
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
 import WorkSpace
-import postfitPlot
 
 ROOT.gROOT.SetBatch(True)
 
@@ -135,6 +145,7 @@ def writeYields(ftxt, gr, integral, error, dataEvents) :
 
 def setName (d, sv) :
     if "decorrelate" not in model.systematicDetail[sv].keys() : return sv
+    elif model.systematicDetail[sv]["decorrelate"] : return sv
     else :
         for g in model.systematicDetail[sv]["decorrelate"].keys() :
             for x in model.systematicDetail[sv]["decorrelate"][g] :
@@ -186,11 +197,9 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
             histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
         histoSingleSyst[hn][d][sv]["sum"].Add(h, -2)
         
-
-        if "variation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
+        if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
         else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv))
-    #print "systematics ----   ", d, histoSingleSyst[hn][d].keys()
-
+        
 
 def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
         
@@ -351,8 +360,9 @@ def makeplot(hn,saveintegrals=True):
    os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
    os.system("git diff HEAD > "+outpath+"/git_diff.txt")
    os.system("git status HEAD > "+outpath+"/git_status.txt")
-   #if saveintegrals:
-   ftxt=open(outpath+"/%s.txt"%(hn),"w")
+   YieldFileName = outpath+"/"+hn+".txt"
+   if postfit : YieldFileName = outpath+"/"+hn+"_postFit.txt"
+   ftxt=open(YieldFileName,"w")
    #print "Making histo",hn
    histos[hn]=ROOT.THStack(hn,"") 
    histosSig[hn]=ROOT.THStack(hn,"") 
@@ -397,12 +407,6 @@ def makeplot(hn,saveintegrals=True):
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot)
 
      
-   #superImposedPlot (histos[hn], histosSig[hn], outpath) 
-###   if makeWorkspace : return 
-   
-   
-   #histosumNoSig[hn]= histosum[hn].Clone()
-  # histosum[hn].Add(histoSigsum[hn])
    
 
    
@@ -496,24 +500,30 @@ def makeplot(hn,saveintegrals=True):
    tKS.Draw()
 
    canvas[hn].GetPad(2).SetGridy()
-   canvas[hn].SaveAs(outpath+"/%s.png"%hn)	   
-   canvas[hn].SaveAs(outpath+"/%s.root"%hn)	   
+   if postfit : canvas[hn].SaveAs(outpath+"/%s_postFit.png"%hn)	   
+   else :
+	canvas[hn].SaveAs(outpath+"/%s.png"%hn)   
+	canvas[hn].SaveAs(outpath+"/%s.root"%hn)   
+   #canvas[hn].SaveAs("%s.root"%hn)	   
    canvas[hn].GetPad(1).SetLogy(True)
-   canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)	   
-   canvas[hn].SaveAs(outpath+"/%s_log.root"%hn)	   
-
+   if postfit : canvas[hn].SaveAs(outpath+"/%s_log_postFit.png"%hn)	   
+   else :       
+	canvas[hn].SaveAs(outpath+"/%s_log.png"%hn)   
+	canvas[hn].SaveAs(outpath+"/%s_log.root"%hn)   
 
 
 variablesToFit = []
 makeWorkspace = False
+if args.variablesToFit != None : 
+    variablesToFit = args.variablesToFit
+    makeWorkspace = True
 postfit = False
-if len(sys.argv) > 2 : 
-    if sys.argv[2] == "postfit" :
-        postfit = True
-    else :
-        makeWorkspace = True
-        variablesToFit = sys.argv[2:]
-if makeWorkspace : print "variablesToFit ", variablesToFit
+postfit = args.postfit
+
+
+print "postfit", postfit
+print "makeWorkspace", makeWorkspace
+print "variablesToFit", variablesToFit
 
 
 
@@ -521,11 +531,12 @@ his=[x for x in histoNames if "__syst__" not in x]
 print his[0]
 makeplot(variablesToFit[0] if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
-print "Preload"
-for ff in f:
+if not makeWorkspace :
+ print "Preload"
+ for ff in f:
    for h in histoNames :
      f[ff].Get(h)
-print "Preload-done"
+ print "Preload-done"
 
 if makeWorkspace:
     for hn in variablesToFit[1:] :  makeplot(hn,True)

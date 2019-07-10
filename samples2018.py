@@ -19,6 +19,7 @@ samples={
 "EWKZ_2018MGPY"     : {"files":[path2018+"EWK_LLJJ_pythia8_nano2018.root"],"xsec":1.664},
 #"EWKZ105_2018MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
 "EWKZint_2018MGPY"  : {"files":[path2018+"EWK_LLJJ_INT_nano2018.root"],"xsec":0.128},
+"EWKZ105_2016MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
 
 "STs_2018AMCPY"             : {"files":[path2018+"ST_s_nano2018.root"],"xsec":3.36},
 "STwtbar_2018POWPY"         : {"files":[path2018+"ST_tW_antitop_nano2018.root"],"xsec":35.85},
@@ -38,7 +39,7 @@ samples={
 
 
 "W2J_2018AMCPY"  : {"files":[path2018+"WToLNu_2J_nano2018.root"],"xsec":3172.96},
-#"W1J_2018AMCPY"  : {"files":[path2018+"WToLNu_1J_nano2018.root"],"xsec":8426.09},
+"W1J_2018AMCPY"  : {"files":[path2018+"WToLNu_1J_nano2018.root"],"xsec":8426.09},
 "W0J_2018AMCPY"  : {"files":[path2018+"WToLNu_0J_nano2018.root"],"xsec":50131.98},
 
 
