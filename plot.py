@@ -219,10 +219,13 @@ def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
     sv = sy.replace("Up", "").replace("Down", "")
 
     if sv in model.systematicDetail and (sy.endswith("Up") or sy.endswith("Down") ):
-        hv = histoSingleSyst[hn][d]["nominalVariation"].Clone()
-        hv.Add(histoSingleSyst[hn][d][sv]["variation"], -1.)
-        hv.Add(computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"], "Up" if sy.endswith("Up") else "Down"))
-        return hv
+        svName = setName(d, sv)
+        if svName == "notSysToApply" : return  histoSingleSyst[hn][d]["nominalVariation"]
+        else :
+            hv = histoSingleSyst[hn][d]["nominalVariation"].Clone()
+            hv.Add(histoSingleSyst[hn][d][svName]["variation"], -1.)
+            hv.Add(computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"], "Up" if sy.endswith("Up") else "Down"))
+            return hv
     else : return  histoSingleSyst[hn][d]["nominalVariation"]
 
 
