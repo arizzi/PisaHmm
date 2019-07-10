@@ -154,12 +154,20 @@ def setName (d, sv) :
     
     
     
-def computeSingleSystVariation(d, hn, sv, syVar="nom") :
+def computeSingleSystVariation(d, hn, sv, shapeType, syVar="nom") :
     x = postFit.postfitValue(sv, syVar)
-    histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["sum"].Clone()
-    histoSingleSyst[hn][d][sv]["variation"].Scale(postFit.smoothStepFunc(x))
-    histoSingleSyst[hn][d][sv]["variation"].Add(histoSingleSyst[hn][d][sv]["diff"])
-    histoSingleSyst[hn][d][sv]["variation"].Scale(0.5 * x)
+    if shapeType  == "shape" :
+        histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["sum"].Clone()
+        histoSingleSyst[hn][d][sv]["variation"].Scale(postFit.smoothStepFunc(x))
+        histoSingleSyst[hn][d][sv]["variation"].Add(histoSingleSyst[hn][d][sv]["diff"])
+        histoSingleSyst[hn][d][sv]["variation"].Scale(0.5 * x)
+    else :# shapeType  == "lnN" :
+        if x>0 : 
+            histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["Up"].Clone()
+            histoSingleSyst[hn][d][sv]["variation"].Scale(x)
+        else :
+            histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["Down"].Clone()
+            histoSingleSyst[hn][d][sv]["variation"].Scale(abs(x))
     return histoSingleSyst[hn][d][sv]["variation"]
 
 def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
@@ -169,8 +177,8 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
         hsUp=h.Clone()
         hsDown=h.Clone()
         if model.systematicDetail[sv]["type"]=="lnN" :
-            hsUp.Scale(model.systematicDetail[sv]["value"])
-            hsDown.Scale(1./model.systematicDetail[sv]["value"])
+            hsUp.Scale(model.systematicDetail[sv]["value"]-1.)
+            hsDown.Scale(1./model.systematicDetail[sv]["value"]-1.)
         if model.systematicDetail[sv]["type"]=="shape" :
             if all(x in model.systematicsToPlot for x in [sv+"Up", sv+"Down"]): 
                 hsUp=f[d].Get(findSyst(hn,sv+"Up",f[d]))
@@ -200,8 +208,8 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
             histoSingleSyst[hn][d][sv]["diff"].Add(hDiff)
             histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
         
-        if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv).Clone()
-        else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv))
+        if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"]).Clone()
+        else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"]))
 
 def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
         
@@ -212,7 +220,7 @@ def fitVariation (model, f, d, hn, h, histoSingleSyst, sy = "noSystematic") :
     if sv in model.systematicDetail and (sy.endswith("Up") or sy.endswith("Down") ):
         hv = histoSingleSyst[hn][d]["nominalVariation"].Clone()
         hv.Add(histoSingleSyst[hn][d][sv]["variation"], -1.)
-        hv.Add(computeSingleSystVariation(d, hn, sv, "Up" if sy.endswith("Up") else "Down"))
+        hv.Add(computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"], "Up" if sy.endswith("Up") else "Down"))
         return hv
     else : return  histoSingleSyst[hn][d]["nominalVariation"]
 
