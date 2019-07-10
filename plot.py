@@ -162,12 +162,8 @@ def computeSingleSystVariation(d, hn, sv, shapeType, syVar="nom") :
         histoSingleSyst[hn][d][sv]["variation"].Add(histoSingleSyst[hn][d][sv]["diff"])
         histoSingleSyst[hn][d][sv]["variation"].Scale(0.5 * x)
     else :# shapeType  == "lnN" :
-        if x>0 : 
-            histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["Up"].Clone()
-            histoSingleSyst[hn][d][sv]["variation"].Scale(x)
-        else :
-            histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["Down"].Clone()
-            histoSingleSyst[hn][d][sv]["variation"].Scale(abs(x))
+        histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["Up"].Clone()
+        histoSingleSyst[hn][d][sv]["variation"].Scale(model.systematicDetail[sv]["value"]**x)
     return histoSingleSyst[hn][d][sv]["variation"]
 
 def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
@@ -176,9 +172,9 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
         if svName == "notSysToApply" : continue
         hsUp=h.Clone()
         hsDown=h.Clone()
-        if model.systematicDetail[sv]["type"]=="lnN" :
-            hsUp.Scale(model.systematicDetail[sv]["value"]-1.)
-            hsDown.Scale(1./model.systematicDetail[sv]["value"]-1.)
+        #if model.systematicDetail[sv]["type"]=="lnN" :
+            #hsUp.Scale(model.systematicDetail[sv]["value"]-1.)
+            #hsDown.Scale(1./model.systematicDetail[sv]["value"]-1.)
         if model.systematicDetail[sv]["type"]=="shape" :
             if all(x in model.systematicsToPlot for x in [sv+"Up", sv+"Down"]): 
                 hsUp=f[d].Get(findSyst(hn,sv+"Up",f[d]))
