@@ -145,26 +145,28 @@ def writeYields(ftxt, gr, integral, error, dataEvents) :
 
 def setName (d, sv) :
     if "decorrelate" not in model.systematicDetail[sv].keys() : return sv
-    elif model.systematicDetail[sv]["decorrelate"] : return sv
     else :
         for g in model.systematicDetail[sv]["decorrelate"].keys() :
             for x in model.systematicDetail[sv]["decorrelate"][g] :
-                if d.startswith(x) : return sv+g
+                if d.startswith(x) : 
+                    if len(model.systematicDetail[sv]["decorrelate"].keys())<2 : return sv
+                    else : return sv+g
     return  "notSysToApply" #this means that the systematic sv does not affect the sample d.    e.g. d=DY  sv= VVxsec
     
     
     
 def computeSingleSystVariation(d, hn, sv, shapeType, syVar="nom") :
-    x = postFit.postfitValue(sv, syVar)
+    svName = setName(d, sv)
+    x = postFit.postfitValue(svName, syVar)
     if shapeType  == "shape" :
-        histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["sum"].Clone()
-        histoSingleSyst[hn][d][sv]["variation"].Scale(postFit.smoothStepFunc(x))
-        histoSingleSyst[hn][d][sv]["variation"].Add(histoSingleSyst[hn][d][sv]["diff"])
-        histoSingleSyst[hn][d][sv]["variation"].Scale(0.5 * x)
+        histoSingleSyst[hn][d][svName]["variation"] = histoSingleSyst[hn][d][svName]["sum"].Clone()
+        histoSingleSyst[hn][d][svName]["variation"].Scale(postFit.smoothStepFunc(x))
+        histoSingleSyst[hn][d][svName]["variation"].Add(histoSingleSyst[hn][d][svName]["diff"])
+        histoSingleSyst[hn][d][svName]["variation"].Scale(0.5 * x)
     else :# shapeType  == "lnN" :
-        histoSingleSyst[hn][d][sv]["variation"] = histoSingleSyst[hn][d][sv]["Up"].Clone()
-        histoSingleSyst[hn][d][sv]["variation"].Scale(model.systematicDetail[sv]["value"]**x)
-    return histoSingleSyst[hn][d][sv]["variation"]
+        histoSingleSyst[hn][d][svName]["variation"] = histoSingleSyst[hn][d][svName]["Up"].Clone()
+        histoSingleSyst[hn][d][svName]["variation"].Scale(model.systematicDetail[sv]["value"]**x)
+    return histoSingleSyst[hn][d][svName]["variation"]
 
 def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
     for sv in model.systematicDetail.keys() :
@@ -190,19 +192,22 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
         #histoSingleSyst[hn][d][svName]["Down"] = hsUp.Clone()
         #histoSingleSyst[hn][d][svName]["Up"] = hsDown.Clone()
         
-    for sv in histoSingleSyst[hn][d].keys() :
-        hDiff = histoSingleSyst[hn][d][sv]["Up"].Clone()
-        hSum  = histoSingleSyst[hn][d][sv]["Up"].Clone()
-        hDiff.Add(histoSingleSyst[hn][d][sv]["Down"], -1)
-        hSum.Add(histoSingleSyst[hn][d][sv]["Down"])
+    #for sv in histoSingleSyst[hn][d].keys() :
+    for sv in model.systematicDetail.keys() :
+        svName = setName(d, sv)
+        if svName == "notSysToApply" : continue
+        hDiff = histoSingleSyst[hn][d][svName]["Up"].Clone()
+        hSum  = histoSingleSyst[hn][d][svName]["Up"].Clone()
+        hDiff.Add(histoSingleSyst[hn][d][svName]["Down"], -1)
+        hSum.Add(histoSingleSyst[hn][d][svName]["Down"])
         hSum.Add(h, -2)
         
         if "diff" not in histoSingleSyst[hn][d].keys() :  
-            histoSingleSyst[hn][d][sv]["diff"] =  hDiff.Clone()
-            histoSingleSyst[hn][d][sv]["sum"]  =  hSum.Clone()
+            histoSingleSyst[hn][d][svName]["diff"] =  hDiff.Clone()
+            histoSingleSyst[hn][d][svName]["sum"]  =  hSum.Clone()
         else :
-            histoSingleSyst[hn][d][sv]["diff"].Add(hDiff)
-            histoSingleSyst[hn][d][sv]["sum"].Add(hSum)
+            histoSingleSyst[hn][d][svName]["diff"].Add(hDiff)
+            histoSingleSyst[hn][d][svName]["sum"].Add(hSum)
         
         if "nominalVariation" not in histoSingleSyst[hn][d].keys() : histoSingleSyst[hn][d]["nominalVariation"] = computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"]).Clone()
         else : histoSingleSyst[hn][d]["nominalVariation"].Add(computeSingleSystVariation(d, hn, sv, model.systematicDetail[sv]["type"]))
