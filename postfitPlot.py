@@ -11,9 +11,9 @@ class PostFit :
         for sy in self.outputFit["params"] :
             if not sy["name"].startswith("prop") :
                 self.postFitParam[sy["name"]] =  {}
-                self.postFitParam[sy["name"]]["Up"]     =  sy["fit"][0]
+                self.postFitParam[sy["name"]]["Down"]     =  sy["fit"][0]
                 self.postFitParam[sy["name"]]["nom"]    =  sy["fit"][1]
-                self.postFitParam[sy["name"]]["Down"]   =  sy["fit"][2]
+                self.postFitParam[sy["name"]]["Up"]   =  sy["fit"][2]
         print self.postFitParam.keys()
 
     def smoothStepFunc(self, x) :

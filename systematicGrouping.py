@@ -70,9 +70,9 @@ def systematicGrouping (background, signal) :
                 "value":1.0,
         },
 #        "JES":{
-#                "type": "shape",
-#                "value":1.0,
-#        },
+ #               "type": "shape",
+ #               "value":1.0,
+ #       },
         #"MuScale":{
                 #"type": "shape",
                 #"value":1.0,
