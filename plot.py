@@ -50,8 +50,21 @@ def makeText (x, y, someText, font, size = 0.05) :
     tex.SetLineWidth(2);
     return tex
 
-
+def d_value(h1, h2) :
+    hSignal = h1.Clone()
+    hBackground = h2.Clone()
+    nbins = hSignal.GetNbinsX()
+    hSignal.Scale(1./hSignal.Integral(0,nbins+1))
+    hBackground.Scale(1./hBackground.Integral(0,nbins+1))
     
+    adiff=0
+    for n in range(nbins+2) : 
+        adiff += abs(hSignal.GetBinContent(n) - hBackground.GetBinContent(n))
+    adiff = adiff/2.
+    #return str(round(adiff, 2))
+    return str(adiff)[0:4]
+    
+  
 def setHistoStyle (h, gr) :
     h.SetFillColor(model.fillcolor[gr])
     h.SetTitle("")
@@ -441,8 +454,8 @@ def makeplot(hn,saveintegrals=True):
    
    
    #histosum[hn].Add(histoSigsum[hn])
+   ftxt.write("d_value = "+d_value(histosum[hn], histoSigsum[hn]))
    
-
    
    for gr in model.signal:
         h=histosSignal[hn][gr]     
@@ -489,10 +502,12 @@ def makeplot(hn,saveintegrals=True):
    t1 = makeText(0.15,0.91,"CMS", 61)                                                           
    t2 = makeText(0.32,0.91,str(year), 42)                                                       
    t3 = makeText(0.90,0.91,lumi%(lumitot/1000.)+"  (13 TeV)", 42)                                
+   td = makeText(0.85,0.78,"d = "+d_value(histosum[hn], histoSigsum[hn]), 42, 0.04)                                
    t0.Draw()                                                             
    t1.Draw()                                                             
    t2.Draw()                                                             
    t3.Draw()                                     
+   td.Draw()                                     
    datastack[hn].GetHistogram().SetMarkerStyle(10)                       
 
    
