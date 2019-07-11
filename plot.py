@@ -166,6 +166,8 @@ def computeSingleSystVariation(d, hn, sv, shapeType, syVar="nom") :
     else :# shapeType  == "lnN" :
         histoSingleSyst[hn][d][svName]["variation"] = histoSingleSyst[hn][d][svName]["Up"].Clone()
         histoSingleSyst[hn][d][svName]["variation"].Scale(model.systematicDetail[sv]["value"]**x)
+        histoSingleSyst[hn][d][svName]["variation"].Add(histoSingleSyst[hn][d][svName]["Up"], -1.)
+    #if d.startswith("DY") : print d, svName, histoSingleSyst[hn][d][svName]["variation"].Integral()
     return histoSingleSyst[hn][d][svName]["variation"]
 
 def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
