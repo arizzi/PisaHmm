@@ -1,6 +1,6 @@
 import ROOT
 import os
-
+import collections
 
 
 def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_syst, availableSamples, datacard, year) :
@@ -150,6 +150,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
         varName[x] = all_histo_all_syst[x]["data"+year]["nom"].GetName().split("___")[0]
         region[x] = x.split("___")[-1]
     
+    region = collections.OrderedDict(sorted(region.items()))
     
     os.system("mkdir -p workspace")
     datacard=open("workspace/datacard"+year+model.name+".txt","w")
@@ -188,7 +189,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
         availableSamples[x] = [ s for s in listAllSample if s not in emptySamples[x]]
 
 
-
+    availableSamples = collections.OrderedDict(sorted(availableSamples.items()))
 
     datacard.write("bin \t \t \t \t")
     for x in region.keys() : 
@@ -216,7 +217,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
 
     writeSystematic ("workspace/fileCombine"+year+model.name+".root", region, varName, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
 
-            
+
 
     for x in region.keys() : datacard.write( region[x]+" autoMCStats 0 1\n\n")
     
