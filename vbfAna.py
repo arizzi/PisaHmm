@@ -48,7 +48,7 @@ addReweightEWK(flow)
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
-addCompleteJecs(flow)
+addPtEtaJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -222,7 +222,22 @@ toproc=sorted(toproc,key=lambda x : sum(map(os.path.getsize,x[1])),reverse=True)
 print toproc
 
 if len(sys.argv[2:]) :
-   toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
+   if sys.argv[2] == "fix" :
+       toproc=[]
+       for s in sams :
+	 try:
+	   ff=ROOT.TFile.Open("out/%sHistos.root"%s)
+	   if ff.IsZombie() or len(ff.GetListOfKeys()) == 0:
+	           print "zombie or zero keys",s
+	           toproc.append((s,samples[s]["files"]))
+	 
+	 except:
+	   print "failed",s
+	   toproc.append((s,samples[s]["files"]))
+   else:
+       toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
+
+print "Will process", toproc
    
 results=zip(runpool.map(f, toproc ),[x[0] for x in toproc])
 print "Results",results

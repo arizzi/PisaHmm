@@ -52,10 +52,12 @@ def makeText (x, y, someText, font, size = 0.05) :
 
 
     
-def setHistoStyle (h, gr) :
+def setHistoStyle (h, gr, boundary=False) :
     h.SetFillColor(model.fillcolor[gr])
     h.SetTitle("")
     h.SetLineColor(model.linecolor[gr])
+    if boundary:
+        h.SetLineColor(ROOT.kBlack)       
     h.SetFillStyle(1001) #NEW
     h.SetLineStyle(1) #NEW    
     
@@ -325,7 +327,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 error_b = ROOT.Double(0)
                 integral[gr]["nom"]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
                 error[gr] = sqrt(error[gr]*error[gr] + error_b*error_b)
-                setHistoStyle (h, gr) 
+                setHistoStyle (h, gr) #non funziona: d==samplesToPlot[gr][-1]) 
             if hn not in SumTH1 :
                 SumTH1[hn]=h.Clone()
                 stackSys[hn]={}
@@ -334,13 +336,14 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
                         if postfit : 
                             hs=f[d].Get(hn).Clone()
-                        if hn.split("___")[0] in model.rebin.keys() : 
-                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if hs:
+                            if hn.split("___")[0] in model.rebin.keys() : 
+                               hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                             if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                             hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
-                        else : 
+                        else :	
+			    print "missing",sy,"for",hn, gr,d 
                             addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
                         addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
@@ -475,6 +478,7 @@ def makeplot(hn,saveintegrals=True):
    histosum[hn].Draw("same E2")        
 
 
+   datastack[hn].Draw("E P sameaxis")
    datastack[hn].Draw("E P same")
    for gr in model.signal:     histosSignal[hn][gr].Draw("hist same")                                                
                                                                          
