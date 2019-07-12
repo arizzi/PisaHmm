@@ -89,7 +89,7 @@ def writeUncertainities (orderedUncertainties, lenght, position) :
             uncLine += str(orderedUncertainties[n])
         else : 
             uncLine += "-"
-        uncLine += "\t\t"
+        uncLine += "\t\t\t"
     
     return uncLine
     
@@ -124,7 +124,7 @@ def writeLine (uncName, uncType, uncertainty,  allSamples, sampleWithSystematic)
     
     if len(position)==0 : return ""
 
-    line += uncName + "\t\t"
+    line += uncName + "\t"
     if len(uncName)<8 : line += "\t"
     line += uncType + "\t"
     if len(uncType)<8 : line += "\t"
@@ -184,7 +184,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     for x in region.keys() : 
         emptySamples[x] = []
         for s in listAllSample :
-            if not all(all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) >= 0. for sy in all_histo_all_syst[x][s].keys()) : emptySamples[x].append(s)
+            if not all(all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) > 0. for sy in all_histo_all_syst[x][s].keys()) : emptySamples[x].append(s)
         availableSamples[x] = [ s for s in listAllSample if s not in emptySamples[x]]
 
 
@@ -193,22 +193,22 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     datacard.write("bin \t \t \t \t")
     for x in region.keys() : 
         for s in availableSamples[x] :
-            datacard.write(region[x]+" \t")
+            datacard.write(region[x]+" \t\t")
         
     datacard.write("\nprocess \t \t \t")
     for x in region.keys() : 
         for s in availableSamples[x] :
-            datacard.write(s+"\t")
+            datacard.write(s+"\t"+("" if len(s)>15 else "\t"))
         
     datacard.write("\nprocess \t \t \t")
     for x in region.keys() : 
         for s in availableSamples[x] :
-            datacard.write(str(processNumber[s])+"\t\t")
+            datacard.write(str(processNumber[s])+"\t\t\t")
         
     datacard.write("\nrate \t \t \t \t")
     for x in region.keys() : 
         for s in availableSamples[x] :
-            datacard.write(str(all_histo_all_syst[x][s]["nom"].Integral(0, nBins[x]+1))+"\t")
+            datacard.write(str(all_histo_all_syst[x][s]["nom"].Integral(0, nBins[x]+1))+"\t\t")
     datacard.write("\n------------\n")
 
 
