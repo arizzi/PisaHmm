@@ -172,6 +172,19 @@ flow.Selection("BDT1p2","BDTAtan>1.2")
 flow.Selection("BDTNoMN1p0","BDTAtanNoMassNoNSJ>1.0")
 flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
 
+jesEta=[0,2,2.5,3.1,5]
+jesPt=[0,30,50,100,2000]
+for iet,et in enumerate(jesEta[:-1]):
+  for ipt,pt in enumerate(jesPt[:-1]):
+     etamin=et
+     ptmin=pt
+     etamax=jesEta[iet+1]
+     ptmax=jesPt[ipt+1]
+     jbin=re.sub("\.","p","Pt%sTo%sEta%sTo%s"%(ptmin,ptmax,etamin,etamax))
+     inbin="(QJet1_pt>=%s && QJet1_pt<%s && abs(QJet1_eta) >= %s && abs(QJet1_eta)  < %s)"%(ptmin,ptmax,etamin,etamax)
+     flow.Selection("ZRegion%s"%jbin,inbin,requires=["ZRegion"])
+     print "Defining ZRegion for JES", "ZRegion%s"%jbin
+
 flow.AddCppCode('\n#include "eval_lwtnn.h"\n')
 #flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
 flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")

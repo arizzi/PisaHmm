@@ -1,6 +1,6 @@
 from nail import *
 import ROOT
-import sys
+import sys,re
 
 
 def addLheScale(flow):  
@@ -82,6 +82,27 @@ def addCompleteJecs(flow):
        flow.Define("%s_touse"%j,"Jet_pt_touse*%s/Jet_pt_nom"%j)
        flow.Systematic(j[10:],"Jet_pt_touse","%s_touse"%j)
 
+
+def addPtEtaJecs(flow):
+    jesEta=[0,2,2.5,3.1,5]
+    jesPt=[0,30,50,100,2000]
+    for iet,et in enumerate(jesEta[:-1]):
+      for ipt,pt in enumerate(jesPt[:-1]):
+       etamin=et
+       ptmin=pt
+       etamax=jesEta[iet+1]
+       ptmax=jesPt[ipt+1]
+  #     jbin="Pt%sTo%sEta%sTo%s"%(ptmin,ptmax,etamin,etamax)
+       jbin=re.sub("\.","p","Pt%sTo%sEta%sTo%s"%(ptmin,ptmax,etamin,etamax))
+
+       inbin="(Jet_pt>=%s && Jet_pt<%s && abs(Jet_eta) >= %s && abs(Jet_eta)  < %s)"%(ptmin,ptmax,etamin,etamax)
+#       flow.Define("Jet_pt_jes%sDown_touse"%jbin,"%s*Jet_pt_touse*Jet_pt_jesTotalDown/Jet_pt_nom+(not %s)*Jet_pt_touse"%(inbin,inbin))
+ #      flow.Define("Jet_pt_jes%sUp_touse"%jbin,"%s*Jet_pt_touse*Jet_pt_jesTotalUp/Jet_pt_nom+(not %s)*Jet_pt_touse"%(inbin,inbin))
+       flow.Define("Jet_pt_jes%sDown_touse"%jbin,"Where(%s,Jet_pt_touse*Jet_pt_jesTotalDown/Jet_pt_nom,Jet_pt_touse)"%(inbin))
+       flow.Define("Jet_pt_jes%sUp_touse"%jbin,"Where(%s,Jet_pt_touse*Jet_pt_jesTotalUp/Jet_pt_nom,Jet_pt_touse)"%(inbin))
+       flow.Systematic("JES%sDown"%jbin,"Jet_pt_touse","Jet_pt_jes%sDown_touse"%jbin)
+       flow.Systematic("JES%sUp"%jbin,"Jet_pt_touse","Jet_pt_jes%sUp_touse"%jbin)
+       print "Adding JES", "JES%s"%jbin
 
 
 def addPUvariation(flow):
