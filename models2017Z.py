@@ -45,7 +45,7 @@ fillcolor={
 }
 
 #systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
-systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
+systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]#,"LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 from jesnames import jes2016
 systematicsToPlot+=[x[10:] for x in jes2016 ]

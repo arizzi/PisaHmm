@@ -257,12 +257,15 @@ f={}
 for group in model.signal :
     for s in model.signal[group] :
         f[s]=ROOT.TFile.Open("out/%sHistos.root"%s)
+#        f[s]=ROOT.TFile.Open("outManyJes/%sHistos.root"%s)
 for group in model.background :
     for b in model.background[group] :
         f[b]=ROOT.TFile.Open("out/%sHistos.root"%b)
+ #       f[b]=ROOT.TFile.Open("outManyJes/%sHistos.root"%b)
 for group in model.data :
     for d in model.data[group] :
         f[d]=ROOT.TFile.Open("out/%sHistos.root"%d)
+  #      f[d]=ROOT.TFile.Open("outManyJes/%sHistos.root"%d)
 
 histoNames=list(set([x.GetName() for y in f.keys() for x in f[y].GetListOfKeys() ]))
 

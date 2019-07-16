@@ -48,7 +48,9 @@ addReweightEWK(flow)
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
-addPtEtaJecs(flow)
+#addPtEtaJecs(flow)
+
+addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:

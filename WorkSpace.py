@@ -148,7 +148,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     for x in all_histo_all_syst.keys() : 
         nBins[x] = all_histo_all_syst[x]["data"+year]["nom"].GetNbinsX()-1
         varName[x] = all_histo_all_syst[x]["data"+year]["nom"].GetName().split("___")[0]
-        region[x] = x.split("___")[-1]
+        region[x] = x #x.split("___")[-1]
     
     region = collections.OrderedDict(sorted(region.items()))
     

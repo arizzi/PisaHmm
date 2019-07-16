@@ -12,6 +12,8 @@ histosPerSelection={
 "ZRegion": signalHistosVariations+genericHistos+bdtInputHistos,
 "ZRegionSMP": signalHistosVariations+["pTbalanceAll"],
 "SideBand" : signalHistos+signalHistosVariations+genericHistos,
+}
+hh={
 "ZRegionPt0To30Eta0To2":["pTbalanceAll"],
 "ZRegionPt30To50Eta0To2":["pTbalanceAll"],
 "ZRegionPt50To100Eta0To2":["pTbalanceAll"],
@@ -38,10 +40,12 @@ histosPerSelection={
 #"TwoJetsTwoMu" : genericHistos
 }
 histosPerSelectionFullJecs={
-"SignalRegion":["BDTAtan"],
-"SideBand":["BDTAtanNoMass"],
-"ZRegion":["BDTAtanNoMass","pTbalanceAll"],
-"ZRegionSMP":["BDTAtanNoMass","pTbalanceAll"],
+"SignalRegion":["BDTAtan","DNNAtan"],
+"SideBand":["BDTAtanNoMass","DNNAtanNoMass"],
+"ZRegion":["BDTAtanNoMass","pTbalanceAll","DNNAtanNoMass"],
+"ZRegionSMP":["BDTAtanNoMass","pTbalanceAll","DNNAtanNoMass"],
+}
+histosPerSelectionBinnedJecs={
 "ZRegionPt0To30Eta0To2":["pTbalanceAll"],
 "ZRegionPt30To50Eta0To2":["pTbalanceAll"],
 "ZRegionPt50To100Eta0To2":["pTbalanceAll"],
