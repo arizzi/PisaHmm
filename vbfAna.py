@@ -36,6 +36,7 @@ addMuEffWeight(flow)
 
 from systematics import *
 addLheScale(flow)
+addLhePdf(flow)
 addPSWeights(flow)
 addBtag(flow)
 addBasicJecs(flow)
@@ -47,10 +48,11 @@ addReweightEWK(flow)
 
 snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
 systematics=flow.variations #take all systematic variations
+print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
-addCompleteJecs(flow)
+#addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -109,6 +111,15 @@ def f(ar):
      '''%nthreads)
      s,f=ar
      print f
+     rf=ROOT.TFile.Open(f[0])
+     ev=rf.Get("Events")
+     hessian=False
+     if ev :
+	 br =ev.GetBranch("LHEPdfWeight")
+	 if br and "306000" in br.GetTitle():	
+	    print "Sample",s,"has Hessian PDF"
+	    hessian = True
+
      vf=ROOT.vector("string")()
      map(lambda x : vf.push_back(x), f)
      for x in vf:
@@ -129,6 +140,10 @@ def f(ar):
 	       rdf=rdf.Define("lhefactor","2.f") 
 	   else:
 	       rdf=rdf.Define("lhefactor","1.f") 
+	   if hessian:
+	       rdf=rdf.Define("LHEPdfHasHessian","true")
+	   else:
+	       rdf=rdf.Define("LHEPdfHasHessian","false")
            if year == "2016":
                rdf=rdf.Define("Muon_sf","(20.1f/36.4f*Muon_ISO_SF + 16.3f/36.4f*Muon_ISO_eraGH_SF)*(20.1f/36.4f*Muon_ID_SF + 16.3f/36.4f*Muon_ID_eraGH_SF)*(20.1f/36.4f*Muon_Trigger_SF + 16.3f/36.4f*Muon_Trigger_eraGH_SF)")
            else :
@@ -178,8 +193,8 @@ def f(ar):
          #snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2"]
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
-         if "lumi" not in samples[s].keys()  :
-           ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+ #        if "lumi" not in samples[s].keys()  :
+#           ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
          print ou.histos.size()#,ouspec.histos.size()
          fff=ROOT.TFile.Open("out/%sHistos.root"%(s),"recreate")

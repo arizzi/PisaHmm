@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("model", help="model to plot")
 parser.add_argument("-p", "--postfit", help="plot postfit plot", action="store_true")
 parser.add_argument("-v", "--variablesToFit", nargs="*")
+parser.add_argument("-f", "--folder",default="out/",help="input folder")
 parser.print_help()
 args = parser.parse_args()
 
@@ -254,18 +255,19 @@ def addFitVariation(h, variationToAdd) :
 
 
 f={}
+folder=args.folder
 for group in model.signal :
     for s in model.signal[group] :
-        f[s]=ROOT.TFile.Open("out/%sHistos.root"%s)
-#        f[s]=ROOT.TFile.Open("outManyJes/%sHistos.root"%s)
+        f[s]=ROOT.TFile.Open(folder+"%sHistos.root"%s)
+#        f[s]=ROOT.TFile.Open("out/%sHistos.root"%s)
 for group in model.background :
     for b in model.background[group] :
-        f[b]=ROOT.TFile.Open("out/%sHistos.root"%b)
- #       f[b]=ROOT.TFile.Open("outManyJes/%sHistos.root"%b)
+#        f[b]=ROOT.TFile.Open("out/%sHistos.root"%b)
+        f[b]=ROOT.TFile.Open(folder+"/%sHistos.root"%b)
 for group in model.data :
     for d in model.data[group] :
-        f[d]=ROOT.TFile.Open("out/%sHistos.root"%d)
-  #      f[d]=ROOT.TFile.Open("outManyJes/%sHistos.root"%d)
+ #       f[d]=ROOT.TFile.Open("out/%sHistos.root"%d)
+        f[d]=ROOT.TFile.Open(folder+"/%sHistos.root"%d)
 
 histoNames=list(set([x.GetName() for y in f.keys() for x in f[y].GetListOfKeys() ]))
 
@@ -572,7 +574,6 @@ if args.variablesToFit != None :
     makeWorkspace = True
 postfit = False
 postfit = args.postfit
-
 
 print "postfit", postfit
 print "makeWorkspace", makeWorkspace

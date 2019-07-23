@@ -31,6 +31,8 @@ binningrules=[
 ("LeadingSAJet_pt.*" , "%s , -10 , 150"%16),
 ("LHE_N.*" , "5 , -1 , 4"),
 (".*balance.*" , "%s , 0 , 4"%nbins),
-
+("minEtaHQ.*","%s , 0 , 5"%nbins),
+("Rpt","%s , 0 , 1"%nbins),
+("Higgs_mRelReso","%s , 0 , 0.2"%nbins),
 ]
 

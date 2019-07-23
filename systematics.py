@@ -12,8 +12,16 @@ def addLheScale(flow):
     flow.VariationWeight("LHERenDown")
     flow.VariationWeight("LHEFacUp")
     flow.VariationWeight("LHEFacDown")
+ 
 
-
+def addLhePdf(flow):
+    flow.Define("LHEPdfSquaredSum","sqrt(Sum((LHEPdfWeight-1.f)*(LHEPdfWeight-1.f)))")
+    flow.Define("LHEPdfRMS","nLHEPdfWeight>0?LHEPdfSquaredSum/sqrt(nLHEPdfWeight):0.f")
+    flow.Define("LHEPdfUp","LHEPdfHasHessian?1.+LHEPdfSquaredSum:1.+LHEPdfRMS")	
+    flow.Define("LHEPdfDown","LHEPdfHasHessian?1.-LHEPdfSquaredSum:1.-LHEPdfRMS")	
+    flow.VariationWeight("LHEPdfUp")
+    flow.VariationWeight("LHEPdfDown")
+	
 
 def addPSWeights(flow):
      flow.Define("PSWeightToFix","PSWeight[0]!=1.0f && genWeight!=LHEWeight_originalXWGTUP ")
