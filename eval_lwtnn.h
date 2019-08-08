@@ -7,26 +7,27 @@
 #include <iostream>   
 #include "TString.h"
 
-// variabili
-
-// NODE0-> "MqqLog", "Rpt", "DeltaEtaQQ", "ll_zstar", "softActivityEWK_njets5", "min(EtaHQ1,EtaHQ2)", "qgl_1q", "qgl_2q",         "ll_pt","ll_pt_Log","ll_eta","Mqq","Jet2q_pt","Jet1q_pt","Jet2q_eta","Jet1q_eta","Jet2q_phi","Jet1q_phi",
-           
-// NODE1->  "ll_mass","deltaMRel","deltaM"
-
 class LwtnnWrapper{
     public:
-        LwtnnWrapper()
+        LwtnnWrapper(std::vector<std::string> NNjsons =  {"/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json"})
         {
-//             std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/final_file_lwtnn2.json");
-            std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json");
-            graph_ = new lwt::LightweightGraph(lwt::parse_json_graph(input));
+
+//             std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json");
+//             graph_ = new lwt::LightweightGraph(lwt::parse_json_graph(input));
+            
+            for ( auto j: NNjsons )
+            {
+                std::ifstream input(j);
+                graphs_.push_back(new lwt::LightweightGraph(lwt::parse_json_graph(input)));
+            }
+            
         }
         
-        float eval(unsigned int slot, std::vector <float> invec, std::vector<int> dims)
+        float eval(int event, std::vector <float> invec, std::vector<int> dims)
         {
             std::map<std::string, std::map<std::string, double> > inputs;
             int count=0;
-            for (int i=0; i<dims.size(); i++)
+            for (unsigned int i=0; i<dims.size(); i++)
             {
                 inputs[Form("node_%i", i)]={};
                 for (int j=0; j<dims[i]; j++)
@@ -37,18 +38,24 @@ class LwtnnWrapper{
                 
             }
             
-//             for (auto i: inputs["node_0"]) std::cout <<  "NODE1  " << i.first << " " << i.second << std::endl;
-//             for (auto i: inputs["node_1"]) std::cout <<  "NODE0  " << i.first << " " << i.second << std::endl;
-            
-            std::map<std::string, double> outputs = graph_->compute(inputs);
-//             std::cout << outputs["out_0"] << std::endl;
+            int which = event%(graphs_.size());
+            std::map<std::string, double> outputs = graphs_[which]->compute(inputs);
+
             return outputs["out_0"];
         }
         
-        lwt::LightweightGraph* graph_;
+        std::vector<lwt::LightweightGraph*> graphs_;
 
 };
 
-LwtnnWrapper lwtnn;
+std::vector<std::string> v = {"/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json"} ;
+LwtnnWrapper lwtnn = LwtnnWrapper(v);
+
+std::vector<std::string> v18 = {
+"/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt0.json",
+"/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt1.json",
+"/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt2.json",
+"/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt3.json"};
+LwtnnWrapper lwtnn18 = LwtnnWrapper(v18);
 
 #endif

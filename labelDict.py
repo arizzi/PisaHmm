@@ -44,8 +44,12 @@ labelVariable={
 "NSoft5New"         : "# soft jet p_{T}>5 equivalent version",
 "ll_zstar_log"      : "log(z*)",
 "SBClassifierZ"     : "BDT output (m=125)",
-"BDTAtanZ"          : "BDTAtanh((BDT+1)/2) (m=125)",
+"BDTAtanZ"          : "atanh((BDT+1)/2) (m=125)",
 "SBClassifierNoMass": "BDT output (m=125)",
-"BDTAtanNoMass"     : "BDTAtanh((BDT+1)/2) (m=125)",
+"BDTAtanNoMass"     : "atanh((BDT+1)/2) (m=125)",
+"DNN18Atan"         : "atanh(DNN)",
+"DNN18AtanNoMass"   : "atanh(DNN) (m=125)",
+"DNNAtan"           : "atanh(DNN)",
+"DNNAtanNoMass"     : "atanh(DNN) (m=125)",
 
 }

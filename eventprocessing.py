@@ -175,10 +175,12 @@ flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
 
 flow.AddCppCode('\n#include "eval_lwtnn.h"\n')
 #flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
-flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")
-flow.Define("DNNClassifierNoMass","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,125.,Higgs_mRelReso,Higgs_mReso}, {16,3})")
+flow.Define("DNNClassifier","lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")
+flow.Define("DNNClassifierNoMass","lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,125.,Higgs_mRelReso,Higgs_mReso}, {16,3})")
 flow.Define("DNNAtan","atanh(DNNClassifier)")
 flow.Define("DNNAtanNoMass","atanh(DNNClassifierNoMass)")
+flow.Define("DNN18Atan","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
+flow.Define("DNN18AtanNoMass","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,125.,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
 
 #unused MC stuff
 flow.Selection("hasHiggs","Sum(GenPart_pdgId == 25) > 0")
