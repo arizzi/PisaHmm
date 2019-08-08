@@ -52,7 +52,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
-#addCompleteJecs(flow)
+addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -140,6 +140,10 @@ def f(ar):
 	       rdf=rdf.Define("lhefactor","2.f") 
 	   else:
 	       rdf=rdf.Define("lhefactor","1.f") 
+	   if "LHEPdfWeight" not in list(rdf.GetColumnNames()):
+	       print "ADDING FAKE PDF",f
+	       rdf=rdf.Define("LHEPdfWeight","ROOT::VecOps::RVec<float>(1,1)")
+	       rdf=rdf.Define("nLHEPdfWeight","uint32_t(1)")
 	   if hessian:
 	       rdf=rdf.Define("LHEPdfHasHessian","true")
 	   else:
