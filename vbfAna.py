@@ -38,7 +38,7 @@ from systematics import *
 addLheScale(flow)
 addLhePdf(flow)
 addPSWeights(flow)
-addBtag(flow)
+#addBtag(flow)
 addBasicJecs(flow)
 addMuScale(flow)
 addPUvariation(flow)
@@ -52,7 +52,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
-addCompleteJecs(flow)
+#addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -111,6 +111,7 @@ def f(ar):
      '''%nthreads)
      s,f=ar
      print f
+     ROOT.gSystem.Load("libotherStuff.so")
      rf=ROOT.TFile.Open(f[0])
      ev=rf.Get("Events")
      hessian=False

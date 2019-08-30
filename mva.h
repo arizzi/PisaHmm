@@ -59,6 +59,7 @@ float eval(unsigned int i,std::vector<float> f){
 };
 
 //MVAWrapper mva(64);
-MVAWrapper mva;
+extern MVAWrapper mva;
+//MVAWrapper mva;
 
 #endif
