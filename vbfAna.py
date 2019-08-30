@@ -134,7 +134,7 @@ def f(ar):
 	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Filter("passJson(run,luminosityBlock)","jsonFilter")
 	   rdf=rdf.Define("isMC","false")
-	   rdf=rdf.Define("Jet_pt_nom","Jet_pt")
+	   if year != "2018": rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
 	 else :
 	   if  s in  ["DY0J_2018AMCPY","DY0J_2017AMCPY","DY1J_2017AMCPY","DY1J_2018AMCPY"] :

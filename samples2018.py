@@ -1,5 +1,5 @@
 path2018 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
-path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
+path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
 
 samples={
 #"DY105Inclusuve_2018AMCPY"     : {"files":[path2018+"DYJetsToLL_M-105To160-amcatnloFXFX_nano2018.root"],"xsec": 41.81},
