@@ -53,9 +53,12 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 
 systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-from jesnames import jes2016
-systematicsToPlot+=[x[10:] for x in jes2016 ]
 
+if True  :  #use full JES?
+  from jesnames import jes2016
+  systematicsToPlot+=[x[10:] for x in jes2016 ]
+else :
+  systematicsToPlot+=["JESUp","JESDown"]
 
 from rebinning import *
 #possibly change the rebinning here

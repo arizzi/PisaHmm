@@ -1,10 +1,10 @@
 #!/bin/bash
-ZREGION=ch1_DNNAtanNoMass___ZRegion
+ZREGION=ch1_DNN18AtanNoMass___ZRegion
 ZCONTROL=ch1_pTbalanceAll___ZRegion
 ZREGIONBDT=ch1_BDTAtanNoMass___ZRegion
 
-SIGNAL=ch2_DNNAtan___SignalRegion
-SIDE=ch2_DNNAtanNoMass___SideBand
+SIGNAL=ch2_DNN18Atan___SignalRegion
+SIDE=ch2_DNN18AtanNoMass___SideBand
 SIGNALBDT=ch2_BDTAtan___SignalRegion
 SIDEBDT=ch2_BDTAtanNoMass___SideBand
 
@@ -16,18 +16,18 @@ done
 combineCards.py run2016=datacard2016.txt run2017=datacard2017.txt run2018=datacard2018.txt > combined.txt
 #combineCards.py run2018=datacard2018.txt > combined.txt
 
-TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE $SIGNALBDT"
-TOFIT="$SIDEBDT $ZREGIONBDT"
-#TOMASK="$ZCONTROL $SIGNAL"
-#TOFIT="$SIDE $ZREGION"
+#TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE $SIGNALBDT"
+#TOFIT="$SIDEBDT $ZREGIONBDT"
+TOMASK="$ZCONTROL $SIGNAL"
+TOFIT="$SIDE $ZREGION"
 PREFITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 PREFITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 PREFIT="--setParameters $PREFITMASK$PREFITNOMASK"
 
-TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE"
-TOFIT="$SIDEBDT $ZREGIONBDT $SIGNALBDT"
-#TOMASK=$ZCONTROL 
-#TOFIT="$SIDE $ZREGION $SIGNAL"
+#TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE"
+#TOFIT="$SIDEBDT $ZREGIONBDT $SIGNALBDT"
+TOMASK=$ZCONTROL 
+TOFIT="$SIDE $ZREGION $SIGNAL"
 FITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 FITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 FIT="--setParameters $FITMASK$FITNOMASK"

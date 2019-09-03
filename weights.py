@@ -10,6 +10,7 @@ def addDefaultWeights(flow):
     flow.CentralWeight("genWeight")
     flow.CentralWeight("btagWeight")
     flow.CentralWeight("puWeight")
+    flow.CentralWeight("QGLweight",["twoJets"])
 
 def addMuEffWeight(flow):
     #flow.AddCppCode('#include "../hmmtools/hmm_code.h"')
