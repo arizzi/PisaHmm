@@ -44,7 +44,7 @@ flow.Define("Jet_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPh
 flow.DefaultConfig(jetPtCut=25)
 flow.SubCollection("SelectedJet","Jet",'''
 (year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ||  Jet_neEmEF<0.55 ) && 
-Jet_pt_touse > jetPtCut && Jet_puId >0 &&  Jet_jetId > 0 && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6) && 
+Jet_pt_touse > jetPtCut && Jet_puId >0 &&  (Jet_pt_touse > 50 || Jet_jetId > 0 ) && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6 || Jet_pt_touse >50) && 
 (Jet_muonIdx1==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_dz,Jet_muonIdx1,100)) > 0.2 || abs(TakeDef(Muon_dxy,Jet_muonIdx1,100) > 0.05)) &&
 (Jet_muonIdx2==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_dz,Jet_muonIdx2,100)) > 0.2 || abs(TakeDef(Muon_dxy,Jet_muonIdx2,100) > 0.05)) 
 ''')
@@ -54,11 +54,10 @@ flow.Define("GenJet_p4","@p4v(GenJet)")
 flow.Distinct("JetPair","SelectedJet")
 #flow.TakePair("QJet","SelectedJet","JetPair","Argmax(MemberMap((JetPair0_p4+JetPair1_p4),M() ))",requires=["twoJets"])
 flow.Define("SortedSelectedJetIndices","Argsort(-SelectedJet_pt_touse)")
-flow.ObjectAt("QJet0","SelectedJet","At(SortedSelectedJetIndices,0)",requires=["twoJets"])
-flow.ObjectAt("QJet1","SelectedJet","At(SortedSelectedJetIndices,1)",requires=["twoJets"])
+flow.ObjectAt("QJet0","SelectedJet",'At(SortedSelectedJetIndices,0)',requires=["twoJets"])
+flow.ObjectAt("QJet1","SelectedJet",'At(SortedSelectedJetIndices,1)',requires=["twoJets"])
 flow.AddCppCode('\n#include "qglJetWeight.h"\n')
 flow.Define("QGLweight", "isMC?qglJetWeight(QJet0_partonFlavour, QJet0_eta, QJet0_qgl)*qglJetWeight(QJet1_partonFlavour, QJet1_eta, QJet1_qgl):1",requires=["twoJets"])
-
 
 #compute number of softjets removing signal footprint
 flow.Define("SoftActivityJet_mass","SoftActivityJet_pt*0")

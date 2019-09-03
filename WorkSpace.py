@@ -19,13 +19,19 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
         
     #different systematic have to be created for different regions if they are normalizationOnly
     sysToSplitInRegions=[]
+    sysToPop=[]
     for syst in systematicDetail :
+        if  all(syst+"Up" not in all_histo_all_syst[x][samp].keys() for x in region.keys() for samp in availableSamples[x]) and ( not systematicDetail[syst]["type"]=="lnN" or ( "normalizationType" in systematicDetail[syst].keys() and systematicDetail[syst]["normalizationType"]=="normalizationOnly" )) : sysToPop.append(syst)   # check if systematics in systematicGrouping are in model, if there are not they are popped
         if "normalizationType" in systematicDetail[syst].keys() and systematicDetail[syst]["normalizationType"] == "normalizationOnly":
             sysToSplitInRegions.append(syst)
-    for syst in sysToSplitInRegions :
-        for x in region.keys() :
-            systematicDetail[region[x].split("___")[-1]+"_"+syst] = systematicDetail[syst]
+    for syst in sysToPop : 
+        print "popping ", syst
         systematicDetail.pop(syst, None)
+    for syst in sysToSplitInRegions :
+        if syst not in sysToPop : 
+            for x in region.keys() :
+                systematicDetail[region[x].split("___")[-1]+"_"+syst] = systematicDetail[syst]
+            systematicDetail.pop(syst, None)
     
     
     for syst in systematicDetail :
@@ -70,9 +76,9 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                                 for samp in availableSamples[x] :
                                     if "groupvalue" in systematicDetail[syst].keys() : 
                                         if g not in systematicDetail[syst]["groupvalue"].keys() and samp.split("_")[0] in systematicDetail[syst]["decorrelate"][g] : 
-                                            systematicDetail[syst]["groupvalue"][g] = all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].GetNbinsX()+1)/all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1)
-                                    
-                                    
+                                            systematicDetail[syst]["groupvalue"][g] = ( all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].GetNbinsX()+1)/all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1) + all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1)/all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].GetNbinsX()+1) ) /2.
+
+                                        
                         
                 if "samplevalue" in systematicDetail[syst].keys() : 
                     datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["samplevalue"],  availableSamples, sampleWithSystematic))

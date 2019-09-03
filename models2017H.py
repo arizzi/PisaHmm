@@ -51,9 +51,11 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 #ystematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]#,"LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
-from jesnames import jes2016
-systematicsToPlot+=[x[10:] for x in jes2016 ]
-
+if True:
+  from jesnames import jes2016
+  systematicsToPlot+=[x[10:] for x in jes2016 ]
+else:
+  systematicsToPlot+=["JESUp","JESDown"]
 
 linecolor=fillcolor
 markercolor=fillcolor

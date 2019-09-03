@@ -71,6 +71,7 @@ def setHistoStyle (h, gr, boundary=False) :
     h.SetLineColor(model.linecolor[gr])
     if boundary:
         h.SetLineColor(ROOT.kBlack)       
+        #h.SetLineColor(ROOT.kWhite)       
     h.SetFillStyle(1001) #NEW
     h.SetLineStyle(1) #NEW    
     
@@ -78,7 +79,7 @@ def setHistoStyle (h, gr, boundary=False) :
 def makeRatioMCplot(h) :
     hMC = h.Clone()
     hMC.SetLineWidth(1)
-    for n in range(hMC.GetNbinsX()) :
+    for n in range(hMC.GetNbinsX()+1) :
        # hMC.SetBinError(n,  hMC.GetBinError(n)/hMC.GetBinContent(n) if hMC.GetBinContent(n)>0 else 0 )
         e = hMC.GetBinError(n)/hMC.GetBinContent(n) if hMC.GetBinContent(n)>0 else 0     
         hMC.SetBinError(n,  e if e<0.5 else 0.5 )                                        
@@ -328,7 +329,9 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
     integral[gr]={}
     integral[gr]["nom"]=0
     error[gr]=0
-    for d in samplesToPlot[gr]: 
+    #for d in samplesToPlot[gr]: 
+    for n in range(len(samplesToPlot[gr])) :
+      d = samplesToPlot[gr][n]
       if makeWorkspace : all_histo_all_syst[hn][d]={}
       nevents = 1 if data else totevents(d)
       lumi_over_nevents = lumi/nevents
@@ -359,7 +362,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                             if hn.split("___")[0] in model.rebin.keys() : 
                                hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                             if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
-                            hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                            if  sy.replace("Up", "").replace("Down", "") in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy.replace("Up", "").replace("Down", "")].keys() and model.systematicDetail[sy.replace("Up", "").replace("Down", "")]["normalizationType"] == "shapeOnly" and hs.integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.integral(0,h.GetNbinsX()+1)/hs.integral(0,hs.GetNbinsX()+1))
+                            else :hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else :	
 			    print "missing",sy,"for",hn, gr,d 
@@ -376,11 +380,17 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         if hn.split("___")[0] in model.rebin.keys() : 
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
-                        if not data : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                        if not data : 
+                            if  sy.replace("Up", "").replace("Down", "") in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy.replace("Up", "").replace("Down", "")].keys() and model.systematicDetail[sy.replace("Up", "").replace("Down", "")]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
+                            else : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
                         addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
             stack[hn].Add(h)
+            #if n==0 : stack[hn].Add(h)
+            #else : 
+                ##stack[hn].GetHists()[-1].Add(h)
+                #stack[hn].GetStack().Last().Add(h)
             if makeWorkspace : all_histo_all_syst[hn][d]["nom"]=h.Clone()
         else:
             print "Cannot open",d,hn
@@ -417,7 +427,8 @@ def makeplot(hn,saveintegrals=True):
    histosSig[hn]=ROOT.THStack(hn,"") 
    datastack[hn]=ROOT.THStack(hn,"") 
 
-   canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750)       
+   #canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",900,750)       
+   canvas[hn]=ROOT.TCanvas("canvas_"+hn,"",1200,1000)       
    #canvas[hn].SetRightMargin(.0);                        
    canvas[hn].Divide(1,2)                                 
    canvas[hn].GetPad(2).SetPad(0.0,0.,0.90,0.25)           
@@ -524,6 +535,8 @@ def makeplot(hn,saveintegrals=True):
    ratio=datasum[hn].Clone()
    ratio.Add(histosum[hn],-1.) 
    ratio.Divide(histosum[hn])
+   for n in range(datasum[hn].GetNbinsX()+2) :
+       if datasum[hn].GetBinContent(n) > 0 : ratio.SetBinError(n, datasum[hn].GetBinError(n)/(histosum[hn].GetBinContent(n) if histosum[hn].GetBinContent(n)>0 else datasum[hn].GetBinContent(n)))
    ratio.SetMarkerStyle(10)
 
    canvas[hn].cd(2)

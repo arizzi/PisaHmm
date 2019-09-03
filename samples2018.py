@@ -29,6 +29,7 @@ samples={
 
 
 "data2018": {"files":[path2018data+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
+"data2018V16": {"files":[path2018+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
 
 
 "TT_2018AMCPY"      : {"files":[path2018+"TT_nano2018.root"],"xsec":809.},    #generator is different from 2016
