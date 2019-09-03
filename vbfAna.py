@@ -27,22 +27,24 @@ from histobinning import binningrules
 flow.binningRules = binningrules
 
 flowData=copy.deepcopy(flow)
-procData=flowData.CreateProcessor("eventProcessorData",[],histosPerSelection,snap,"SignalRegion",nthreads)
+procData=flowData.CreateProcessor("eventProcessorData",["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
 
 #define some event weights
 from weights import *
 addDefaultWeights(flow)
 addMuEffWeight(flow)
+addQGLweight(flow)
 
 from systematics import *
 addLheScale(flow)
 addLhePdf(flow)
 addPSWeights(flow)
-#addBtag(flow)
+addBtag(flow)
 addBasicJecs(flow)
 addMuScale(flow)
 addPUvariation(flow)
 addReweightEWK(flow)
+addQGLvariation(flow)
 
 
 
@@ -136,6 +138,7 @@ def f(ar):
 	   rdf=rdf.Define("isMC","false")
 	   if year != "2018": rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
+	   rdf=rdf.Define("Jet_partonFlavour","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 else :
 	   if  s in  ["DY0J_2018AMCPY","DY0J_2017AMCPY","DY1J_2017AMCPY","DY1J_2018AMCPY"] :
 	       rdf=rdf.Define("lhefactor","2.f") 
@@ -206,16 +209,21 @@ def f(ar):
          ROOT.gROOT.ProcessLine('''
      ROOT::EnableImplicitMT(%s);
      '''%nthreads)
+         
+
+         normalization = ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
 	 if ouspec is not None :
 	    print "Postproc hisots"
             for h in ouspec.histos :
                 h.GetValue()
                 fff.cd()
+                h.Scale(normalization)
                 h.Write()
-         for h in ou.histos :
+         for h in ou.histos : 
 #	    print "histo"
 	    h.GetValue()
 	    fff.cd()
+            h.Scale(normalization)
  	    h.Write()
 	 
          fff.Write()

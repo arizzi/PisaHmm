@@ -22,7 +22,6 @@ flow.Define("PSWeightSafe","nPSWeight>=4?PSWeight:std::vector<float>(4,1)")
 flow.Define("Jet_pt_touse","Jet_pt")
 flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 
-
 #Higgs to mumu reconstruction
 flow.DefaultConfig(muIsoCut=0.25,muIdCut=0,muPtCut=10, dzCut=0.2,dxyCut=0.05) #cuts value should not be hardcoded below but rather being declared here so that scans and optimizations are possible
 flow.Define("Muon_id","Muon_tightId*4+Muon_mediumId*2+Muon_softId") 
@@ -57,6 +56,9 @@ flow.Distinct("JetPair","SelectedJet")
 flow.Define("SortedSelectedJetIndices","Argsort(-SelectedJet_pt_touse)")
 flow.ObjectAt("QJet0","SelectedJet","At(SortedSelectedJetIndices,0)",requires=["twoJets"])
 flow.ObjectAt("QJet1","SelectedJet","At(SortedSelectedJetIndices,1)",requires=["twoJets"])
+flow.AddCppCode('\n#include "qglJetWeight.h"\n')
+flow.Define("QGLweight", "isMC?qglJetWeight(QJet0_partonFlavour, QJet0_eta, QJet0_qgl)*qglJetWeight(QJet1_partonFlavour, QJet1_eta, QJet1_qgl):1",requires=["twoJets"])
+
 
 #compute number of softjets removing signal footprint
 flow.Define("SoftActivityJet_mass","SoftActivityJet_pt*0")
