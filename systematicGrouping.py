@@ -18,7 +18,7 @@ def systematicGrouping (background, signal) :
     legendGrouping.update(signal)
 
     DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J"]
-    EWK= ["EWKZ", "EWKZint"]
+    EWK= ["EWKZ", "EWKZint", "EWKZ105_2018MGHERWIG","EWKZint_2018MGPY"]
     TT = ["TTlep","TTsemi","TThad", "TT"]
     ST = ["STs","STwtbar","STwt","STtbar","STt"]
     WW = ["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]
@@ -27,6 +27,8 @@ def systematicGrouping (background, signal) :
     WJets = ["W2J","W1J","W0J"]
     Hmm = ["vbfHmm","ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
 
+    allSamples = {}
+    for x in DY+EWK+TT+ST+WW+WZ+ZZ+WJets+Hmm : allSamples[x] = x
     
     systematicDetail={
         "puWeight" : {
@@ -73,6 +75,18 @@ def systematicGrouping (background, signal) :
 #                "type": "shape",
 #                "value":1.0,
 #       },
+        "QGL":{
+                "normalizationType": "shapeOnly",
+                "type": "shape",
+                "value":1.0,
+        },
+        "LHEPdf":{
+                "decorrelate":allSamples,
+                "normalizationType": "normalizationOnly",
+                "type": "lnN",
+                "value":1.1,
+                "groupvalue":{},
+        },
         "MuScale":{
                 "type": "shape",
                 "value":1.0,

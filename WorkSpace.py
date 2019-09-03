@@ -17,6 +17,17 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
         h_data_obs = all_histo_all_syst[x]["data"+year]["nom"].Clone(varName[x]+"_"+region[x]+"_data_obs")
         h_data_obs.Write()
         
+    #different systematic have to be created for different regions if they are normalizationOnly
+    sysToSplitInRegions=[]
+    for syst in systematicDetail :
+        if "normalizationType" in systematicDetail[syst].keys() and systematicDetail[syst]["normalizationType"] == "normalizationOnly":
+            sysToSplitInRegions.append(syst)
+    for syst in sysToSplitInRegions :
+        for x in region.keys() :
+            systematicDetail[region[x].split("___")[-1]+"_"+syst] = systematicDetail[syst]
+        systematicDetail.pop(syst, None)
+    
+    
     for syst in systematicDetail :
         systName = syst
         listSamp = []
@@ -51,14 +62,24 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                                     if sy.endswith("Up") :   systnameDict[x][samp][sy] = systName + "Up"
                                     if sy.endswith("Down") : systnameDict[x][samp][sy] = systName + "Down"
                             
-
-                
+                if "normalizationType" in systematicDetail[syst].keys() :
+                    if systematicDetail[syst]["normalizationType"] == "normalizationOnly" :
+                        systematicDetail[syst]["type"] = "lnN"
+                        for x in region.keys() :   #some rations are computed twice but I dont know how to do it elseway
+                            if x.endswith(syst.split("_")[0]) :
+                                for samp in availableSamples[x] :
+                                    if "groupvalue" in systematicDetail[syst].keys() : 
+                                        if g not in systematicDetail[syst]["groupvalue"].keys() and samp.split("_")[0] in systematicDetail[syst]["decorrelate"][g] : 
+                                            systematicDetail[syst]["groupvalue"][g] = all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].GetNbinsX()+1)/all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1)
+                                    
+                                    
+                        
                 if "samplevalue" in systematicDetail[syst].keys() : 
                     datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["samplevalue"],  availableSamples, sampleWithSystematic))
                     
                     
                 elif "groupvalue" in systematicDetail[syst].keys() : 
-                    datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["groupvalue"][g],  availableSamples, sampleWithSystematic))
+                    datacard.write( writeLine(systName, systematicDetail[syst]["type"],   systematicDetail[syst]["groupvalue"][g] if g in systematicDetail[syst]["groupvalue"] else 1.,  availableSamples, sampleWithSystematic))
                 
                 else :
                     datacard.write( writeLine(systName, systematicDetail[syst]["type"],    1. if "value" not in systematicDetail[syst].keys()  else systematicDetail[syst]["value"],  availableSamples, sampleWithSystematic))
