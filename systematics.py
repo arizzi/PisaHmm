@@ -95,3 +95,9 @@ def addCompleteJecs(flow):
 def addPUvariation(flow):
     flow.VariationWeight("puWeightDown","puWeight")  #name of the replacement, target
     flow.VariationWeight("puWeightUp","puWeight") 
+
+def addQGLvariation(flow):
+    flow.Define("QGLweightDown","1.")
+    flow.Define("QGLweightUp","QGLweight*QGLweight")
+    flow.VariationWeight("QGLweightDown","QGLweight")  #name of the replacement, target
+    flow.VariationWeight("QGLweightUp","QGLweight") 
