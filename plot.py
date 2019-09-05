@@ -362,7 +362,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                             if hn.split("___")[0] in model.rebin.keys() : 
                                hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                             if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
-                            if  sy.replace("Up", "").replace("Down", "") in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy.replace("Up", "").replace("Down", "")].keys() and model.systematicDetail[sy.replace("Up", "").replace("Down", "")]["normalizationType"] == "shapeOnly" and hs.integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.integral(0,h.GetNbinsX()+1)/hs.integral(0,hs.GetNbinsX()+1))
+                            if  sy.replace("Up", "").replace("Down", "") in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy.replace("Up", "").replace("Down", "")].keys() and model.systematicDetail[sy.replace("Up", "").replace("Down", "")]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else :hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else :	

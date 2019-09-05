@@ -75,7 +75,7 @@ def systematicGrouping (background, signal) :
 #                "type": "shape",
 #                "value":1.0,
 #       },
-        "QGL":{
+        "QGLweight":{
                 "normalizationType": "shapeOnly",
                 "type": "shape",
                 "value":1.0,
