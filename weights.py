@@ -22,3 +22,8 @@ def addReweightEWK(flow):
 def addQGLweight(flow):
     flow.CentralWeight("QGLweight",["twoJets"])
 
+def addPreFiring(flow):
+    flow.AddCppCode('\n#include "prefiring.h"\n')
+    flow.Define("Jet_pt_prefireWeight","Map(Jet_pt,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
+    flow.Define("PrefiringWeight","std::accumulate(Jet_pt_prefireWeight.begin(),Jet_pt_prefireWeight.end(),1.f, std::multiplies<float>())") 
+    flow.CentralWeight("PrefiringWeight")

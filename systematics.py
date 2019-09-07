@@ -15,10 +15,10 @@ def addLheScale(flow):
  
 
 def addLhePdf(flow):
-    flow.Define("LHEPdfSquaredSum","sqrt(Sum((LHEPdfWeight-1.f)*(LHEPdfWeight-1.f)))")
+    flow.Define("LHEPdfSquaredSum","sqrt(Sum((LHEPdfWeight*lhefactor-1.f)*(LHEPdfWeight*lhefactor-1.f)))")
     flow.Define("LHEPdfRMS","nLHEPdfWeight>0?LHEPdfSquaredSum/sqrt(nLHEPdfWeight):0.f")
-    flow.Define("LHEPdfUp","LHEPdfHasHessian?1.+LHEPdfSquaredSum:1.+LHEPdfRMS")	
-    flow.Define("LHEPdfDown","LHEPdfHasHessian?1.-LHEPdfSquaredSum:1.-LHEPdfRMS")	
+    flow.Define("LHEPdfUp","LHEPdfHasHessian?(1.+LHEPdfSquaredSum):(1.+LHEPdfRMS)")	
+    flow.Define("LHEPdfDown","LHEPdfHasHessian?(1.-LHEPdfSquaredSum):(1.-LHEPdfRMS)")	
     flow.VariationWeight("LHEPdfUp")
     flow.VariationWeight("LHEPdfDown")
 	
@@ -100,4 +100,11 @@ def addQGLvariation(flow):
     flow.Define("QGLweightDown","1.")
     flow.Define("QGLweightUp","QGLweight*QGLweight")
     flow.VariationWeight("QGLweightDown","QGLweight")  #name of the replacement, target
-    flow.VariationWeight("QGLweightUp","QGLweight") 
+    flow.VariationWeight("QGLweightUp","QGLweight")
+
+def addPreFiringVariation(flow):
+    flow.Define("PrefiringWeightDown","1.")
+    flow.Define("PrefiringWeightUp","PrefiringWeight*PrefiringWeight")
+    flow.VariationWeight("PrefiringWeightDown","PrefiringWeight")
+    flow.VariationWeight("PrefiringWeightUp","PrefiringWeight")
+ 

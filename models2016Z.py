@@ -6,7 +6,7 @@ background={
 "DY2J":["DY2J_2016AMCPY"],
 "EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
 "Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
-"Other":["W2J_2016AMCPY","W1J_2016AMCPY","W0J_2016AMCPY", 
+"Other":["W2J_2016AMCPY","W1J_2016AMCPY",#"W0J_2016AMCPY", 
          "WWdps_2016MGPY",
 #"WWJJlnln_2016MGPY",
 "WLLJJln_2016MG_MADSPIN_PY",
@@ -52,9 +52,11 @@ fillcolor={
 }
 
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]
-systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
+#systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
+systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
-if False:
+
+if True:
  from jesnames import jes2016
  systematicsToPlot+=[x[10:] for x in jes2016 ]
 else:

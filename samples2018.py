@@ -1,5 +1,8 @@
-path2018 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
-path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
+path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
+#path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
+#/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
+path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
+#path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 
 samples={
 #"DY105Inclusuve_2018AMCPY"     : {"files":[path2018+"DYJetsToLL_M-105To160-amcatnloFXFX_nano2018.root"],"xsec": 41.81},
@@ -29,7 +32,7 @@ samples={
 
 
 "data2018": {"files":[path2018data+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
-"data2018V16": {"files":[path2018+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
+#data2018V16": {"files":[path2018+"SingleMuon_nano2018.root"],"lumi":59970.,"data":True},
 
 
 "TT_2018AMCPY"      : {"files":[path2018+"TT_nano2018.root"],"xsec":809.},    #generator is different from 2016

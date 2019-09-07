@@ -37,7 +37,7 @@ echo "Fit: " $FIT
 
 DCTXT=combined.txt
 NAME=cmb
-
+if /bin/false ; then
 ./decorrelate.sh >> combined.txt
 text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel    --channel-masks ${DCTXT}   --PO  'map=.*Hmm.*:r[1.,-10,10]'  >>${NAME}.log
 
@@ -45,4 +45,11 @@ combine  -M MultiDimFit -n$NAME --saveWorkspace $PREFIT combined.root --verbose 
 
 combine -M Significance --snapshotName MultiDimFit -t -1  higgsCombine${NAME}.MultiDimFit.mH120.root ${FIT}r=1   >>${NAME}.log
 combine -M Significance --snapshotName MultiDimFit -t -1  higgsCombine${NAME}.MultiDimFit.mH120.root ${FIT}r=1  --toysFrequentist  >>${NAME}.log
+fi
+DC=higgsCombine${NAME}.MultiDimFit.mH120.root
+combineTool.py -M Impacts -d $DC -m 125 -n$NAME ${FIT}r=1 -t -1 --doInitialFit --robustFit 1  >${NAME}.impact.log
+combineTool.py -M Impacts -d $DC -m 125 -n$NAME ${FIT}r=1 -t -1 --robustFit 1 --doFits   --parallel 50 >>${NAME}.impact.log
+combineTool.py -M Impacts -d $DC -m 125 -n$NAME -o impacts${NAME}.json  >>${1}.impact.log
+plotImpacts.py -i impacts${NAME}.json -o impacts${NAME} >>${NAME}.impact.log
+
 

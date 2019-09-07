@@ -11,7 +11,7 @@ class LwtnnWrapper{
     public:
         LwtnnWrapper(std::vector<std::string> NNjsons =  {"/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json"})
         {
-
+	    std::cout << "Constructor " << NNjsons.size() << " " << NNjsons[0] <<" "  << this <<  std::endl;
 //             std::ifstream input("/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json");
 //             graph_ = new lwt::LightweightGraph(lwt::parse_json_graph(input));
             
@@ -25,6 +25,9 @@ class LwtnnWrapper{
         
         float eval(int event, std::vector <float> invec, std::vector<int> dims)
         {
+/*	    std::cout << "DNN in " << invec[0] << " "<< invec[3] << " dims: " << dims.size() << " ev " << event<<  " " << graphs_.size() << " " << this <<  std::endl;
+	    for(size_t j=0; j<invec.size() ; j++) std::cout << " " << invec[j];
+	    std::cout << std::endl;*/
             std::map<std::string, std::map<std::string, double> > inputs;
             int count=0;
             for (unsigned int i=0; i<dims.size(); i++)
@@ -40,11 +43,17 @@ class LwtnnWrapper{
             
             int which = event%(graphs_.size());
             std::map<std::string, double> outputs = graphs_[which]->compute(inputs);
-
+/*   if (outputs["out_0"] < 1e-7 && graphs_.size() == 4) {
+	    std::cout << "DNN in check " << invec[0] << " " << invec[3]  << " dims: " << dims.size() << " ev " << event<<  " " << graphs_.size() <<  std::endl;
+	    for(size_t j=0; j<invec.size() ; j++) std::cout << " " << invec[j];
+	    std::cout << std::endl;
+	    std::cout << "DNN " << which << " " << outputs["out_0"] << " " << this << std::endl;
+	    abort();
+  	    }*/
             return outputs["out_0"];
         }
         
-        std::vector<lwt::LightweightGraph*> graphs_;
+        std::vector<const lwt::LightweightGraph*> graphs_;
 
 };
 extern LwtnnWrapper lwtnn;
