@@ -6,7 +6,7 @@ background={
 #"EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
 "EWKZ":["EWKZ105_2016MGHERWIG","EWKZint_2016MGPY"],
 "Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
-"Other":["W2J_2016AMCPY","W1J_2016AMCPY","W0J_2016AMCPY", 
+"Other":["W2J_2016AMCPY","W1J_2016AMCPY",#"W0J_2016AMCPY", 
          #"WWdps_2016MGPY","WWJJlnln_2016MGPY","WLLJJln_2016MG_MADSPIN_PY",
          "WW2l2n_2016POWPY",#"WWlnqq_2016AMC_MADSPIN_PY",
          "WZ1l1n2q_2016AMCPY","WZ1l3n_2016AMCPY","WZ2l2q_2016AMC_MADSPIN_PY","WZ3l1n_2016POWPY",
@@ -54,7 +54,7 @@ fillcolor={
 #ystematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
-if True:
+if False:
  from jesnames import jes2016
  systematicsToPlot+=[x[10:] for x in jes2016 ]
 else:

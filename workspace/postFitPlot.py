@@ -1,4 +1,5 @@
 #!/usr/bin/env python 
+import importlib
 
 import CombineHarvester.CombineTools.plotting as plot
 import ROOT
@@ -94,6 +95,7 @@ parser.add_argument('--x_title', default='DNN output',help='Title for the x-axis
 parser.add_argument('--y_title', default='Entries',help='Title for the y-axis')
 parser.add_argument('--lumi', default='35.9 fb^{-1} (13 TeV)',help='Lumi label')
 parser.add_argument('--cr', default=False, action='store_true', help='Plot CRs? (Important for QCD in 0-lep')
+parser.add_argument('--year', default='2018',help='year')
 
 
 args = parser.parse_args()
@@ -132,9 +134,12 @@ histo_file = ROOT.TFile(shape_file)
 
 #Store plotting information for different backgrounds 
 background_schemes={}
-import models2018Z,models2018H
-import  models2016Z as models2018Z
-import  models2016H as models2018H
+#import models2018Z,models2018H
+#import  models2016Z as models2018Z
+#import  models2016H as models2018H
+models2018Z=importlib.import_module("models"+args.year+"Z")
+models2018H=importlib.import_module("models"+args.year+"H")
+
 background_schemes['ch1']=[backgroundComp(x,models2018Z.background[x],models2018Z.fillcolor[x]) for x in models2018Z.backgroundSorted]+[backgroundComp(x,models2018Z.signal[x],models2018Z.fillcolor[x]) for x in models2018Z.signal]
 #background_schemes['ch2_SignalRegion']=[backgroundComp(x,models2018H.background[x],models2018H.fillcolor[x]) for x in models2018H.backgroundSorted]+[backgroundComp(x,models2018H.signal[x],models2018H.fillcolor[x]) for x in models2018H.signal]
 background_schemes['ch2']=[backgroundComp(x,models2018H.background[x],models2018H.fillcolor[x]) for x in models2018H.backgroundSorted]+[backgroundComp(x,models2018H.signal[x],models2018H.fillcolor[x]) for x in models2018H.signal]
@@ -304,9 +309,14 @@ latex2.DrawLatex(0.145,0.955,channel_label)
 
 
 #CMS and lumi labels
+lumiperYear={
+"2016":"35.9 fb^{-1} (13 TeV)",
+"2017":"41.5 fb^{-1} (13 TeV)",
+"2018":"60.0 fb^{-1} (13 TeV)",
+}
 plot.FixTopRange(pads[0], plot.GetPadYMax(pads[0]), extra_pad if extra_pad>0 else 0.30)
 plot.DrawCMSLogo(pads[0], 'CMS', 'Preliminary', 11, 0.045, 0.05, 1.0, '', 1.0)
-plot.DrawTitle(pads[0], args.lumi, 3)
+plot.DrawTitle(pads[0], lumiperYear[args.year], 3)
 
 #Add ratio plot if required
 if args.ratio:

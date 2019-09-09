@@ -39,16 +39,22 @@ flow.Define("Higgs","Mu0_p4+Mu1_p4")
 flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
 
+flow.AddCppCode('\n#include "prefiring.h"\n')
+flow.Define("Jet_prefireWeight","Map(Jet_pt,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
+
 flow.Define("Jet_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Jet_pt_touse , Jet_eta, Jet_phi, Jet_mass)")
 #VBF Jets kinematics
 flow.DefaultConfig(jetPtCut=25)
 flow.SubCollection("SelectedJet","Jet",'''
 (year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ||  Jet_neEmEF<0.55 ) && 
-Jet_pt_touse > jetPtCut && Jet_puId >0 &&  (Jet_pt_touse > 50 || Jet_jetId > 0 ) && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6 || Jet_pt_touse >50) && 
+Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || Jet_puId >0 ) &&   Jet_jetId > 0  && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6 || Jet_pt_touse >50) && 
 (Jet_muonIdx1==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_dz,Jet_muonIdx1,100)) > 0.2 || abs(TakeDef(Muon_dxy,Jet_muonIdx1,100) > 0.05)) &&
 (Jet_muonIdx2==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_dz,Jet_muonIdx2,100)) > 0.2 || abs(TakeDef(Muon_dxy,Jet_muonIdx2,100) > 0.05)) 
 ''')
 flow.Selection("twoJets","nSelectedJet>=2")
+
+
+
 flow.Define("GenJet_p4","@p4v(GenJet)")
 #flow.Define("SelectedJet_p4","@p4v(SelectedJet)")
 flow.Distinct("JetPair","SelectedJet")
@@ -58,6 +64,10 @@ flow.ObjectAt("QJet0","SelectedJet",'At(SortedSelectedJetIndices,0)',requires=["
 flow.ObjectAt("QJet1","SelectedJet",'At(SortedSelectedJetIndices,1)',requires=["twoJets"])
 flow.AddCppCode('\n#include "qglJetWeight.h"\n')
 flow.Define("QGLweight", "isMC?qglJetWeight(QJet0_partonFlavour, QJet0_eta, QJet0_qgl)*qglJetWeight(QJet1_partonFlavour, QJet1_eta, QJet1_qgl):1",requires=["twoJets"])
+
+flow.Define("PrefiringWeight","isMC?std::accumulate(Jet_prefireWeight.begin(),Jet_prefireWeight.end(),1.f, std::multiplies<float>()):1.f")
+flow.Define("PrefiringCorrection","1.f-(1.f-QJet0_prefireWeight)*(1.f-QJet1_prefireWeight)")
+flow.Define("CorrectedPrefiringWeight","PrefiringWeight+PrefiringCorrection")
 
 #compute number of softjets removing signal footprint
 flow.Define("SoftActivityJet_mass","SoftActivityJet_pt*0")
@@ -167,10 +177,10 @@ flow.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDelta
 flow.Define("BDTAtan","atanh((SBClassifier+1.)/2.)")
 flow.Define("BDTAtanNoMass","atanh((SBClassifierNoMass+1.)/2.)")
 flow.Define("BDTAtanNoMassNoNSJ","atanh((SBClassifierNoMassNoNSJ+1.)/2.)")
-flow.Selection("BDT0p8","BDTAtan>0.8")
-flow.Selection("BDT1p0","BDTAtan>1.0")
-flow.Selection("BDT1p1","BDTAtan>1.1")
-flow.Selection("BDT1p2","BDTAtan>1.2")
+flow.Selection("BDT0p8","BDTAtanNoMass>0.8")
+flow.Selection("BDT1p0","BDTAtanNoMass>1.0")
+flow.Selection("BDT1p1","BDTAtanNoMass>1.1")
+flow.Selection("BDT1p2","BDTAtanNoMass>1.2")
 flow.Selection("BDTNoMN1p0","BDTAtanNoMassNoNSJ>1.0")
 flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
 

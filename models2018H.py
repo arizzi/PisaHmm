@@ -92,7 +92,7 @@ systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHE
 #systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]+[x+"Down" for x in jesnames]+[x+"Up" for x in jesnames]
 systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
-if True  :  #use full JES?
+if False  :  #use full JES?
   from jesnames import jes2016
   systematicsToPlot+=[x[10:] for x in jes2016 ]
 else :

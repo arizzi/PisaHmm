@@ -37,5 +37,7 @@ binningrules=[
 ("minEtaHQ.*","%s , 0 , 5"%nbins),
 ("Rpt","%s , 0 , 1"%nbins),
 ("Higgs_mRelReso","%s , 0 , 0.2"%nbins),
+("Jet_jetId.*","%s , 0 , %s"%(nbins,nbins-1)),
+("Jet_puId.*","%s , 0 , %s"%(nbins,nbins-1)),
 ]
 
