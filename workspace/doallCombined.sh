@@ -37,8 +37,8 @@ echo "Fit: " $FIT
 
 DCTXT=combined.txt
 NAME=cmb
-if /bin/false ; then
 ./decorrelate.sh >> combined.txt
+if /bin/false ; then
 text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel    --channel-masks ${DCTXT}   --PO  'map=.*Hmm.*:r[1.,-10,10]'  >>${NAME}.log
 
 combine  -M MultiDimFit -n$NAME --saveWorkspace $PREFIT combined.root --verbose 9   >>${NAME}.log

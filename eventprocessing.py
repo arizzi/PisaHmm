@@ -39,8 +39,8 @@ flow.Define("Higgs","Mu0_p4+Mu1_p4")
 flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
 
-flow.AddCppCode('\n#include "prefiring.h"\n')
-flow.Define("Jet_prefireWeight","Map(Jet_pt,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
+flow.AddExternalCode(header="prefiring.h",cppfiles=["prefiring.C"])
+flow.Define("Jet_prefireWeight","Map(Jet_pt_touse,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
 
 flow.Define("Jet_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Jet_pt_touse , Jet_eta, Jet_phi, Jet_mass)")
 #VBF Jets kinematics
@@ -150,12 +150,13 @@ flow.Define("mmjj_pt_log","log(mmjj_pt)")
 flow.Define("mmjj_pz","mmjj.Pz()")
 flow.Define("mmjj_pz_logabs","log(abs(mmjj_pz))")
 flow.Define("MaxJetAbsEta","std::max(std::abs(QJet0_eta), std::abs(QJet1_eta))")
-flow.AddCppCode('\n#include "muresolution.h"\n')
+flow.AddExternalCode(header="muresolution.h",cppfiles=["muresolution.C"],ipaths=["."])
 flow.Define("Higgs_mRelReso", "hRelResolution(LeadMuon_pt,LeadMuon_eta,SubMuon_pt,SubMuon_eta)")
 flow.Define("Higgs_mReso","Higgs_mRelReso*Higgs_m")
 flow.Define("minEtaHQ","std::min(EtaHQ1,EtaHQ2)")
 
-flow.DefaultConfig(higgsMassWindowWidth=10,mQQcut=400,nominalHMass=125.03,btagCut=0.8)
+flow.DefaultConfig(higgsMassWindowWidth=10,mQQcut=400,nominalHMass=125.03) ,btagCut=0.8)
+flow.Define("btagCut","(year==2018)?0.4184f:((year==2017)?0.4941f:0.6321f)")
 flow.Selection("MassWindow","abs(Higgs.M()-nominalHMass)<higgsMassWindowWidth")
 flow.Selection("MassWindowZ","abs(Higgs.M()-91)<15")
 flow.Selection("VBFRegion","Mqq > mQQcut && QJet0_pt_touse> 35 && QJet1_pt_touse > 25")
@@ -170,6 +171,8 @@ flow.Selection("TwoJetsTwoMu","twoJets && twoOppositeSignMuons", requires=["twoJ
 #flow.Define("SBClassifier","mva.eval(__slot,{Higgs_m,Mqq_log,mmjj_pt_log,qqDeltaEta,float(NSoft5),ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 #flow.Define("SBClassifierNoMass","mva.eval(__slot,{125.,Mqq_log,mmjj_pt_log,qqDeltaEta,float(NSoft5),ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 #flow.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,mmjj_pt_log,qqDeltaEta,0,ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
+
+flow.AddExternalCode(header= "mva.h",cppfiles=["mva.C"],libs=["TMVA"],ipaths=["."])
 flow.Define("SBClassifier","mva.eval(__slot,{Higgs_m,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5),minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 flow.Define("SBClassifierNoMass","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5),minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 flow.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,0,minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
@@ -184,13 +187,14 @@ flow.Selection("BDT1p2","BDTAtanNoMass>1.2")
 flow.Selection("BDTNoMN1p0","BDTAtanNoMassNoNSJ>1.0")
 flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
 
-flow.AddCppCode('\n#include "eval_lwtnn.h"\n')
+flow.AddExternalCode(header= "eval_lwtnn.h",cppfiles=["eval_lwtnn.C"],libs=["lwtnn"],ipaths=["/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn/"],lpaths=["/scratch/lgiannini/HmmPisa/lwtnn/build/lib/"])
 #flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
 flow.Define("DNNClassifier","lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")
 flow.Define("DNNClassifierNoMass","lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,125.,Higgs_mRelReso,Higgs_mReso}, {16,3})")
 flow.Define("DNNAtan","atanh(DNNClassifier)")
 flow.Define("DNNAtanNoMass","atanh(DNNClassifierNoMass)")
 flow.Define("DNN18Atan","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
+flow.Define("DNN18AtanNoQGL","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,0.98,0.8,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
 flow.Define("DNN18AtanNoMass","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,125.,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
 
 #unused MC stuff

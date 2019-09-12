@@ -13,5 +13,6 @@ rebin = {
     "BDTAtanNoMass" : bdtbinning,
     "BDTAtanNoMassNoNSJ" : bdtbinning,
     "DNN18Atan": abc,
+    "DNN18AtanNoQGL": abc,
     "DNN18AtanNoMass": abc
 }

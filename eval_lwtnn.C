@@ -9,5 +9,4 @@ std::vector<std::string> v18 = {
 "/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt2.json",
 "/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt3.json"};
 LwtnnWrapper lwtnn18 = LwtnnWrapper(v18);
-MVAWrapper mva;
 

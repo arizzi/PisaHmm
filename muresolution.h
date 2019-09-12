@@ -5,8 +5,8 @@
 #include <TFile.h>
 #include <math.h> 
 
-TFile* f_param= TFile::Open("muonresolution.root");
-TH2F* hmuon= (TH2F*)f_param->Get("PtErrParametrization");
+extern TFile* f_param;
+extern TH2F* hmuon;
 
 float hRelResolution(float pt1, float eta1, float pt2, float eta2) {
     float MuonPtErr1=hmuon->GetBinContent(hmuon->FindBin( (log(pt1)),abs(eta1) ));

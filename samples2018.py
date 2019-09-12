@@ -1,4 +1,4 @@
-path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
+path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5_v2/"
 #path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
 path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
@@ -10,7 +10,7 @@ samples={
 
 "DY105_2018AMCPY"     : {"files":[path2018+"DYJetsToLL_M-105To160-amcatnloFXFX_nano2018.root"],"xsec": 41.81, "filter": "VBFFilterAntiFlag"},
 "DY105_2018MGPY"      : {"files":[path2018+"DYJetsToLL_M-105To160-madgraphMLM_nano2018.root"],"xsec": 41.25, "filter": "VBFFilterAntiFlag"},
-"DY105VBF_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_M-105To160-amcatnloFXFX_VBFFilter_nano2018.root"],"xsec": 41.81*0.0425242, "filter": "VBFFilterFlag"}, #this name has to change
+#"DY105VBF_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_M-105To160-amcatnloFXFX_VBFFilter_nano2018.root"],"xsec": 41.81*0.0425242, "filter": "VBFFilterFlag"}, #this name has to change
 "DY105VBF_2018MGPY"   : {"files":[path2018+"DYJetsToLL_M-105To160-madgraphMLM_VBFFilter_nano2018.root"],"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag"},
 
 "DY0J_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_0J_nano2018.root"],"xsec": 4620.52},
@@ -85,7 +85,7 @@ samples={
 
 "vbfHmm_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008210722},
 #"vbfHmm_PSw_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008210722}, # it exists but it has not been hadded
-"vbfHmm_2018AMCPY"      : {"files":[path2018+"VBF_HToMuMu_amc_nano2018.root"],"xsec":0.0008210722},
+#"vbfHmm_2018AMCPY"      : {"files":[path2018+"VBF_HToMuMu_amc_nano2018.root"],"xsec":0.0008210722},
 
 
 "zHmm_2018POWPY"        : {"files":[path2018+"ZH_HToMuMu_nano2018.root"],"xsec":0.00019201024},

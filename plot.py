@@ -139,6 +139,7 @@ def totevents(s):
        totevCount[s]=1e-9
        totevSkim[s]=1e-9
        for fn in samples[s]["files"]:
+	  print s
 	  f=ROOT.TFile.Open(fn)
 	  run=f.Get("Runs")
 	  totevSkim[s]+=f.Get("Events").GetEntries()
@@ -149,7 +150,6 @@ def totevents(s):
 	    run.Project("hw","1","genEventCount")
 	    totevCount[s]+=hw.GetSumOfWeights()
 	    print totev[s]
-#    print "returning",totev[s], "for",s
     return totev[s]
 
 
@@ -450,7 +450,6 @@ def makeplot(hn,saveintegrals=True):
    histosSignal[hn]={} 
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
-
    DataYieldLine = "sample \t yield  \t\tfraction"
    for sy in model.systematicsToPlot : 
        DataYieldLine = DataYieldLine + "\t" + sy + "\t"
@@ -466,6 +465,7 @@ def makeplot(hn,saveintegrals=True):
    
    for gr in model.signal:
      fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot)
+
 
      
    #superImposedPlot (histos[hn], histosSig[hn], outpath) 
@@ -497,6 +497,7 @@ def makeplot(hn,saveintegrals=True):
        datastack[hn].GetStack().Last().SetBinContent(i,0)
        datasum[hn].SetBinContent(i,0)
        #print "blinded",i,hn
+
    myLegend.Draw() #NEW  
    canvas[hn].cd(1)
    histos[hn].SetTitle("") 
@@ -589,7 +590,6 @@ if args.variablesToFit != None :
 postfit = False
 postfit = args.postfit
 
-print "postfit", postfit
 print "makeWorkspace", makeWorkspace
 print "variablesToFit", variablesToFit
 
