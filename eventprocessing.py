@@ -155,7 +155,7 @@ flow.Define("Higgs_mRelReso", "hRelResolution(LeadMuon_pt,LeadMuon_eta,SubMuon_p
 flow.Define("Higgs_mReso","Higgs_mRelReso*Higgs_m")
 flow.Define("minEtaHQ","std::min(EtaHQ1,EtaHQ2)")
 
-flow.DefaultConfig(higgsMassWindowWidth=10,mQQcut=400,nominalHMass=125.03) ,btagCut=0.8)
+flow.DefaultConfig(higgsMassWindowWidth=10,mQQcut=400,nominalHMass=125.03) #,btagCut=0.8)
 flow.Define("btagCut","(year==2018)?0.4184f:((year==2017)?0.4941f:0.6321f)")
 flow.Selection("MassWindow","abs(Higgs.M()-nominalHMass)<higgsMassWindowWidth")
 flow.Selection("MassWindowZ","abs(Higgs.M()-91)<15")
