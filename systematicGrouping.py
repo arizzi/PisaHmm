@@ -85,7 +85,7 @@ def systematicGrouping (background, signal) :
                 #"decorrelate":{"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "normalizationType": "normalizationOnly",
                 "type": "lnN",
-                "value":1.1,
+                "value":1.1, #AR: Giulio questo non ha senso... 
                 "groupvalue":{},
         },
         "MuScale":{
@@ -104,7 +104,9 @@ def systematicGrouping (background, signal) :
         }
     }
     from jesnames import jes2016
+
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
+
     jesfew={    "JES":{
                 "type": "shape",
                 "value":1.0,

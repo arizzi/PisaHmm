@@ -15,7 +15,7 @@ extern TEfficiency *h_IsoEG30Weight;
 extern TFile* f_forwardJetWeight_2017;
 extern TH2F *h_forwardJetWeight_2017;
 
-float prefiringJetWeight(float year,float pt, float eta) {
+inline float prefiringJetWeight(float year,float pt, float eta) {
     float w = 0;
     float ptToUse=pt;
     do {

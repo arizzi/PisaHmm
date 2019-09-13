@@ -1,6 +1,6 @@
 from nail.nail import *
 import ROOT
-nthreads=50
+nthreads=0
 import sys
 import copy
 ROOT.gROOT.ProcessLine(".x softactivity.h")
@@ -21,14 +21,14 @@ ftxt=open("out/description.txt","w")
 ftxt.write(flow.Describe(used))
 
 snap=[] 
-snaplist=["QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
+snaplist=["nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 
 from histobinning import binningrules
 flow.binningRules = binningrules
 
 flowData=copy.deepcopy(flow)
-procData=flowData.CreateProcessor("eventProcessorData",["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
+procData=flowData.CreateProcessor("eventProcessorData",snaplist+["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
 
 #define some event weights
 from weights import *
@@ -51,13 +51,13 @@ addQGLvariation(flow)
 addPreFiringVariation(flow)
 
 
-snaplist+=["genWeight","puWeight","btagWeight","muEffWeight"]
+snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","QJet1_partonFlavour","QJet0_partonFlavour"]
 systematics=flow.variations #take all systematic variations
 print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
-addCompleteJecs(flow)
+#addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -72,7 +72,7 @@ for sel in  histosWithSystematics:
 print >> sys.stderr, "Number of known columns", len(flow.validCols)
 
 #pproc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"SignalRegion",nthreads)
-proc=flow.CreateProcessor("eventProcessor",[],histosWithSystematics,snap,"",nthreads)
+proc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"",nthreads)
 
 
 
@@ -199,14 +199,14 @@ def f(ar):
 	    print "adding postproc",s
 	    ouspec=specificPostProcessors[s](ou.rdf)
 	    print "added"
-         snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_genPt","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","PrefiringWeight","DNN18Atan","QJet0_prefireWeight","QJet1_prefireWeight", "QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","QGLweight","genWeight","btagWeight","muEffWeight"]
+         #snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_genPt","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","PrefiringWeight","DNN18Atan","QJet0_prefireWeight","QJet1_prefireWeight", "QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","QGLweight","genWeight","btagWeight","muEffWeight"]
 #"QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
 
  #        snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2","LHEPdfUp","LHEPdfDown","LHEPdfSquaredSum","LHEPdfRMS","nLHEPdfWeight","LHEPdfWeight","PrefiringWeight","DNN18Atan__syst__MuScaleDown","Higgs_eta__syst__MuScaleUp","Higgs_mRelReso__syst__MuScaleUp","Higgs_mReso__syst__MuScaleUp","Higgs_m__syst__MuScaleUp","Higgs_pt__syst__MuScaleUp","Mqq","Mqq_log","NSoft5__syst__MuScaleUp","QJet0_eta","QJet0_phi","QJet0_pt_touse","QJet0_qgl","QJet1_eta","QJet1_phi","QJet1_pt_touse","QJet1_qgl","Rpt__syst__MuScaleUp","event","ll_zstar__syst__MuScaleUp","minEtaHQ__syst__MuScaleUp","qqDeltaEta"]
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
-         #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+#         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
          print ou.histos.size()#,ouspec.histos.size()

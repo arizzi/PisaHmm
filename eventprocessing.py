@@ -62,7 +62,7 @@ flow.Distinct("JetPair","SelectedJet")
 flow.Define("SortedSelectedJetIndices","Argsort(-SelectedJet_pt_touse)")
 flow.ObjectAt("QJet0","SelectedJet",'At(SortedSelectedJetIndices,0)',requires=["twoJets"])
 flow.ObjectAt("QJet1","SelectedJet",'At(SortedSelectedJetIndices,1)',requires=["twoJets"])
-flow.AddCppCode('\n#include "qglJetWeight.h"\n')
+flow.AddHeaderCode('\n#include "qglJetWeight.h"\n')
 flow.Define("QGLweight", "isMC?qglJetWeight(QJet0_partonFlavour, QJet0_eta, QJet0_qgl)*qglJetWeight(QJet1_partonFlavour, QJet1_eta, QJet1_qgl):1",requires=["twoJets"])
 
 flow.Define("PrefiringWeight","isMC?std::accumulate(Jet_prefireWeight.begin(),Jet_prefireWeight.end(),1.f, std::multiplies<float>()):1.f")

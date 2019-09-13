@@ -1,5 +1,5 @@
-path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5_v2/"
-#path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
+#path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5_v2/"
+path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
 path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"

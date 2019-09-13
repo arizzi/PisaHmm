@@ -5,7 +5,7 @@
 
 
 
-float qglJetWeight(int partonFlavour, float eta, float qgl) {
+inline float qglJetWeight(int partonFlavour, float eta, float qgl) {
 
 //     std::cout << partonFlavour  << " \t " << eta  << " \t " << qgl << std::endl;
     if (partonFlavour!=0 && abs(eta)<2 && qgl>0) {
