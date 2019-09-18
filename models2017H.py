@@ -3,7 +3,7 @@ name="H"
 background={
 #"DY":["DY105_2017AMCPY", "DY105VBF_2017AMCPY"],
 "DY":["DY105_2017AMCPY"],
-"DYVBF":[ "DY105VBF_2017AMCPYnew"],
+"DYVBF":[ "DY105VBF_2017AMCPY"],
 "EWKZ":["EWKZ105_2017MGHERWIG","EWKZint_2017MGPY"],  # --------------- EWKZ_2017MGPY -> HERWIG ----------------     
 "Top":["STs_2017AMCPY","STwtbar_2017POWPY","STwt_2017POWPY","STtbar_2017POWPY","STt_2017POWPY","TTlep_2017POWPY","TTsemi_2017POWPY"],
 "Other":["W2J_2017AMCPY",#"W0J_2017AMCPY",     # ,"W1J_2017AMCPY"   to be added when ready
@@ -23,7 +23,8 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 signal={
 "VBF H":["vbfHmm_2017POWPY"],
-"gg H":["ggHmm_2017POWPY"],
+#"gg H":["ggHmm_2017POWPY"],
+"gg H":["ggHmm_2017AMCPY"],
 "ZH":["zHmm_2017POWPY"],
 "WH":["WplusHmm_2017POWPY","WminusHmm_2017POWPY"],
 "ttH":["ttHmm_2017POWPY"]
@@ -53,7 +54,7 @@ fillcolor={
 systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
 #ystematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]#,"LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
-if True:
+if False:
   from jesnames import jes2016
   systematicsToPlot+=[x[10:] for x in jes2016 ]
 else:

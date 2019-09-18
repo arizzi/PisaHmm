@@ -18,7 +18,7 @@ def systematicGrouping (background, signal) :
     legendGrouping.update(signal)
 
     DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J"]
-    EWK= ["EWKZ", "EWKZint", "EWKZ105_2018MGHERWIG","EWKZint_2018MGPY"]
+    EWK= ["EWKZ", "EWKZint", "EWKZ105"] 
     TT = ["TTlep","TTsemi","TThad", "TT"]
     ST = ["STs","STwtbar","STwt","STtbar","STt"]
     WW = ["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]

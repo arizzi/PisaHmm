@@ -26,8 +26,8 @@ PREFIT="--setParameters $PREFITMASK$PREFITNOMASK"
 
 #TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE"
 #TOFIT="$SIDEBDT $ZREGIONBDT $SIGNALBDT"
-TOMASK=$ZCONTROL 
-TOFIT="$SIDE $ZREGION $SIGNAL"
+TOMASK="$ZCONTROL "
+TOFIT="$SIDE $SIGNAL $ZREGION"
 FITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 FITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 FIT="--setParameters $FITMASK$FITNOMASK"
@@ -38,7 +38,7 @@ echo "Fit: " $FIT
 DCTXT=combined.txt
 NAME=cmb
 ./decorrelate.sh >> combined.txt
-if /bin/false ; then
+if /bin/true ; then
 text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel    --channel-masks ${DCTXT}   --PO  'map=.*Hmm.*:r[1.,-10,10]'  >>${NAME}.log
 
 combine  -M MultiDimFit -n$NAME --saveWorkspace $PREFIT combined.root --verbose 9   >>${NAME}.log
@@ -46,7 +46,7 @@ combine  -M MultiDimFit -n$NAME --saveWorkspace $PREFIT combined.root --verbose 
 combine -M Significance --snapshotName MultiDimFit -t -1  higgsCombine${NAME}.MultiDimFit.mH120.root ${FIT}r=1   >>${NAME}.log
 combine -M Significance --snapshotName MultiDimFit -t -1  higgsCombine${NAME}.MultiDimFit.mH120.root ${FIT}r=1  --toysFrequentist  >>${NAME}.log
 fi
-if /bin/true; then
+if /bin/false; then
 DC=higgsCombine${NAME}.MultiDimFit.mH120.root
 #combineTool.py -M Impacts -d $DC -m 125 -n$NAME ${FIT}r=1 -t -1 --doInitialFit --robustFit 1  >${NAME}.impact.log
 #combineTool.py -M Impacts -d $DC -m 125 -n$NAME ${FIT}r=1 -t -1 --robustFit 1 --doFits   --parallel 50 >>${NAME}.impact.log

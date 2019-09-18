@@ -9,7 +9,7 @@ snapregion="SignalRegion"
 histosPerSelection={
 #"PreSel" : genericHistos+["Mqq"],
 "SignalRegion": signalHistos+ genericHistos+signalHistosVariations+bdtInputHistos,
-"ZRegion": signalHistosVariations+genericHistos, #+bdtInputHistos,
+"ZRegion": signalHistosVariations+genericHistos +bdtInputHistos,
 #"ZRegionSMP": signalHistosVariations+["pTbalanceAll"]+bdtInputHistos,
 "SideBand" : signalHistos+signalHistosVariations,#+genericHistos+bdtInputHistos,
 #"BDT1p1" : bdtInputHistos+genericHistos,
@@ -54,7 +54,7 @@ histosPerSelectionFullJecs={
 
 
 #quick override for missing plots
-if True:
+if False:
   histosPerSelectionFullJecs={}
   histosPerSelection={
 "SignalRegion": signalHistos,

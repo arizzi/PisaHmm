@@ -12,7 +12,8 @@ background={
          "WWdps_2018MGPY","WWJJlnln_2018MGPY","WLLJJln_2018MG_MADSPIN_PY",
          "WW2l2n_2018POWPY","WWlnqq_2018POWPY",
          "WZ1l3n_2018AMCPY","WZ2l2q_2018AMC_MADSPIN_PY","WZ3l1n_2018POWPY",
-         "ZZ2l2q_2018POWPY","ZZ2l2n_2018POWPY","ZZ4l_2018POWPY"
+         "ZZ2l2q_2018POWPY",#"ZZ2l2n_2018POWPY",
+	"ZZ4l_2018POWPY"
 ],
 }
 
@@ -54,7 +55,7 @@ fillcolor={
 
 systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
-if False  :  #use full JES?
+if True  :  #use full JES?
   from jesnames import jes2016
   systematicsToPlot+=[x[10:] for x in jes2016 ]
 else :

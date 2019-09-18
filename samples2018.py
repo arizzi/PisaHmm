@@ -1,7 +1,7 @@
 #path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5_v2/"
-path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
+path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
-path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_Z/"
+path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 
 samples={
@@ -14,9 +14,9 @@ samples={
 "DY105VBF_2018MGPY"   : {"files":[path2018+"DYJetsToLL_M-105To160-madgraphMLM_VBFFilter_nano2018.root"],"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag"},
 
 "DY0J_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_0J_nano2018.root"],"xsec": 4620.52},
-"DY1J_2018AMCPY"  : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_tmp/DYJetsToLL_1J_nano2017.root"],"xsec":859.59},    # DY1J 2018 NANOAOD does not exist yet 
+"DY1J_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_1J_nano2018.root"],"xsec":859.59},   
 "DY2J_2018AMCPY"  : {"files":[path2018+"DYJetsToLL_2J_nano2018.root"],"xsec":338.26},
-"DYM50_2018AMCPY" : {"files":[path2018+"DYJetstoLL_amc_M-50_nano2018.root"],"xsec":5765.40},
+##AA"DYM50_2018AMCPY" : {"files":[path2018+"DYJetstoLL_amc_M-50_nano2018.root"],"xsec":5765.40},
 
 #"EWKZ_2018MGHERWIG" : {"files":[path2018+"EWK_LLJJ_herwig_nano2018.root"],"xsec":1.664},   # DY1J 2018 NANOAOD does not exist yet 
 "EWKZ_2018MGPY"     : {"files":[path2018+"EWK_LLJJ_pythia8_nano2018.root"],"xsec":1.664},
@@ -69,7 +69,7 @@ samples={
 
 
 
-"ZZ2l2n_2018POWPY": {"files":[path2018+"ZZTo2L2Nu_nano2018.root"],"xsec":16.523 * 20.000 * 10.099 / 10000.},    
+#AA"ZZ2l2n_2018POWPY": {"files":[path2018+"ZZTo2L2Nu_nano2018.root"],"xsec":16.523 * 20.000 * 10.099 / 10000.},    
 "ZZ2l2q_2018POWPY": {"files":[path2018+"ZZTo2L2Q_nano2018.root"],"xsec":16.523 * 2. * 6.729 * 69.91 / 10000.},
 "ZZ4l_2018POWPY": {"files":[path2018+"ZZTo4L_nano2018.root"],"xsec":16.523 * 10.099 * 10.099 / 10000.},    
 
@@ -80,8 +80,8 @@ samples={
 
 
 
-"ggHmm_2018AMCPY"       : {"files":[path2018+"GluGlu_HToMuMu_amc_nano2018.root"],"xsec":0.009582794}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
-"ggHmm_2018POWPY"       : {"files":[path2018+"GluGlu_HToMuMu_nano2018.root"],"xsec":0.009582794},
+"ggHmm_2018AMCPY"       : {"files":[path2018+"GluGlu_HToMuMu_amc_nano2018.root"],"xsec":0.01057}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
+"ggHmm_2018POWPY"       : {"files":[path2018+"GluGlu_HToMuMu_nano2018.root"],"xsec":0.01057},
 
 "vbfHmm_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008210722},
 #"vbfHmm_PSw_2018POWPY"      : {"files":[path2018+"VBF_HToMuMu_nano2018.root"],"xsec":0.0008210722}, # it exists but it has not been hadded

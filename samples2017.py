@@ -1,6 +1,8 @@
-path2017 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_tmp/"
+path2017 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_nanoV5/"
+#/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_tmp/"
 #path2018 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
-path2017data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/"
+path2017data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_nanoV5/"
+# "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/"
 
 
 samples={
@@ -10,7 +12,7 @@ samples={
 "DY105_2017AMCPY"     : {"files":[path2017+"DYJetsToLL_M-105To160-amcatnloFXFX_nano2017.root"],"xsec": 41.81, "filter":  "VBFFilterAntiFlag"},
 "DY105_2017MGPY"      : {"files":[path2017+"DYJetsToLL_M-105To160-madgraphMLM_nano2017.root"],"xsec": 41.25, "filter":  "VBFFilterAntiFlag"},
 "DY105VBF_2017AMCPY"  : {"files":[path2017+"DYJetsToLL_M-105To160_VBFFilter-amcatnloFXFX_nano2017.root"],"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
-"DY105VBF_2017AMCPYnew"  : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_nanoV5_v2/DYJetsToLL_M-105To160_VBFFilter-amcatnloFXFX_nano2017.root"],"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
+#"DY105VBF_2017AMCPYnew"  : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_nanoV5_v2/DYJetsToLL_M-105To160_VBFFilter-amcatnloFXFX_nano2017.root"],"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
 "DY105VBF_2017MGPY"   : {"files":[path2017+"DYJetsToLL_M-105To160_VBFFilter-madgraphMLM_nano2017.root"],"xsec": 41.25*0.0419533, "filter":  "VBFFilterFlag"},
 
 "DY0J_2017AMCPY"  : {"files":[path2017+"DYJetsToLL_0J_nano2017.root"],"xsec": 4620.52},
@@ -19,7 +21,7 @@ samples={
 "DYTau_2017AMCPY" : {"files":[path2017+"DYJetsToTauTau_ForcedMuDecay_nano2017.root"],"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 #"DYM50_2017AMCPY" : {"files":[path2017+"DYJetstoLL_amc_M-50_nano2017.root"],"xsec":5765.40},
 "EWKZ105_2017MGHERWIG"     : {"files":[path2017+"EWK_LLJJ_MLL_105-160_herwig_nano2017.root"],"xsec":0.0508896},
-"EWKZ_2017MGHERWIG" : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/EWK_LLJJ_herwig_nano2017.root"],"xsec":1.664}, #it does not exist yet
+"EWKZ_2017MGHERWIG" : {"files":[path2017+"EWK_LLJJ_herwig_nano2017.root"],"xsec":1.664}, #it does not exist yet
 "EWKZ_2017MGPY"     : {"files":[path2017+"EWK_LLJJ_pythia8_nano2017.root"],"xsec":1.664},
 "EWKZint_2017MGPY"  : {"files":[path2017+"EWK_LLJJ_INT_nano2017.root"],"xsec":0.128},
 

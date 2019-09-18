@@ -1,5 +1,6 @@
-path2016 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/"
-path2016data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_Z/"
+path2016 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5_v3/"
+#/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/"
+path2016data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 
 
 samples={
@@ -14,7 +15,7 @@ samples={
 "DY0J_2016AMCPY"  : {"files":[path2016+"DYJetsToLL_0J_nano2016.root"],"xsec": 4620.52},
 "DY1J_2016AMCPY"  : {"files":[path2016+"DYJetsToLL_1J_nano2016.root"],"xsec":859.59},
 "DY2J_2016AMCPY"  : {"files":[path2016+"DYJetsToLL_2J_nano2016.root"],"xsec":338.26},
-"DYTau_2016AMCPY" : {"files":[path2016+"DYJetsToTauTau_ForcedMuDecay_nano2016.root"],"xsec":5765.40 / 3. * 0.1739 * 0.1739},
+#"DYTau_2016AMCPY" : {"files":[path2016+"DYJetsToTauTau_ForcedMuDecay_nano2016.root"],"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 "DYM50_2016AMCPY" : {"files":[path2016+"DYJetstoLL_amc_M-50_nano2016.root"],"xsec":5765.40},
 
 "EWKZ105_2016MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
@@ -41,7 +42,7 @@ samples={
 
 
 
-"WWdps_2016MGPY"    : {"files":[path2016+"WWTo2L2Nu_DoubleScattering_nano2016.root"],"xsec":1.62},
+#"WWdps_2016MGPY"    : {"files":[path2016+"WWTo2L2Nu_DoubleScattering_nano2016.root"],"xsec":1.62},
 "WWJJlnln_2016MGPY" : {"files":[path2016+"WWJJToLNuLNu_EWK_nano2016.root"],"xsec":0.3452},
 "WLLJJln_2016MG_MADSPIN_PY"  : {"files":[path2016+"WLLJJ_WToLNu_EWK_nano2016.root"],"xsec":0.0176},
 #"WWJJlnlnNoT_2016MGPY": {"files":[path2016+"WWJJToLNuLNu_EWK_noTop_nano2016.root"],"xsec":0.3452},
@@ -53,10 +54,10 @@ samples={
 
 
 
-"WZ1l1n2q_2016AMCPY"            : {"files":[path2016+"WZTo1L1Nu2Q_nano2016.root"],"xsec":47.13 * 21.34 * 69.91 / 10000.},
+#"WZ1l1n2q_2016AMCPY"            : {"files":[path2016+"WZTo1L1Nu2Q_nano2016.root"],"xsec":47.13 * 21.34 * 69.91 / 10000.},
 "WZ1l3n_2016AMCPY"              : {"files":[path2016+"WZTo1L3Nu_nano2016.root"],"xsec":47.13 * 21.34 * 20.00 / 10000.},
 "WZ2l2q_2016AMC_MADSPIN_PY"     : {"files":[path2016+"WZTo2L2Q_nano2016.root"],"xsec":47.13 * 6.729 * 67.41 / 10000.},
-"WZ3l1n_2016POWPY"              : {"files":[path2016+"WZTo3LNu_powheg_nano2016.root"],"xsec":47.13 * 21.34 * 10.099 / 10000.},
+#"WZ3l1n_2016POWPY"              : {"files":[path2016+"WZTo3LNu_powheg_nano2016.root"],"xsec":47.13 * 21.34 * 10.099 / 10000.},
 "WZ3l1n_2016AMCPY"              : {"files":[path2016+"WZTo3LNu_nano2016.root"],"xsec":47.13 * 21.34 * 10.099 / 10000.},
 
 
@@ -72,13 +73,13 @@ samples={
 #"WZ_2017AMCPY": {"files":[path2016+"WZ_nano2016.root"],"xsec":47.13}, 
 #"WW_2017AMCPY": {"files":[path2016+"WW_nano2016.root"],"xsec":118.7}, 
 
-"ggHmm_2016AMCPY"       : {"files":[path2016+"GluGlu_HToMuMu_amc_nano2016.root"],"xsec":0.009582794}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
-"ggHmm_2016POWPY"       : {"files":[path2016+"GluGlu_HToMuMu_nano2016.root"],"xsec":0.009582794},
+"ggHmm_2016AMCPY"       : {"files":[path2016+"GluGlu_HToMuMu_amc_nano2016.root"],"xsec":0.01057}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
+"ggHmm_2016POWPY"       : {"files":[path2016+"GluGlu_HToMuMu_nano2016.root"],"xsec":0.01057},
 
 "vbfHmm_2016POWPY"      : {"files":[path2016+"VBF_HToMuMu_nano2016.root"],"xsec":0.0008210722},
-"vbfHmm_2016POWHERWIG"  : {"files":[path2016+"VBF_HToMuMu_herwigpp_nano2016.root"],"xsec":0.0008210722},
-"vbfHmm_2016AMCPY"      : {"files":[path2016+"VBF_HToMuMu_amc_nano2016.root"],"xsec":0.0008210722},
-"vbfHmm_2016AMCHERWIG"  : {"files":[path2016+"VBF_HToMuMu_amc_herwigpp_nano2016.root"],"xsec":0.0008210722},
+#"vbfHmm_2016POWHERWIG"  : {"files":[path2016+"VBF_HToMuMu_herwigpp_nano2016.root"],"xsec":0.0008210722},
+#"vbfHmm_2016AMCPY"      : {"files":[path2016+"VBF_HToMuMu_amc_nano2016.root"],"xsec":0.0008210722},
+#"vbfHmm_2016AMCHERWIG"  : {"files":[path2016+"VBF_HToMuMu_amc_herwigpp_nano2016.root"],"xsec":0.0008210722},
 
 "zHmm_2016POWPY"        : {"files":[path2016+"ZH_HToMuMu_nano2016.root"],"xsec":0.00019201024},
 "ttHmm_2016POWPY"       : {"files":[path2016+"ttHToMuMu_nano2016.root"],"xsec":0.00011034496},

@@ -3,7 +3,7 @@ from rebinning import *
 name="H"
 background={
 "DY":["DY105_2018AMCPY"],
-"DYVBF":[ "DY105VBF_2018AMCPY"],
+"DYVBF":[ "DY105VBF_2018MGPY"], #DY105VBF_2018AMCPY"],
 #"DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"],
 "EWKZ":["EWKZ105_2018MGHERWIG","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
 #"EWKZ":["EWKZint_2018MGPY","EWKZ105_2016MGHERWIG"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
@@ -28,8 +28,10 @@ background={
 "WWJJlnln_2018MGPY","WLLJJln_2018MG_MADSPIN_PY",
 #        "WW2l2n_2018POWPY","WWlnqq_2018POWPY",
 #"Other":[ 
-"WZ1l3n_2018AMCPY","WZ2l2q_2018AMC_MADSPIN_PY","WZ3l1n_2018POWPY",
-         "ZZ2l2q_2018POWPY","ZZ2l2n_2018POWPY","ZZ4l_2018POWPY"
+"WZ1l3n_2018AMCPY",
+"WZ2l2q_2018AMC_MADSPIN_PY","WZ3l1n_2018POWPY",
+         "ZZ2l2q_2018POWPY",#"ZZ2l2n_2018POWPY",
+"ZZ4l_2018POWPY"
 ],
 }
 
@@ -46,7 +48,8 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 signal={
 "VBF H":["vbfHmm_2018POWPY"],
-"gg H":["ggHmm_2018POWPY"],
+#"gg H":["ggHmm_2018POWPY"],
+"gg H":["ggHmm_2018AMCPY"],
 #"ZH":["zHmm_2018POWPY"],
 #"WH":["WplusHmm_2018POWPY","WminusHmm_2018POWPY"],
 #"ttH":["ttHmm_2018POWPY"]
@@ -92,7 +95,7 @@ systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHE
 #systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]+[x+"Down" for x in jesnames]+[x+"Up" for x in jesnames]
 systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
-if False  :  #use full JES?
+if True  :  #use full JES?
   from jesnames import jes2016
   systematicsToPlot+=[x[10:] for x in jes2016 ]
 else :

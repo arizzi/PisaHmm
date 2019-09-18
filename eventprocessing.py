@@ -10,6 +10,7 @@ flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFrom
 #variables that we will add file by file before passing the RNode to the event processor
 flow.AddExpectedInput("year","int")
 flow.AddExpectedInput("isMC","bool")
+flow.AddExpectedInput("isHerwig","bool")
 flow.AddExpectedInput("Muon_sf","ROOT::VecOps::RVec<float>")
 flow.AddExpectedInput("btagWeight","float")
 flow.AddExpectedInput("EWKreweight","float")
@@ -40,7 +41,8 @@ flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
 
 flow.AddExternalCode(header="prefiring.h",cppfiles=["prefiring.C"])
-flow.Define("Jet_prefireWeight","Map(Jet_pt_touse,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
+#flow.Define("Jet_prefireWeight","Map(Jet_pt_touse,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
+flow.Define("Jet_prefireWeight","Map(Jet_pt,Jet_eta, [ year](float pt,float eta) { return prefiringJetWeight(year,pt,eta); }) ")
 
 flow.Define("Jet_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Jet_pt_touse , Jet_eta, Jet_phi, Jet_mass)")
 #VBF Jets kinematics
@@ -62,12 +64,12 @@ flow.Distinct("JetPair","SelectedJet")
 flow.Define("SortedSelectedJetIndices","Argsort(-SelectedJet_pt_touse)")
 flow.ObjectAt("QJet0","SelectedJet",'At(SortedSelectedJetIndices,0)',requires=["twoJets"])
 flow.ObjectAt("QJet1","SelectedJet",'At(SortedSelectedJetIndices,1)',requires=["twoJets"])
-flow.AddHeaderCode('\n#include "qglJetWeight.h"\n')
-flow.Define("QGLweight", "isMC?qglJetWeight(QJet0_partonFlavour, QJet0_eta, QJet0_qgl)*qglJetWeight(QJet1_partonFlavour, QJet1_eta, QJet1_qgl):1",requires=["twoJets"])
+flow.AddCppCode('\n#include "qglJetWeight.h"\n')
+flow.Define("QGLweight", "isMC?qglJetWeight(QJet0_partonFlavour, QJet0_eta, QJet0_qgl,isHerwig)*qglJetWeight(QJet1_partonFlavour, QJet1_eta, QJet1_qgl,isHerwig):1",requires=["twoJets"])
 
 flow.Define("PrefiringWeight","isMC?std::accumulate(Jet_prefireWeight.begin(),Jet_prefireWeight.end(),1.f, std::multiplies<float>()):1.f")
-flow.Define("PrefiringCorrection","1.f-(1.f-QJet0_prefireWeight)*(1.f-QJet1_prefireWeight)")
-flow.Define("CorrectedPrefiringWeight","PrefiringWeight+PrefiringCorrection")
+#flow.Define("PrefiringCorrection","1.f-(1.f-QJet0_prefireWeight)*(1.f-QJet1_prefireWeight)")
+#flow.Define("CorrectedPrefiringWeight","PrefiringWeight+PrefiringCorrection")
 
 #compute number of softjets removing signal footprint
 flow.Define("SoftActivityJet_mass","SoftActivityJet_pt*0")

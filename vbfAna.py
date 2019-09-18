@@ -1,6 +1,6 @@
 from nail.nail import *
 import ROOT
-nthreads=0
+nthreads=50
 import sys
 import copy
 ROOT.gROOT.ProcessLine(".x softactivity.h")
@@ -21,7 +21,7 @@ ftxt=open("out/description.txt","w")
 ftxt.write(flow.Describe(used))
 
 snap=[] 
-snaplist=["nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
+snaplist=["nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 
 from histobinning import binningrules
@@ -57,7 +57,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
-#addCompleteJecs(flow)
+addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -138,10 +138,13 @@ def f(ar):
 	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Filter("passJson(run,luminosityBlock)","jsonFilter")
 	   rdf=rdf.Define("isMC","false")
+	   rdf=rdf.Define("isHerwig","false")
 	   if year != "2018": rdf=rdf.Define("Jet_pt_nom","Jet_pt")
 	   rdf=rdf.Define("LHE_NpNLO","0")
 	   rdf=rdf.Define("Jet_partonFlavour","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 else :
+	   print "Is herwig?",("true" if "HERWIG" in s else "false"), s
+	   rdf=rdf.Define("isHerwig",("true" if "HERWIG" in s else "false"))
 	   if  s in  ["DY0J_2018AMCPY","DY0J_2017AMCPY","DY1J_2017AMCPY","DY1J_2018AMCPY"] :
 	       rdf=rdf.Define("lhefactor","2.f") 
 	   else:
@@ -206,6 +209,10 @@ def f(ar):
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
+#         rep=ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Report() 
+#	 print "Cutflow for",s
+#	 rep.Print()
+ #        ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 #         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
@@ -253,7 +260,7 @@ sams=samples.keys()
 #sams=["DY2J","TTlep"]
 #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
 toproc=[ (s,samples[s]["files"]) for s in sams  ]
-toproc=sorted(toproc,key=lambda x : sum(map(os.path.getsize,x[1])),reverse=True)
+toproc=sorted(toproc,key=lambda x : sum(map( lambda x : ( os.path.getsize(x) if os.path.exists(x) else 0 ),x[1])),reverse=True)
 print toproc
 
 if len(sys.argv[2:]) :
