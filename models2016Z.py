@@ -59,7 +59,8 @@ systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp"
 
 if True:
  from jesnames import jes2016
- systematicsToPlot+=[x[10:] for x in jes2016 ]
+ from jernames import jernames
+ systematicsToPlot+=[x[10:] for x in jes2016 ]+jernames
 else:
  systematicsToPlot+=["JESUp","JESDown"]
 

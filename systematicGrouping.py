@@ -52,6 +52,11 @@ def systematicGrouping (background, signal) :
                 #"groupvalue":{},
                 #"samplevalue":{"W2J":2.,"W1J":3.,"W0J":4.}
         },
+        "EWKZJJxsec":{
+                "type": "lnN",
+                "decorrelate":{"EWK":EWK},
+                "value":1.05,
+        },
         "DYxsec":{
                 "type": "lnN",
                 "decorrelate":{"DY":DY},
@@ -67,10 +72,10 @@ def systematicGrouping (background, signal) :
                 "decorrelate":{"ST":ST},
                 "value":1.05,
         },
-        "JER":{
-                "type": "shape",
-                "value":1.0,
-        },
+#        "JER":{
+#                "type": "shape",
+#                "value":1.0,
+#        },
 #        "JES":{
 #                "type": "shape",
 #                "value":1.0,
@@ -104,7 +109,6 @@ def systematicGrouping (background, signal) :
         }
     }
     from jesnames import jes2016
-
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
 
     jesfew={    "JES":{
@@ -112,11 +116,19 @@ def systematicGrouping (background, signal) :
                 "value":1.0,
        }}
 
+    from jernames import jernames
+    jer={x[0:-4]:{"type": "shape", "value":1.0} for x in jernames if "Down" in x}
+    jerfew={    "JES":{
+                "type": "shape",
+                "value":1.0,
+       }}
 #    jesnames=[ "JESPt0To30Eta0To2","JESPt30To50Eta0To2","JESPt50To100Eta0To2","JESPt100To2000Eta0To2","JESPt0To30Eta2To2p5","JESPt30To50Eta2To2p5","JESPt50To100Eta2To2p5","JESPt100To2000Eta2To2p5","JESPt0To30Eta2p5To3p1","JESPt30To50Eta2p5To3p1","JESPt50To100Eta2p5To3p1","JESPt100To2000Eta2p5To3p1","JESPt0To30Eta3p1To5","JESPt30To50Eta3p1To5","JESPt50To100Eta3p1To5","JESPt100To2000Eta3p1To5" ]
 #    jes={x:{"type": "shape", "value":1.0} for x in jesnames}
 
     systematicDetail.update(jes)
 #    systematicDetail.update(jesfew)
+    systematicDetail.update(jer)
+#    systematicDetail.update(jerfew)
     return systematicDetail
 
 

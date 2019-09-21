@@ -26,7 +26,7 @@ PREFIT="--setParameters $PREFITMASK$PREFITNOMASK"
 
 #TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE"
 #TOFIT="$SIDEBDT $ZREGIONBDT $SIGNALBDT"
-TOMASK="$ZCONTROL "
+TOMASK="$ZCONTROL $ZREGION"
 TOFIT="$SIDE $SIGNAL $ZREGION"
 FITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 FITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`

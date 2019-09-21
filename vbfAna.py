@@ -57,6 +57,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
+addDecorrelatedJER(flow)
 addCompleteJecs(flow)
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
@@ -259,7 +260,7 @@ sams=samples.keys()
 
 #sams=["DY2J","TTlep"]
 #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
-toproc=[ (s,samples[s]["files"]) for s in sams  ]
+toproc=[ (s,samples[s]["files"]) for s in sams  if os.path.exists(samples[s]["files"][0])]
 toproc=sorted(toproc,key=lambda x : sum(map( lambda x : ( os.path.getsize(x) if os.path.exists(x) else 0 ),x[1])),reverse=True)
 print toproc
 
@@ -267,6 +268,7 @@ if len(sys.argv[2:]) :
    if sys.argv[2] == "fix" :
        toproc=[]
        for s in sams :
+	if os.path.exists(samples[s]["files"][0]) :
 	 try:
 	   ff=ROOT.TFile.Open("out/%sHistos.root"%s)
 	   if ff.IsZombie() or len(ff.GetListOfKeys()) == 0:

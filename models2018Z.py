@@ -4,7 +4,8 @@ background={
 "DY0J":["DY0J_2018AMCPY"],
 "DY1J":["DY1J_2018AMCPY"],
 "DY2J":["DY2J_2018AMCPY"],
-"EWKZ":["EWKZ_2018MGPY","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
+"EWKZ":["EWKZ_2018MGHERWIG","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
+#EWKZ":["EWKZ_2018MGPY","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
 "Top":[
 #STs_2018AMCPY","STwtbar_2018POWPY","STwt_2018POWPY","STtbar_2018POWPY","STt_2018POWPY",
 "TTlep_2018POWPY","TTsemi_2018POWPY","TThad_2018POWPY"],
@@ -57,7 +58,8 @@ systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp"
 
 if True  :  #use full JES?
   from jesnames import jes2016
-  systematicsToPlot+=[x[10:] for x in jes2016 ]
+  from jernames import jernames
+  systematicsToPlot+=[x[10:] for x in jes2016 ]+jernames
 else :
   systematicsToPlot+=["JESUp","JESDown"]
 

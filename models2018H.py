@@ -3,7 +3,7 @@ from rebinning import *
 name="H"
 background={
 "DY":["DY105_2018AMCPY"],
-"DYVBF":[ "DY105VBF_2018MGPY"], #DY105VBF_2018AMCPY"],
+"DYVBF":[ "DY105VBF_2018AMCPY"],
 #"DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"],
 "EWKZ":["EWKZ105_2018MGHERWIG","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
 #"EWKZ":["EWKZint_2018MGPY","EWKZ105_2016MGHERWIG"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
@@ -93,11 +93,13 @@ systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHE
 #jesnames=[ "JESPt0To30Eta0To2","JESPt30To50Eta0To2","JESPt50To100Eta0To2","JESPt100To2000Eta0To2","JESPt0To30Eta2To2p5","JESPt30To50Eta2To2p5","JESPt50To100Eta2To2p5","JESPt100To2000Eta2To2p5","JESPt0To30Eta2p5To3p1","JESPt30To50Eta2p5To3p1","JESPt50To100Eta2p5To3p1","JESPt100To2000Eta2p5To3p1","JESPt0To30Eta3p1To5","JESPt30To50Eta3p1To5","JESPt50To100Eta3p1To5","JESPt100To2000Eta3p1To5" ]
 
 #systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]+[x+"Down" for x in jesnames]+[x+"Up" for x in jesnames]
+#systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
 if True  :  #use full JES?
   from jesnames import jes2016
-  systematicsToPlot+=[x[10:] for x in jes2016 ]
+  from jernames import jernames
+  systematicsToPlot+=[x[10:] for x in jes2016 ]+jernames
 else :
   systematicsToPlot+=["JESUp","JESDown"]
 

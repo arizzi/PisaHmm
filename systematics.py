@@ -25,10 +25,10 @@ def addLhePdf(flow):
 
 def addPSWeights(flow):
      flow.Define("PSWeightToFix","PSWeight[0]!=1.0f && genWeight!=LHEWeight_originalXWGTUP ")
-     flow.Define("PSWeightISRDown","PSWeightToFix?PSWeight[0]:PSWeight[0]*LHEWeight_originalXWGTUP")
-     flow.Define("PSWeightFSRDown","PSWeightToFix?PSWeight[1]:PSWeight[1]*LHEWeight_originalXWGTUP")
-     flow.Define("PSWeightISRUp","PSWeightToFix?PSWeight[2]:PSWeight[2]*LHEWeight_originalXWGTUP")
-     flow.Define("PSWeightFSRUp","PSWeightToFix?PSWeight[3]:PSWeight[3]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightISRDown","(!PSWeightToFix)?PSWeight[0]:PSWeight[0]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightFSRDown","(!PSWeightToFix)?PSWeight[1]:PSWeight[1]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightISRUp","(!PSWeightToFix)?PSWeight[2]:PSWeight[2]*LHEWeight_originalXWGTUP")
+     flow.Define("PSWeightFSRUp","(!PSWeightToFix)?PSWeight[3]:PSWeight[3]*LHEWeight_originalXWGTUP")
      flow.VariationWeight("PSWeightISRUp")
      flow.VariationWeight("PSWeightISRDown")
      flow.VariationWeight("PSWeightFSRUp")
@@ -83,6 +83,29 @@ def addBasicJecs(flow):
        flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp_touse") #name, target, replacement 
        #flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
 
+def addDecorrelatedJER(flow):
+       etabins=[0,2.4,3.1]
+       ptbins=[0,50]
+       etacutstrings=[]
+       ptcutstrings=[]
+       for i,e in enumerate(etabins) :
+	  cut="abs(Jet_eta)>%s"%e
+	  if(i+1<len(etabins)): cut+="&&abs(Jet_eta)<=%s"%(etabins[i+1])
+	  etacutstrings.append(cut)
+       for i,e in enumerate(ptbins) :
+	  cut="Jet_pt>%s"%e
+	  if(i+1<len(ptbins)): cut+="&&Jet_pt<=%s"%(ptbins[i+1])
+	  ptcutstrings.append(cut)
+
+       for i,eta in enumerate(etacutstrings):
+	 for j,pt in enumerate(ptcutstrings):
+	    cutstring="(%s)&&(%s)"%(eta,pt)
+	    print "Jer cutstring",cutstring
+	    name="eta%spt%s"%(i,j)
+            flow.Systematic("JER%sDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%cutstring) #name, target, replacement 
+      #       flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp_touse") #name, target, replacement 
+            flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_nom,Jet_pt_touse)"%cutstring) #name, target, replacement
+	  
 from jesnames import jes2016
 def addCompleteJecs(flow):
     for j in jes2016:

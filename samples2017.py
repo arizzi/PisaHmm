@@ -45,7 +45,8 @@ samples={
 
 
 
-"WWdps_2017MGPY"    : {"files":[path2017+"WWTo2L2Nu_DoubleScattering_nano2017.root"],"xsec":1.62},
+
+#"WWdps_2017MGPY"    : {"files":[path2017+"WWTo2L2Nu_DoubleScattering_nano2017.root"],"xsec":1.62},
 "WWJJlnln_2017MGPY" : {"files":[path2017+"WWJJToLNuLNu_EWK_nano2017.root"],"xsec":0.3452},
 "WLLJJln_2017MG_MADSPIN_PY"  : {"files":[path2017+"WLLJJ_WToLNu_EWK_nano2017.root"],"xsec":0.0176},
 #"WWJJlnlnNoT_2017MGPY": {"files":[path2017+"WWJJToLNuLNu_EWK_noTop_nano2017.root"],"xsec":0.3452},

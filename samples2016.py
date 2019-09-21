@@ -1,4 +1,4 @@
-path2016 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5_v3/"
+path2016 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/"
 path2016data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 
