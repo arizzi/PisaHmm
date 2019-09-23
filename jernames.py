@@ -1,0 +1,14 @@
+jernames=[
+"JEReta0pt0Up",
+"JEReta1pt0Up",
+"JEReta2pt0Up",
+"JEReta0pt1Up",
+"JEReta1pt1Up",
+"JEReta2pt1Up",
+"JEReta0pt0Down",
+"JEReta1pt0Down",
+"JEReta2pt0Down",
+"JEReta0pt1Down",
+"JEReta1pt1Down",
+"JEReta2pt1Down",
+]
