@@ -6,7 +6,22 @@
 #include <math.h> 
 
 
-
+extern TFile* fMuEff1;
+extern TFile* fMuEff2;
+extern TFile* fMuEff3;
+extern TFile* fMuEff4;
+extern TFile* fMuEff5;
+extern TH2F* hDATA1;
+extern TH2F* hDATA2;
+extern TH2F* hDATA3;
+extern TH2F* hDATA4;
+extern TH2F* hDATA5;
+extern TH2F* hMC1;
+extern TH2F* hMC2;
+extern TH2F* hMC3;
+extern TH2F* hMC4;
+extern TH2F* hMC5;
+/*
 TFile* fMuEff1= TFile::Open("MuonEfficiency/year2016/RunBCDEF_SF_Trigger.root");
 TFile* fMuEff2= TFile::Open("MuonEfficiency/year2016/RunGH_SF_Trigger.root");
 
@@ -27,7 +42,7 @@ TH2F* hMC2= (TH2F*)fMuEff2->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/a
 TH2F* hMC3= (TH2F*)fMuEff3->Get("IsoMu27_PtEtaBins/efficienciesMC/abseta_pt_MC");
 TH2F* hMC4= (TH2F*)fMuEff4->Get("IsoMu24_PtEtaBins/efficienciesMC/abseta_pt_MC");
 TH2F* hMC5= (TH2F*)fMuEff5->Get("IsoMu24_PtEtaBins/efficienciesMC/abseta_pt_MC");
-
+*/
 float muEff (TH2F * effMap, float eta, float pt) {
     int binEta = effMap->GetXaxis()->FindBin(abs(eta));
     int binPt  = effMap->GetYaxis()->FindBin(pt);
@@ -60,7 +75,7 @@ float mcMuonEffCorrection(int year, int run, float pt1, float eta1, float pt2, f
     }
      
     
-    
+ return 1;    
 }
 
 

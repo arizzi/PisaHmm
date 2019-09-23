@@ -24,14 +24,14 @@ flow.Define("Jet_pt_touse","Jet_pt")
 flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 
 #Higgs to mumu reconstruction
-flow.DefaultConfig(muIsoCut=0.25,muIdCut=0,muPtCut=10, dzCut=0.2,dxyCut=0.05) #cuts value should not be hardcoded below but rather being declared here so that scans and optimizations are possible
+flow.DefaultConfig(muIsoCut=0.25,muIdCut=2,muPtCut=20, dzCut=1e99,dxyCut=1e99) #cuts value should not be hardcoded below but rather being declared here so that scans and optimizations are possible
 flow.Define("Muon_id","Muon_tightId*4+Muon_mediumId*2+Muon_softId") 
 flow.Define("Muon_iso","Muon_pfRelIso04_all")
 flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < muIsoCut && Muon_id >= muIdCut && Muon_corrected_pt > muPtCut && abs(Muon_dz) < dzCut && abs(Muon_dxy) < dxyCut") 
 flow.Define("SelectedMuon_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(SelectedMuon_corrected_pt , SelectedMuon_eta, SelectedMuon_phi, SelectedMuon_mass)")
 flow.Define("SelectedMuon_p4uncalib","@p4v(SelectedMuon)")
 flow.Selection("twoUnpreselMuons","nMuon>=2")
-flow.Selection("twoMuons","nSelectedMuon>=2") 
+flow.Selection("twoMuons","nSelectedMuon==2") 
 flow.Distinct("MuMu","SelectedMuon")
 flow.Define("OppositeSignMuMu","Nonzero(MuMu0_charge != MuMu1_charge)",requires=["twoMuons"])
 flow.Selection("twoOppositeSignMuons","OppositeSignMuMu.size() > 0")
@@ -39,8 +39,8 @@ flow.TakePair("Mu","SelectedMuon","MuMu","At(OppositeSignMuMu,0,-200)",requires=
 flow.Define("Higgs","Mu0_p4+Mu1_p4")
 flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
-flow.AddCppCode('\n#include "muonEfficiency.h"\n')
-flow.Define("muEffWeight", "isMC?mcMuonEffCorrection(year ,run, Mu0_pt, Mu0_eta, Mu1_pt, Mu1_eta):1",requires=["twoOppositeSignMuons"])
+flow.AddExternalCode(header="muonEfficiency.h",cppfiles=["muonEfficiency.C"])
+flow.Define("muEffWeight", "isMC?(Mu0_sf*Mu1_sf*mcMuonEffCorrection(year ,run, Mu0_pt, Mu0_eta, Mu1_pt, Mu1_eta)):1",requires=["twoOppositeSignMuons"])
 
 
 flow.AddExternalCode(header="prefiring.h",cppfiles=["prefiring.C"])
@@ -52,9 +52,9 @@ flow.DefaultConfig(jetPtCut=25)
 #Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || Jet_puId >0 ) &&   Jet_jetId > 0  && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6  || (Jet_puId>0 && Jet_pt_touse > 50 ) ) && 
 flow.SubCollection("SelectedJet","Jet",'''
 (year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ||  Jet_neEmEF<0.55 ) && 
-Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 500000 || Jet_puId >0 ) &&   Jet_jetId > 0  && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6 || Jet_pt_touse >50) && 
-(Jet_muonIdx1==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_dz,Jet_muonIdx1,100)) > 0.2 || abs(TakeDef(Muon_dxy,Jet_muonIdx1,100) > 0.05)) &&
-(Jet_muonIdx2==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_dz,Jet_muonIdx2,100)) > 0.2 || abs(TakeDef(Muon_dxy,Jet_muonIdx2,100) > 0.05)) 
+Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || Jet_puId >0 ) &&   Jet_jetId > 0  && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6 || Jet_pt_touse >50) && 
+(Jet_muonIdx1==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_pt,Jet_muonIdx1,100)) > 20) &&
+(Jet_muonIdx2==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_pt,Jet_muonIdx2,100)) > 20) 
 ''')
 flow.Selection("twoJets","nSelectedJet>=2")
 
