@@ -338,6 +338,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
       lumi_over_nevents = lumi/nevents
       if f[d] :
         h=f[d].Get(hn)
+	print h.GetSumOfWeights()
         histoSingleSyst[hn][d] = {}
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 

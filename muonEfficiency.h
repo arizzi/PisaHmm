@@ -49,7 +49,7 @@ float muEff (TH2F * effMap, float eta, float pt) {
     
     if (binEta == 0)  binEta = 1;
     if (binPt  == 0)  binPt = 1;
-    if (binEta == effMap->GetNbinsY()+1)  return 0.; // this means to not consider the muon
+    if (binEta == effMap->GetNbinsY()+1)  return 1.; // this means to not consider the muon
     if (binPt  == effMap->GetNbinsX()+1)  binPt  = effMap->GetNbinsX();    
     
     return effMap->GetBinContent(binEta ,binPt);
@@ -61,7 +61,8 @@ float mcMuonEffCorrection(int year, int run, float pt1, float eta1, float pt2, f
     if (year == 2016) {
         float efficiencyBCDEF = ( 1 - (1-muEff(hDATA1, eta1, pt1)) * (1-muEff(hDATA1, eta2, pt2)) ) / ( 1 - (1-muEff(hMC1, eta1, pt1)) * (1-muEff(hMC1, eta2, pt2)) );
         float efficiencyGH    = ( 1 - (1-muEff(hDATA2, eta1, pt1)) * (1-muEff(hDATA2, eta2, pt2)) ) / ( 1 - (1-muEff(hMC2, eta1, pt1)) * (1-muEff(hMC2, eta2, pt2)) );
-        return  20.1/36.4*efficiencyBCDEF + 16.3/36.4*efficiencyGH;
+        float r=   20.1/36.4*efficiencyBCDEF + 16.3/36.4*efficiencyGH;
+	return isnan(r)?1.:r;
     }
          
     if (year == 2017) {

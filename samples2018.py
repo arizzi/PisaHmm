@@ -1,7 +1,8 @@
 #path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5_v3/"
-path2018 =     "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
+path2018 =     "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_tmp/"
-path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
+path2018data =     "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
+#path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 
 samples={

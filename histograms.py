@@ -59,6 +59,7 @@ if False:
   histosPerSelectionFullJecs={}
   histosPerSelection={
 "SignalRegion": signalHistos,
+"ZRegion": signalHistos,
 }
 
 

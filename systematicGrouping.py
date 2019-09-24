@@ -97,6 +97,10 @@ def systematicGrouping (background, signal) :
                 "type": "shape",
                 "value":1.0,
         },
+        "PrefiringWeight":{
+                "type": "shape",
+                "value":1.0,
+        },
         "LHERen":{
                 "type": "shape",
                 "decorrelate":{"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},

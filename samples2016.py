@@ -1,6 +1,7 @@
-path2016 = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+path2016 = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/"
-path2016data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+#path2016data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 
 
 samples={

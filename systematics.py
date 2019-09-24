@@ -126,6 +126,6 @@ def addQGLvariation(flow):
     flow.VariationWeight("QGLweightUp","QGLweight")
 
 def addPreFiringVariation(flow):
-    flow.VariationWeight("PrefireWeight_Down","PrefireWeight")
-    flow.VariationWeight("PrefireWeight_Up","PrefireWeight")
+    flow.VariationWeight("PrefiringWeightDown","PrefiringWeight")
+    flow.VariationWeight("PrefiringWeightUp","PrefiringWeight")
  

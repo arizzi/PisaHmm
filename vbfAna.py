@@ -139,11 +139,21 @@ def f(ar):
 	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Filter("passJson(run,luminosityBlock)","jsonFilter")
 	   rdf=rdf.Define("isMC","false")
+#	   rdf=rdf.Define("PrefireWeight","1.0f")
 	   rdf=rdf.Define("isHerwig","false")
-	   if year != "2018": rdf=rdf.Define("Jet_pt_nom","Jet_pt")
+	   if year != "2018": 
+		rdf=rdf.Define("Jet_pt_nom","Jet_pt") 
 	   rdf=rdf.Define("LHE_NpNLO","0")
 	   rdf=rdf.Define("Jet_partonFlavour","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 else :
+	   if year == "2018" :
+		  rdf=rdf.Define("PrefiringWeight","1.f")
+		  rdf=rdf.Define("PrefiringWeightUp","1.f")
+		  rdf=rdf.Define("PrefiringWeightDown","1.f")
+	   else: 
+		  rdf=rdf.Define("PrefiringWeight","L1PreFiringWeight_Nom")
+		  rdf=rdf.Define("PrefiringWeightUp","L1PreFiringWeight_Up")
+		  rdf=rdf.Define("PrefiringWeightDown","L1PreFiringWeight_Dn")
 	   print "Is herwig?",("true" if "HERWIG" in s else "false"), s
 	   rdf=rdf.Define("isHerwig",("true" if "HERWIG" in s else "false"))
 	   if  s in  ["DY0J_2018AMCPY","DY0J_2017AMCPY","DY1J_2017AMCPY","DY1J_2018AMCPY"] :

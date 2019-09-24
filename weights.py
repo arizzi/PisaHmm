@@ -24,6 +24,5 @@ def addQGLweight(flow):
     flow.CentralWeight("QGLweight",["twoJets"])
 
 def addPreFiring(flow):
-#    flow.CentralWeight("PrefiringWeight")
-    flow.CentralWeight("PrefireWeight")
+    flow.CentralWeight("PrefiringWeight")
 
