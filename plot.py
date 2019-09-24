@@ -338,7 +338,6 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
       lumi_over_nevents = lumi/nevents
       if f[d] :
         h=f[d].Get(hn)
-	print h.GetSumOfWeights()
         histoSingleSyst[hn][d] = {}
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 
@@ -347,6 +346,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
             if data : h.SetMarkerStyle(10)
             else : 
                 if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
+		print h.GetSumOfWeights(),h.GetEntries(),lumi_over_nevents*samples[d]["xsec"],d
                 h.Scale(samples[d]["xsec"]*lumi_over_nevents)
                 error_b = ROOT.Double(0)
                 integral[gr]["nom"]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
