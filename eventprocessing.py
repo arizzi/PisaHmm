@@ -28,14 +28,24 @@ flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 flow.Define("Muon_id","Muon_tightId*4+Muon_mediumId*2+Muon_softId") 
 flow.Define("Muon_p4_orig","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_corrected_pt , Muon_eta, Muon_phi, Muon_mass)")
 flow.Define("Muon_mass_FSR","0.f*Muon_pt")
-flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
-flow.Define("Muon_wFSR_p4","Muon_FSR_p4+Muon_p4_orig")
-flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
-flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt")
+
+#need FSR inputs
+#flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
+#flow.Define("Muon_wFSR_p4","Muon_FSR_p4+Muon_p4_orig")
+#flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+#flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt")
+
+#replacements without FSR inputs
+flow.Define("Muon_iso","Muon_pfRelIso04_all")
+flow.Define("Muon_correctedFSR_pt","Muon_corrected_pt")
+
 flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId && Muon_correctedFSR_pt > 20. && abs(Muon_eta) < 2.4") 
 
 #flow.Define("SelectedMuon_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(SelectedMuon_corrected_pt , SelectedMuon_eta, SelectedMuon_phi, SelectedMuon_mass)")
-flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
+
+#need FSR
+#flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
+flow.Define("SelectedMuon_p4","SelectedMuon_p4_orig")
 flow.Define("SelectedMuon_p4uncalib","@p4v(SelectedMuon)")
 flow.Selection("twoUnpreselMuons","nMuon>=2")
 flow.Selection("twoMuons","nSelectedMuon==2") 
