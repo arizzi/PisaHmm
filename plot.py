@@ -32,6 +32,7 @@ totev={}
 totevCount={}
 totevSkim={}
 hnForSys={}
+systematicsSetToUse=[]
 
 def makeLegend (yDown, yUp, name = "") :
     myLegend= ROOT.TLegend(0.82, yDown, 1, yUp, name) 
@@ -197,7 +198,7 @@ def computeSingleSyst(model, f, d, hn, h, histoSingleSyst) :
             #hsUp.Scale(model.systematicDetail[sv]["value"]-1.)
             #hsDown.Scale(1./model.systematicDetail[sv]["value"]-1.)
         if model.systematicDetail[sv]["type"]=="shape" :
-            if all(x in model.systematicsToPlot for x in [sv+"Up", sv+"Down"]): 
+            if all(x in systematicsSetToUse for x in [sv+"Up", sv+"Down"]): 
                 hsUp=f[d].Get(findSyst(hn,sv+"Up",f[d]))
                 hsDown=f[d].Get(findSyst(hn,sv+"Down",f[d]))
                 if hsUp and hsDown :
@@ -355,7 +356,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
             if hn not in SumTH1 :
                 SumTH1[hn]=h.Clone()
                 stackSys[hn]={}
-                for sy in model.systematicsToPlot :
+                for sy in systematicsSetToUse :
                     if not data :
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
                         if postfit : 
@@ -374,7 +375,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
             else :
                 SumTH1[hn].Add(h)	
-                for sy in model.systematicsToPlot :
+                for sy in systematicsSetToUse :
                     hs=f[d].Get(findSyst(hn,sy,f[d]))
                     if postfit : 
                         hs=f[d].Get(hn).Clone()
@@ -414,7 +415,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
 def makeplot(hn,saveintegrals=True):
  if "__syst__" not in hn :
    myLegend = makeLegend (0.4, 0.9)
-   myLegend_sy = makeLegend (0.1, 0.15 + 0.015*len(model.systematicsToPlot))
+   myLegend_sy = makeLegend (0.1, 0.15 + 0.015*len(systematicsSetToUse))
    outpath=args.outfolder+"/%s/%s"%(year,model.name)
    os.system("mkdir -p "+outpath)
    os.system("cp "+args.folder+"/description.txt "+outpath)
@@ -452,7 +453,7 @@ def makeplot(hn,saveintegrals=True):
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
    DataYieldLine = "sample \t yield  \t\tfraction"
-   for sy in model.systematicsToPlot : 
+   for sy in systematicsSetToUse : 
        DataYieldLine = DataYieldLine + "\t" + sy + "\t"
    ftxt.write(DataYieldLine+"\n")
    #if saveintegrals:
@@ -552,7 +553,7 @@ def makeplot(hn,saveintegrals=True):
    ratio.SetAxisRange(-0.5,0.5,"Y")
    ratio.GetYaxis().SetNdivisions(5)
    ratiosy=[]
-   for j,sy in enumerate(model.systematicsToPlot):
+   for j,sy in enumerate(systematicsSetToUse):
        ratiosy.append(histosumSyst[hn][sy].Clone())
        ratiosy[-1].Add(histosum[hn],-1.)
        ratiosy[-1].Divide(histosum[hn])
@@ -585,9 +586,11 @@ def makeplot(hn,saveintegrals=True):
 
 variablesToFit = []
 makeWorkspace = False
+systematicsSetToUse=model.systematicsToPlot
 if args.variablesToFit != None : 
     variablesToFit = args.variablesToFit
     makeWorkspace = True
+    systematicsSetToUse=model.systematicsForDC
 postfit = False
 postfit = args.postfit
 

@@ -4,8 +4,8 @@ background={
 "DY0J":["DY0J_2017AMCPY"],
 "DY1J":["DY1J_2017AMCPY"],
 "DY2J":["DY2J_2017AMCPY"],
-#"EWKZ":["EWKZ_2017MGPY","EWKZint_2017MGPY"],  # --------------- EWKZ_2017MGPY -> HERWIG ----------------     
-"EWKZ":["EWKZ_2017MGHERWIG","EWKZint_2017MGPY"],  # --------------- EWKZ_2017MGPY -> HERWIG ----------------     
+"EWKZ":["EWKZ_2017MGPY","EWKZint_2017MGPY"],  # --------------- EWKZ_2017MGPY -> HERWIG ----------------     
+#"EWKZ":["EWKZ_2017MGHERWIG","EWKZint_2017MGPY"],  # --------------- EWKZ_2017MGPY -> HERWIG ----------------     
 "Top":["STs_2017AMCPY","STwtbar_2017POWPY","STwt_2017POWPY","STtbar_2017POWPY","STt_2017POWPY","TTlep_2017POWPY","TTsemi_2017POWPY"],
 "Other":["W2J_2017AMCPY",#"W0J_2017AMCPY",     # ,"W1J_2017AMCPY"   to be added when ready
 #         "WWdps_2017MGPY",
@@ -54,13 +54,11 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown"]
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]#,"LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-if True:
-  from jesnames import jes2016
-  from jernames import jernames
-  systematicsToPlot+=[x[10:] for x in jes2016 ]+jernames
-else:
-  systematicsToPlot+=["JESUp","JESDown"]
 
+from jesnames import jes2016
+from jernames import jernames
+systematicsForDC=systematicsToPlot+[x[10:] for x in jes2016 ]+jernames
+systematicsToPlot+=["JESUp","JESDown"]
 
 
 linecolor=fillcolor

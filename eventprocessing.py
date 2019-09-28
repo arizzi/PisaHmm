@@ -3,7 +3,7 @@ import ROOT
 import sys
 
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
-flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/VBF_HToMuMu_nano2016.root")
+flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/VBF_HToMuMu_nano2016.root")
 #/scratch/mandorli/Hmumu/samplePerAndrea/GluGlu_HToMuMu_skim_nano2016.root")
 #flow.Define("LHEScaleWeight","ROOT::VecOps::RVec<float>(9,1.)") #this result in NOOP if already defined, otherwise it is a failsafe
 
@@ -53,8 +53,8 @@ flow.Define("Jet_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPh
 #VBF Jets kinematics
 flow.DefaultConfig(jetPtCut=25)
 #Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || Jet_puId >0 ) &&   Jet_jetId > 0  && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6  || (Jet_puId>0 && Jet_pt_touse > 50 ) ) && 
+#(year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ||  Jet_neEmEF<0.55 ) && 
 flow.SubCollection("SelectedJet","Jet",'''
-(year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ||  Jet_neEmEF<0.55 ) && 
 Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || Jet_puId >0 ) &&   Jet_jetId > 0  && abs(Jet_eta) < 4.7 && (abs(Jet_eta)<2.5 || Jet_puId > 6 || Jet_pt_touse >50) && 
 (Jet_muonIdx1==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_pt,Jet_muonIdx1,0)) < 20 || abs(TakeDef(Muon_id,Jet_muonIdx1,0) < muIdCut )) &&
 (Jet_muonIdx2==-1 || TakeDef(Muon_pfRelIso04_all,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_pt,Jet_muonIdx2,0)) < 20 || abs(TakeDef(Muon_id,Jet_muonIdx1,0) < muIdCut )) 
@@ -189,6 +189,10 @@ flow.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDelta
 flow.Define("BDTAtan","atanh((SBClassifier+1.)/2.)")
 flow.Define("BDTAtanNoMass","atanh((SBClassifierNoMass+1.)/2.)")
 flow.Define("BDTAtanNoMassNoNSJ","atanh((SBClassifierNoMassNoNSJ+1.)/2.)")
+flow.Selection("SubLeadingEta2p7to3p1","abs(abs(QJet1_eta)-2.7)<0.2 && ZRegion",requires=["ZRegion"])
+flow.Selection("SubLeadingEta2p7to3p1QGL","abs(abs(QJet1_eta)-2.7)<0.2 && QJet1_qgl > 0.5 && ZRegion ",requires=["ZRegion"])
+flow.Selection("SubLeadingEta2p7to3p1Pt45","abs(abs(QJet1_eta)-2.7)<0.2 && ZRegion && QJet0_pt_touse > 45",requires=["ZRegion"])
+flow.Selection("SubLeadingEta2p7to3p1QGLPt45","abs(abs(QJet1_eta)-2.7)<0.2 && QJet1_qgl > 0.5 && ZRegion && QJet0_pt_touse > 45",requires=["ZRegion"])
 flow.Selection("BDT0p8","BDTAtanNoMass>0.8")
 flow.Selection("BDT1p0","BDTAtanNoMass>1.0")
 flow.Selection("BDT1p1","BDTAtanNoMass>1.1")
