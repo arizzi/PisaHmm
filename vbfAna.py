@@ -30,6 +30,8 @@ flow.binningRules = binningrules
 flowData=copy.deepcopy(flow)
 procData=flowData.CreateProcessor("eventProcessorData",snaplist+["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
 
+print "Data processor created"
+
 #define some event weights
 from weights import *
 addDefaultWeights(flow)
@@ -59,6 +61,7 @@ histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelecti
 
 addDecorrelatedJER(flow)
 addCompleteJecs(flow)
+print "######### full systematics #######"
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -220,9 +223,9 @@ def f(ar):
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
-#         rep=ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Report() 
-#	 print "Cutflow for",s
-#	 rep.Print()
+         rep=ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Report() 
+	 rep.Print()
+	 print "Above the cutflow for",s
  #        ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 #         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
@@ -235,6 +238,9 @@ def f(ar):
          
 
          normalization = ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
+	 print "Normalization = ", normalization 
+	 if normalization == 0:
+	    normalization =1.
 	 if ouspec is not None :
 	    print "Postproc hisots"
             for h in ouspec.histos :

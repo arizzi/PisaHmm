@@ -58,10 +58,11 @@ histosPerSelectionFullJecs={
 if False:
   histosPerSelectionFullJecs={}
   histosPerSelection={
-"SubLeadingEta2p7to3p1": genericHistos+bdtInputHistos,
-"SubLeadingEta2p7to3p1Pt45": genericHistos+bdtInputHistos,
-"SubLeadingEta2p7to3p1QGL": genericHistos+bdtInputHistos,
-"SubLeadingEta2p7to3p1QGLPt45": genericHistos+bdtInputHistos,
+"SignalRegion": genericHistos+bdtInputHistos,
+#"SubLeadingEta2p7to3p1": genericHistos+bdtInputHistos,
+#"SubLeadingEta2p7to3p1Pt45": genericHistos+bdtInputHistos,
+#"SubLeadingEta2p7to3p1QGL": genericHistos+bdtInputHistos,
+#"SubLeadingEta2p7to3p1QGLPt45": genericHistos+bdtInputHistos,
 }
 
 

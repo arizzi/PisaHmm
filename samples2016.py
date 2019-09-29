@@ -19,7 +19,7 @@ samples={
 #"DYTau_2016AMCPY" : {"files":[path2016+"DYJetsToTauTau_ForcedMuDecay_nano2016.root"],"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 "DYM50_2016AMCPY" : {"files":[path2016+"DYJetstoLL_amc_M-50_nano2016.root"],"xsec":5765.40},
 
-"EWKZ105_2016MGHERWIG"     : {"files":["/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
+"EWKZ105_2016MGHERWIG"     : {"files":[path2016+"EWK_LLJJ_MLL_105-160_herwig_nano2016.root"],"xsec":0.0508896},
 "EWKZ_2016MGHERWIG" : {"files":[path2016+"EWK_LLJJ_herwig_nano2016.root"],"xsec":1.664},
 "EWKZ_2016MGPY"     : {"files":[path2016+"EWK_LLJJ_pythia8_nano2016.root"],"xsec":1.664},
 "EWKZint_2016MGPY"  : {"files":[path2016+"EWK_LLJJ_INT_nano2016.root"],"xsec":0.128},

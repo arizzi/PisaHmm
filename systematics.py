@@ -84,7 +84,7 @@ def addBasicJecs(flow):
        #flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
 
 def addDecorrelatedJER(flow):
-       etabins=[0,2.4,3.1]
+       etabins=[0,1.93,2.5,3.139]
        ptbins=[0,50]
        etacutstrings=[]
        ptcutstrings=[]
@@ -98,8 +98,13 @@ def addDecorrelatedJER(flow):
 	  ptcutstrings.append(cut)
 
        for i,eta in enumerate(etacutstrings):
-	 for j,pt in enumerate(ptcutstrings):
-	    cutstring="(%s)&&(%s)"%(eta,pt)
+	  for j,pt in enumerate(ptcutstrings):
+	    if i<2:
+	       if j!=0:
+		   continue  #single pt bin for central eta as JME prescribed
+	       cutstring="(%s)"%(eta)
+	    else :
+	       cutstring="(%s)&&(%s)"%(eta,pt)
 	    print "Jer cutstring",cutstring
 	    name="eta%spt%s"%(i,j)
             flow.Systematic("JER%sDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%cutstring) #name, target, replacement 
