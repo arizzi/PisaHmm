@@ -11,8 +11,8 @@ fitDiagnostic = "fitDiagnostics.root"
 
 datacardPy   = "datacardForPostFitHisto.py"
 
-skip_combine = True
-skip_text2workspace = True
+skip_combine = False
+skip_text2workspace = False
 
 if not skip_text2workspace:
     cmd = "cd %s && text2workspace.py %s --dump-datacard | grep 'DC\.' | sed  's/DC.//g' | head -n -1 > %s"%(workspaceFolder,datacardTxt,datacardPy)
@@ -53,7 +53,6 @@ for i in range(len(params)):
     
     fittedParams[name] = (v, v_up, v_down)
 
-print(fittedParams)
 
 def smoothStepFunc(x) : 
      if x >= 1: return 1
@@ -88,8 +87,11 @@ for DCsyst in DCsysts:
     nuisances[name].postfit_down    = fittedParams[name][1]
     nuisances[name].postfit_up      = fittedParams[name][2]
 
+print "NUISANCES: "
 for nuis in nuisances:
-    print(nuis,nuisances[name].type,nuisances[name].postfit_central,nuisances[name].postfit_down,nuisances[name].postfit_up,nuisances[name].datacardValues)
+    print(nuis,nuisances[nuis].type,nuisances[nuis].postfit_central,nuisances[nuis].postfit_down,nuisances[nuis].postfit_up,nuisances[nuis].datacardValues)
+
+print ""
 
 folder = "out"
 
@@ -140,7 +142,7 @@ def fromHistoNameToNuisance(histoName, nuisances, sample):
         for group in systematicDetail[lastWord]['decorrelate']:
             if  group == sampleShort: return lastWord+group
             else:
-                print systematicDetail[lastWord]['decorrelate'][group]
+#                print systematicDetail[lastWord]['decorrelate'][group]
                 if sampleShort in systematicDetail[lastWord]['decorrelate'][group]:
                     return lastWord+group
         print "Error %s not found in 'decorrelate'"%(lastWord)
@@ -155,42 +157,21 @@ def applyNuisance(newHisto,histos,nominalHistoName,nuisHistoNameDown,nuisHistoNa
     if histos[nominalHistoName].Integral()>0:
         up_norm      = histos[nuisHistoNameUp].Integral()    / histos[nominalHistoName].Integral()
         down_norm    = histos[nuisHistoNameDown].Integral()  / histos[nominalHistoName].Integral()
+#    print(newHisto, nominalHistoName, nuisHistoNameDown, nuisHistoNameUp, fitValue)
     for i in range(len(newHisto)):
         nom     = histos[nominalHistoName].GetBinContent(i)
         if nom <=0 : continue
         up           = histos[nuisHistoNameUp].GetBinContent(i)
         down         = histos[nuisHistoNameDown].GetBinContent(i)
         try:
-            # sf  = pow(1.+smoothedNusianceDividedMu(fitValue,(up-nom)/nom,(down-nom)/nom),fitValue) ### OK 
-            ############
-            sf  = pow(1.+smoothedNusianceDividedMu(fitValue,(up/up_norm-nom)/nom,(down/down_norm-nom)/nom),fitValue) 
-#           sf  = 1.+smoothedNusianceDividedMu(fitValue,up/nom/up_norm-1,down/nom/down_norm-1)*fitValue 
-#            sf  = 1.+smoothedNusianceDividedMu(fitValue,up/nom-1,down/nom-1)*fitValue 
-#            sf  = pow(1.+smoothedNusianceDividedMu(fitValue,(up-nom)/nom,(down-nom)/nom),fitValue) 
-#            sf  = pow(fitValue+smoothedNusiance(fitValue,(up-nom)/nom,(down-nom)/nom),fitValue)/pow(fitValue,abs(fitValue))
-#            sf  = pow(fitValue/(fitValue+smoothedNusianceDividedMu(fitValue,(up-nom)/nom,(down-nom)/nom)), -fitValue)
-            ## lnN like mode
-            #~ if postFit>0:
-                #~ sf  = pow(up/nom  , abs(fitValue))
-            #~ else:
-                #~ sf  = pow(down/nom, abs(fitValue))
+           var  = smoothedNusiance(fitValue,up/up_norm-nom,down/down_norm-nom) 
+           sf  = pow(1.+smoothedNusianceDividedMu(fitValue,up_norm-1,down_norm-1),fitValue)
         except:
             print("Warning. Histo %s. Bin %d. nom=%f up=%f down=%f. %s=%f. Forcing sf=1"%(nominalHistoName, i, nom, up, down, nuisHistoNameDown, fitValue))
             sf  = 1
-        newHisto.SetBinContent(i, newHisto.GetBinContent(i) *sf)
-#    sf = pow(smoothedNusianceDividedMu(fitValue,up_norm,down_norm),fitValue)
-    if up_norm>0 and down_norm>0:
-        sf = 1.
-        if fitValue>0: sf = pow(up_norm, (fitValue))
-        else: sf = pow(down_norm, (fitValue))
-#        sf = (pow(1. + smoothedNusianceDividedMu(fitValue,up_norm-1,down_norm-1),fitValue))
-#        sf = (1. + fitValue*smoothedNusianceDividedMu(fitValue,up_norm-1,down_norm-1))
-###        sf = (1. + fitValue*smoothedNusianceDividedMu(fitValue,down_norm-1,up_norm-1)) ### opposite
-#        sf = 1+smoothedNusiance(fitValue,up_norm-1,down_norm-1) #bad
-#        sf = sf*(pow(smoothedNusiance(fitValue,LHERenUp_SF,LHERenDown_SF)/abs(LHERenTT_fit),abs(LHERenTT_fit)))
-#        pow(nuisances[nuis].datacardValues[sample], fitValue)
+            var = 1 
+        newHisto.SetBinContent(i, newHisto.GetBinContent(i)*sf + var*sf)
 
-        newHisto.Scale(sf)
     
 def calculatePostFitHisto(sample, nominalHistoName, histos, nuisances):
     newHisto = histos[nominalHistoName].Clone()
@@ -203,7 +184,7 @@ def calculatePostFitHisto(sample, nominalHistoName, histos, nuisances):
                     ud = "Up" if postFit>0 else "Down"
                     nuisHistoNameDown = fromNuisanceToHistoName(histos, nominalHistoName, nuis, "Down")
                     nuisHistoNameUp = nuisHistoNameDown.replace("Down","Up")
-                    applyNuisance(newHisto,histos,nominalHistoName,nuisHistoNameDown,nuisHistoNameUp,abs(postFit))
+                    applyNuisance(newHisto,histos,nominalHistoName,nuisHistoNameDown,nuisHistoNameUp,postFit)
                 elif nuisances[nuis].type == "lnN":
                     normSyst = normSyst * pow(nuisances[nuis].datacardValues[sample], postFit)
                 else:
@@ -228,8 +209,8 @@ def createPostFitFile(inputFile, outputFile, nuisances):
             histo = hKey.ReadObj()
             hName = histo.GetName()
             ## Hack to save only one variable
-#            if not (("LeadMuon_pt" in hName and "SignalRegion" in hName) or ("data" in hName)):
-#                continue
+            if not (("LeadMuon_pt" in hName and "SignalRegion" in hName) or ("data" in hName)):
+                continue
             histos[hName] = histo
             if "_syst_" in hName:
                 fileSysts.add(hName.split("_")[-1].replace("Up","").replace("Down",""))
@@ -247,7 +228,7 @@ def createPostFitFile(inputFile, outputFile, nuisances):
             else:
                 newHisto = calculatePostFitHisto(sample, nominalHistoName, histos, nuisances)
                 newHisto.Write()
-#                fileSysts = []
+#                fileSysts = [] ### skip systematics
                 for fileSyst in fileSysts:
                     histoSysName_up = fromNuisanceToHistoName(histos, nominalHistoName, fileSyst, "Up")
                     histoSysName_down = fromNuisanceToHistoName(histos, nominalHistoName, fileSyst, "Down")
@@ -257,12 +238,13 @@ def createPostFitFile(inputFile, outputFile, nuisances):
                     newHisto_up = newHisto.Clone(histoSysName_up)
                     newHisto_down = newHisto.Clone(histoSysName_down)
                     nuis = fromHistoNameToNuisance(histoSysName_up, nuisances, sample)
-                    if 'UnfittedNuisance' in nuis:
-                        up_value, down_value =+1,-1
-                    else:
-                        up_value, down_value = nuisances[nuis].postfit_up, nuisances[nuis].postfit_down
+                    up_value, down_value =+1,-1
+                    #~ if 'UnfittedNuisance' in nuis:
+                        #~ up_value, down_value =+1,-1
+                    #~ else:
+                        #~ up_value, down_value = nuisances[nuis].postfit_up, nuisances[nuis].postfit_down
                     print "Adding plot %s\tsyst=%s\tnominal=%s\tsample=%s, using up|down = %f|%f"%(histoSysName_up,fileSyst,nominalHistoName,sample,up_value, down_value)
-                    applyNuisance(newHisto_up,histos,nominalHistoName,histoSysName_down,histoSysName_up,up_value)
+                    applyNuisance(newHisto_up,  histos,nominalHistoName,histoSysName_down,histoSysName_up,up_value  )
                     applyNuisance(newHisto_down,histos,nominalHistoName,histoSysName_down,histoSysName_up,down_value)
                     newHisto_up.Write()
                     newHisto_down.Write()
@@ -288,20 +270,23 @@ aa = os.popen("cp %s/%s %s"%(workspaceFolder,fitDiagnostic,newfolder))
 aa.read()
 
 todo = []
+#fNames = ["DY105_2018AMCPYHistos.root"] ## run single file
+multiProcess = True
 for fName in fNames[:]:
     if ".root" in fName:
         todo.append(("%s/%s"%(folder,fName), "%s/%s"%(newfolder,fName), nuisances))
 ###     SINGLE PROCESS ###
-#        createPostFitFile("%s/%s"%(folder,fName), "%s/%s"%(newfolder,fName), nuisances)
+        if not multiProcess: createPostFitFile("%s/%s"%(folder,fName), "%s/%s"%(newfolder,fName), nuisances)
     elif ".txt" in fName:
         os.popen("cp %s/%s %s/%s"%(folder,fName,newfolder,fName))
     else:
         print("Please check file %s in %s"%(fName,folder))
 
+if multiProcess:
 ### MULTI PROCESS ###
-from multiprocessing import Pool
-runpool = Pool(20)
-runpool.map(createPostFitFileSubmit, todo)
+    from multiprocessing import Pool
+    runpool = Pool(40)
+    runpool.map(createPostFitFileSubmit, todo)
 
 
 
