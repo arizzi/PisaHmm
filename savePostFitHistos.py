@@ -11,10 +11,8 @@ fitDiagnostic = "fitDiagnostics.root"
 
 datacardPy   = "datacardForPostFitHisto.py"
 
-#skip_combine = False
-#skip_text2workspace = False
-skip_combine = True
-skip_text2workspace = True
+skip_combine = False
+skip_text2workspace = False
 
 if not skip_text2workspace:
     cmd = "cd %s && text2workspace.py %s --dump-datacard | grep 'DC\.' | sed  's/DC.//g' | head -n -1 > %s"%(workspaceFolder,datacardTxt,datacardPy)
@@ -230,6 +228,7 @@ def createPostFitFile(inputFile, outputFile, nuisances):
             else:
                 newHisto = calculatePostFitHisto(sample, nominalHistoName, histos, nuisances)
                 newHisto.Write()
+#                fileSysts = [] ### skip systematics
                 for fileSyst in fileSysts:
                     histoSysName_up = fromNuisanceToHistoName(histos, nominalHistoName, fileSyst, "Up")
                     histoSysName_down = fromNuisanceToHistoName(histos, nominalHistoName, fileSyst, "Down")
@@ -271,7 +270,7 @@ aa = os.popen("cp %s/%s %s"%(workspaceFolder,fitDiagnostic,newfolder))
 aa.read()
 
 todo = []
-#fNames = ["DY105_2018AMCPYHistos.root"]
+#fNames = ["DY105_2018AMCPYHistos.root"] ## run single file
 multiProcess = True
 for fName in fNames[:]:
     if ".root" in fName:
