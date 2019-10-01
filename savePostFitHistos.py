@@ -238,11 +238,10 @@ def createPostFitFile(inputFile, outputFile, nuisances):
                     newHisto_up = newHisto.Clone(histoSysName_up)
                     newHisto_down = newHisto.Clone(histoSysName_down)
                     nuis = fromHistoNameToNuisance(histoSysName_up, nuisances, sample)
-                    up_value, down_value =+1,-1
-                    #~ if 'UnfittedNuisance' in nuis:
-                        #~ up_value, down_value =+1,-1
-                    #~ else:
-                        #~ up_value, down_value = nuisances[nuis].postfit_up, nuisances[nuis].postfit_down
+                    if 'UnfittedNuisance' in nuis:
+                        up_value, down_value =+1,-1
+                    else:
+                        up_value, down_value = nuisances[nuis].postfit_up, nuisances[nuis].postfit_down
                     print "Adding plot %s\tsyst=%s\tnominal=%s\tsample=%s, using up|down = %f|%f"%(histoSysName_up,fileSyst,nominalHistoName,sample,up_value, down_value)
                     applyNuisance(newHisto_up,  histos,nominalHistoName,histoSysName_down,histoSysName_up,up_value  )
                     applyNuisance(newHisto_down,histos,nominalHistoName,histoSysName_down,histoSysName_up,down_value)
