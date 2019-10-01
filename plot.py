@@ -157,9 +157,10 @@ def totevents(s):
 
 def writeYields(ftxt, gr, integral, error, dataEvents) :
     line = "%s\t%s +- %s\t%s "%(gr,round(integral[gr]["nom"],5), round(error[gr],5),round(integral[gr]["nom"]/dataEvents,5))
-    for sy in integral[gr].keys()  : 
+    for sy in sorted(integral[gr].keys())  : 
         if sy is not 'nom' : line+="\t%s "%(round(integral[gr][sy],5))
     ftxt.write(line+"\n")
+
 
 def setName (d, sv) :
     if "decorrelate" not in model.systematicDetail[sv].keys() : return sv
@@ -591,6 +592,7 @@ if args.variablesToFit != None :
     variablesToFit = args.variablesToFit
     makeWorkspace = True
     systematicsSetToUse=model.systematicsForDC
+systematicsSetToUse.sort()
 postfit = False
 postfit = args.postfit
 
