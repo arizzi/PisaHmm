@@ -39,5 +39,6 @@ binningrules=[
 ("Higgs_mRelReso","%s , 0 , 0.2"%nbins),
 ("Jet_jetId.*","%s , 0 , %s"%(nbins,nbins-1)),
 ("Jet_puId.*","%s , 0 , %s"%(nbins,nbins-1)),
+("CS*","%s , -3.2 , 3.2"%nbins),
 ]
 
