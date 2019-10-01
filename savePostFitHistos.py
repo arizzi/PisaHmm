@@ -134,10 +134,10 @@ def fromHistoNameToNuisance(histoName, nuisances, sample):
         return "UnfittedNuisance"+lastWord
     else:
         if not (lastWord in systematicDetail):
-            print "Error %s not found in %s"%(lastWord, systematicDetail.keys())
-            return 1
+            print "Warning7 %s not found in %s. %s"%(lastWord, systematicDetail.keys(), matchingNuisances)
+            return "UnfittedNuisance"+lastWord
         if not ('decorrelate' in systematicDetail[lastWord]):
-            print "Error %s has no 'decorrelate'"%(lastWord)
+            print "Error %s has no 'decorrelate'. %s"%(lastWord,matchingNuisances)
             return 1
         for group in systematicDetail[lastWord]['decorrelate']:
             if  group == sampleShort: return lastWord+group
@@ -184,6 +184,9 @@ def calculatePostFitHisto(sample, nominalHistoName, histos, nuisances):
                     ud = "Up" if postFit>0 else "Down"
                     nuisHistoNameDown = fromNuisanceToHistoName(histos, nominalHistoName, nuis, "Down")
                     nuisHistoNameUp = nuisHistoNameDown.replace("Down","Up")
+                    if nuisHistoNameDown=='HistoSystNotFound' or nuisHistoNameUp=='HistoSystNotFound':
+                        print "Warning6: Systematic histo not found %s\t%s"%(str(nominalHistoName),str(nuis))
+                        continue
                     applyNuisance(newHisto,histos,nominalHistoName,nuisHistoNameDown,nuisHistoNameUp,postFit)
                 elif nuisances[nuis].type == "lnN":
                     normSyst = normSyst * pow(nuisances[nuis].datacardValues[sample], postFit)
