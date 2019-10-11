@@ -15,12 +15,17 @@ def addLheScale(flow):
  
 
 def addLhePdf(flow):
+
     flow.Define("LHEPdfSquaredSum","sqrt(Sum((LHEPdfWeight*lhefactor-1.f)*(LHEPdfWeight*lhefactor-1.f)))")
     flow.Define("LHEPdfRMS","nLHEPdfWeight>0?LHEPdfSquaredSum/sqrt(nLHEPdfWeight):0.f")
     flow.Define("LHEPdfUp","LHEPdfHasHessian?(1.+LHEPdfSquaredSum):(1.+LHEPdfRMS)")	
     flow.Define("LHEPdfDown","LHEPdfHasHessian?(1.-LHEPdfSquaredSum):(1.-LHEPdfRMS)")	
     flow.VariationWeight("LHEPdfUp")
     flow.VariationWeight("LHEPdfDown")
+    for i in range(0,100):
+        flow.Define("LHEPdf%s"%i,"nLHEPdfWeight>%s?LHEPdfWeight[%s]:0."%(i,i))
+        flow.VariationWeight("LHEPdf%s"%i)
+	
 	
 
 def addPSWeights(flow):
@@ -77,7 +82,7 @@ def addBasicJecs(flow):
 #       flow.Define("Jet_pt_jerDown_touseLimited","((Jet_pt_jerDown_touse/Jet_pt_touse)>0.8&& (Jet_pt_jerDown_touse/Jet_pt_touse)<1.2)?Jet_pt_jerDown_touse:Jet_pt_touse"	
 
        flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown_touse") #name, target, replacement 
-#       flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp_touse") #name, target, replacement 
+#      flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp_touse") #name, target, replacement 
        flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
        flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown_touse") #name, target, replacement 
        flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp_touse") #name, target, replacement 
@@ -108,7 +113,7 @@ def addDecorrelatedJER(flow):
 	    print "Jer cutstring",cutstring
 	    name="eta%spt%s"%(i,j)
             flow.Systematic("JER%sDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%cutstring) #name, target, replacement 
-      #       flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp_touse") #name, target, replacement 
+            #flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerUp_touse,Jet_pt_touse)"%cutstring) #name, target, replacement
             flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_nom,Jet_pt_touse)"%cutstring) #name, target, replacement
 	  
 from jesnames import jes2016

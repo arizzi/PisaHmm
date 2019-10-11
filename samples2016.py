@@ -1,7 +1,9 @@
-path2016 = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+#path2016 = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+path2016 = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/"
 #path2016data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
-path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+#path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
+path2016data = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 
 
 samples={
@@ -78,9 +80,9 @@ samples={
 "ggHmm_2016POWPY"       : {"files":[path2016+"GluGlu_HToMuMu_nano2016.root"],"xsec":0.01057},
 
 "vbfHmm_2016POWPY"      : {"files":[path2016+"VBF_HToMuMu_nano2016.root"],"xsec":0.0008210722},
-#"vbfHmm_2016POWHERWIG"  : {"files":[path2016+"VBF_HToMuMu_herwigpp_nano2016.root"],"xsec":0.0008210722},
-#"vbfHmm_2016AMCPY"      : {"files":[path2016+"VBF_HToMuMu_amc_nano2016.root"],"xsec":0.0008210722},
-#"vbfHmm_2016AMCHERWIG"  : {"files":[path2016+"VBF_HToMuMu_amc_herwigpp_nano2016.root"],"xsec":0.0008210722},
+"vbfHmm_2016POWHERWIG"  : {"files":[path2016+"VBF_HToMuMu_herwigpp_nano2016.root"],"xsec":0.0008210722},
+"vbfHmm_2016AMCPY"      : {"files":[path2016+"VBF_HToMuMu_amc_nano2016.root"],"xsec":0.0008210722},
+"vbfHmm_2016AMCHERWIG"  : {"files":[path2016+"VBF_HToMuMu_amc_herwigpp_nano2016.root"],"xsec":0.0008210722},
 
 "zHmm_2016POWPY"        : {"files":[path2016+"ZH_HToMuMu_nano2016.root"],"xsec":0.00019201024},
 "ttHmm_2016POWPY"       : {"files":[path2016+"ttHToMuMu_nano2016.root"],"xsec":0.00011034496},

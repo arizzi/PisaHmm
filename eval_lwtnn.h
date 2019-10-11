@@ -25,9 +25,10 @@ class LwtnnWrapper{
         
         float eval(int event, std::vector <float> invec, std::vector<int> dims)
         {
-/*	    std::cout << "DNN in " << invec[0] << " "<< invec[3] << " dims: " << dims.size() << " ev " << event<<  " " << graphs_.size() << " " << this <<  std::endl;
-	    for(size_t j=0; j<invec.size() ; j++) std::cout << " " << invec[j];
-	    std::cout << std::endl;*/
+//	   std::cerr << "QUI" << std::endl;
+//	    std::cerr << "DNN in " << invec[0] << " "<< invec[3] << " dims: " << dims.size() << " ev " << event<<  " " << graphs_.size() << " " << this <<  std::endl;
+//	    for(size_t j=0; j<invec.size() ; j++) std::cout << " " << invec[j];
+//	    std::cerr << std::endl;
             std::map<std::string, std::map<std::string, double> > inputs;
             int count=0;
             for (unsigned int i=0; i<dims.size(); i++)
@@ -58,6 +59,7 @@ class LwtnnWrapper{
 };
 extern LwtnnWrapper lwtnn;
 extern LwtnnWrapper lwtnn18 ;
+extern LwtnnWrapper lwtnn_all ;
 /*
 std::vector<std::string> v = {"/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json"} ;
 LwtnnWrapper lwtnn = LwtnnWrapper(v);

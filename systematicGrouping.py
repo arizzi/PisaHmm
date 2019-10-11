@@ -36,41 +36,41 @@ def systematicGrouping (background, signal) :
                 },
         "lumi":{
                 "type": "lnN",
-                "value":1.025
+                "value":1.0025
             },
         "VVxsec":{
                 "type": "lnN",
                 "decorrelate":{"ZZ":ZZ,"WZ":WZ,"WW":WW},
-                "value":1.10,
+                "value":1.010,
                 #"groupvalue":{"ZZ":2.,"WZ":3.,"WW":4.},
                 #"samplevalue":{}
         },
         "WJetsxsec":{
                 "type": "lnN",
                 "decorrelate":{"WJets":WJets},
-                "value":1.10,
+                "value":1.010,
                 #"groupvalue":{},
                 #"samplevalue":{"W2J":2.,"W1J":3.,"W0J":4.}
         },
         "EWKZJJxsec":{
                 "type": "lnN",
                 "decorrelate":{"EWK":EWK},
-                "value":1.05,
+                "value":1.005,
         },
         "DYxsec":{
                 "type": "lnN",
                 "decorrelate":{"DY":DY},
-                "value":1.10,
+                "value":1.010,
         },
         "TTxsec":{
                 "type": "lnN",
                 "decorrelate":{"TT":TT},
-                "value":1.05,
+                "value":1.005,
         },
         "STxsec":{
                 "type": "lnN",
                 "decorrelate":{"ST":ST},
-                "value":1.05,
+                "value":1.005,
         },
 #        "JER":{
 #                "type": "shape",
@@ -86,7 +86,7 @@ def systematicGrouping (background, signal) :
                 "value":1.0,
         },
         "LHEPdf":{
-                "decorrelate":allSamples,
+                "decorrelate":allSamples, #{x:allSamples[x] for x in allSamples if "EWK" not in x},
                 #"decorrelate":{"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "normalizationType": "normalizationOnly",
                 "type": "lnN",
@@ -103,12 +103,16 @@ def systematicGrouping (background, signal) :
         },
         "LHERen":{
                 "type": "shape",
-                "decorrelate":{"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
+                "decorrelate":{"Hmm":Hmm, "DY":DY, 
+"EWK":EWK,
+ "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
         "LHEFac":{
                 "type": "shape",
-                "decorrelate":{"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
+                "decorrelate":{"Hmm":Hmm, "DY":DY, 
+"EWK":EWK, 
+"TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         }
     }

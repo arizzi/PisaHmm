@@ -21,7 +21,7 @@ ftxt=open("out/description.txt","w")
 ftxt.write(flow.Describe(used))
 
 snap=[] 
-snaplist=["nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
+snaplist=["event","Higgs_m_uncalib","nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 
 from histobinning import binningrules
@@ -42,7 +42,6 @@ addPreFiring(flow)
 from systematics import *
 
 addLheScale(flow)
-addLhePdf(flow)
 addPSWeights(flow)
 addBtag(flow)
 addBasicJecs(flow)
@@ -59,6 +58,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
+addLhePdf(flow)
 addDecorrelatedJER(flow)
 addCompleteJecs(flow)
 print "######### full systematics #######"
@@ -214,7 +214,7 @@ def f(ar):
 	 ouspec=None
          if s in specificPostProcessors.keys():
 	    print "adding postproc",s
-	    ouspec=specificPostProcessors[s](ou.rdf)
+	    ouspec=specificPostProcessors[s](ou.rdf[""])
 	    print "added"
          #snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_genPt","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","PrefiringWeight","DNN18Atan","QJet0_prefireWeight","QJet1_prefireWeight", "QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","QGLweight","genWeight","btagWeight","muEffWeight"]
 #"QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
@@ -223,7 +223,7 @@ def f(ar):
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
-         rep=ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Report() 
+         rep=ou.rdf[""].Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Report() 
 	 rep.Print()
 	 print "Above the cutflow for",s
  #        ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
@@ -237,7 +237,7 @@ def f(ar):
      '''%nthreads)
          
 
-         normalization = ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
+         normalization = ou.rdf[""].Filter("twoJets","twoJets").Mean("QGLweight").GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
 	 print "Normalization = ", normalization 
 	 if normalization == 0:
 	    normalization =1.

@@ -156,9 +156,9 @@ def totevents(s):
 
 
 def writeYields(ftxt, gr, integral, error, dataEvents) :
-    line = "%s\t%s +- %s\t%s "%(gr,round(integral[gr]["nom"],5), round(error[gr],5),round(integral[gr]["nom"]/dataEvents,5))
+    line = "%s,%s,%s,%s "%(gr,round(integral[gr]["nom"],5), round(error[gr],5),round(integral[gr]["nom"]/dataEvents,5))
     for sy in integral[gr].keys()  : 
-        if sy is not 'nom' : line+="\t%s "%(round(integral[gr][sy],5))
+        if sy is not 'nom' : line+=",%s "%(round(integral[gr][sy],5))
     ftxt.write(line+"\n")
 
 def setName (d, sv) :
@@ -422,7 +422,7 @@ def makeplot(hn,saveintegrals=True):
    os.system("git rev-parse HEAD > "+outpath+"/git_commit.txt")
    os.system("git diff HEAD > "+outpath+"/git_diff.txt")
    os.system("git status HEAD > "+outpath+"/git_status.txt")
-   YieldFileName = outpath+"/"+hn+".txt"
+   YieldFileName = outpath+"/"+hn+".csv"
    if postfit : YieldFileName = outpath+"/"+hn+"_postFit.txt"
    ftxt=open(YieldFileName,"w")
    #print "Making histo",hn
@@ -452,12 +452,12 @@ def makeplot(hn,saveintegrals=True):
    histosSignal[hn]={} 
    for gr in model.data:
      fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
-   DataYieldLine = "sample \t yield  \t\tfraction"
+   DataYieldLine = "sample,yield,uncert,fraction"
    for sy in systematicsSetToUse : 
-       DataYieldLine = DataYieldLine + "\t" + sy + "\t"
+       DataYieldLine = DataYieldLine + "," + sy + ""
    ftxt.write(DataYieldLine+"\n")
    #if saveintegrals:
-   ftxt.write("DATA \t%s \n"%(datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
+   ftxt.write("DATA,%s \n"%(datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
 
    
    for gr in model.backgroundSorted:

@@ -35,6 +35,16 @@ class MVAWrapper {
        // reader->AddSpectator("genweight",&a);
         reader->BookMVA("BDTG", "BDT.xml");
 	readers.push_back(reader);*/
+        reader->AddVariable("Higgs_m",&a);   
+        reader->AddVariable("Mqq_log",&a);
+        reader->AddVariable("Rpt",&a);
+        reader->AddVariable("qqDeltaEta",&a);
+        reader->AddVariable("ll_zstar_log",&a);
+        reader->AddVariable("NSoft5New",&a);   
+        reader->AddVariable("minEtaHQ",&a);
+        reader->AddVariable("qqDeltaPhi",&a);
+        reader->AddVariable("QJet1_pt_touse",&a);
+/*
         reader->AddVariable("ll_mass",&a);   
         reader->AddVariable("MqqLog",&a);
         reader->AddVariable("Rpt",&a);
@@ -43,7 +53,7 @@ class MVAWrapper {
         reader->AddVariable("softActivityEWK_njets5",&a);   
         reader->AddVariable("min(EtaHQ1,EtaHQ2)",&a);
         reader->AddSpectator("weightEWK",&a);
-        reader->AddSpectator("genweight",&a);
+        reader->AddSpectator("genweight",&a);*/
         reader->BookMVA("BDTG", "BDT.xml");
 	readers.push_back(reader);
     }

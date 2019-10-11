@@ -4,15 +4,22 @@ background={
 "DY0J":["DY0J_2016AMCPY"],
 "DY1J":["DY1J_2016AMCPY"],
 "DY2J":["DY2J_2016AMCPY"],
-"EWKZ":["EWKZ_2016MGHERWIG","EWKZint_2016MGPY"],
-"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY","STt_2016POW_MADSPIN_PY","TTlep_2016POWPY","TTsemi_2016POWPY"],
-"Other":["W2J_2016AMCPY","W1J_2016AMCPY",#"W0J_2016AMCPY", 
+"EWKZ":["EWKZ_2016MGHERWIG"],#"EWKZint_2016MGPY"],
+"Top":["STs_2016AMCPY","STwtbar_2016POWPY","STwt_2016POWPY","STtbar_2016POW_MADSPIN_PY",
+#"STt_2016POW_MADSPIN_PY",
+"TTlep_2016POWPY",
+#"TTsemi_2016POWPY"
+],
+"Other":[
+#"W2J_2016AMCPY",
+"W1J_2016AMCPY",#"W0J_2016AMCPY", 
 #         "WWdps_2016MGPY",
 #"WWJJlnln_2016MGPY",
 "WLLJJln_2016MG_MADSPIN_PY",
          "WW2l2n_2016POWPY",#"WWlnqq_2016AMC_MADSPIN_PY",
  #        "WZ1l1n2q_2016AMCPY",
-"WZ1l3n_2016AMCPY","WZ2l2q_2016AMC_MADSPIN_PY",#WZ3l1n_2016POWPY",
+"WZ1l3n_2016AMCPY",
+#"WZ2l2q_2016AMC_MADSPIN_PY",#WZ3l1n_2016POWPY",
          "ZZ2l2q_2016POWPY"#,"ZZ2q2n_2016POWPY","ZZ4l_2016POWPY"
 ],
 }
@@ -56,10 +63,10 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 
+systematicsToPlot+=["JESUp","JESDown"]
 from jesnames import jes2016
 from jernames import jernames
 systematicsForDC=systematicsToPlot+[x[10:] for x in jes2016 ]+jernames
-systematicsToPlot+=["JESUp","JESDown"]
 
 
 

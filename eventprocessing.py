@@ -1,9 +1,12 @@
 from nail.nail import *
 import ROOT
 import sys
-
+FSR=False
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
-flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/VBF_HToMuMu_nano2016.root")
+if FSR :
+    flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_FSR/VBF_HToMuMu_nano2016.root")
+else:
+    flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/VBF_HToMuMu_nano2016.root")
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/hmmNail/crab/CMSSW_9_4_6/src/PhysicsTools/NanoAODTools/python/postprocessing/examples/skimmed.root") #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/VBF_HToMuMu_nano2016.root")
 #/scratch/mandorli/Hmumu/samplePerAndrea/GluGlu_HToMuMu_skim_nano2016.root")
 #flow.Define("LHEScaleWeight","ROOT::VecOps::RVec<float>(9,1.)") #this result in NOOP if already defined, otherwise it is a failsafe
@@ -34,22 +37,28 @@ flow.Define("Muon_p4_orig","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::P
 flow.Define("Muon_mass_FSR","0.f*Muon_pt")
 
 #need FSR inputs
-#flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
-#flow.Define("Muon_wFSR_p4","Muon_FSR_p4+Muon_p4_orig")
-#flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
-#flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt")
-
+if FSR:
+  flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
+  #flow.Define("Muon_wFSR_p4","Where(Muon_iso_FSR < 0.8,Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
+##  flow.Define("Muon_wFSR_p4","Muon_FSR_p4*(Muon_iso_FSR < 0.8)+Muon_p4_orig")
+  flow.Define("Muon_wFSR_p4","Where((Muon_iso_FSR < 0.8),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
+  flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+  flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
+else :
 #replacements without FSR inputs
-flow.Define("Muon_iso","Muon_pfRelIso04_all")
-flow.Define("Muon_correctedFSR_pt","Muon_corrected_pt")
+  flow.Define("Muon_iso","Muon_pfRelIso04_all")
+  flow.Define("Muon_correctedFSR_pt","Muon_corrected_pt")
 
 flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId && Muon_correctedFSR_pt > 20. && abs(Muon_eta) < 2.4") 
 
 #flow.Define("SelectedMuon_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(SelectedMuon_corrected_pt , SelectedMuon_eta, SelectedMuon_phi, SelectedMuon_mass)")
 
 #need FSR
-#flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
-flow.Define("SelectedMuon_p4","SelectedMuon_p4_orig")
+if FSR:
+  flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
+else :
+  flow.Define("SelectedMuon_p4","SelectedMuon_p4_orig")
+
 flow.Define("SelectedMuon_p4uncalib","@p4v(SelectedMuon)")
 flow.Selection("twoUnpreselMuons","nMuon>=2")
 flow.Selection("twoMuons","nSelectedMuon==2") 
@@ -79,8 +88,9 @@ flow.DefaultConfig(jetPtCut=25)
 #''') 
 #flow.Define("Jet_associatedMuonPt","abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx1,0))")
 flow.SubCollection("SelectedJet","Jet",'''
-(year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ||  Jet_neEmEF<0.55 ) && 
-Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || (Jet_puId  & 1) >0 ) &&   Jet_jetId  > 0  && abs(Jet_eta) < 4.7 && 
+(year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ) && 
+(year != 2017 ||   abs(Jet_eta) < 2.4 || ( Jet_pt > 30  &&   Jet_puId > 6 )) &&
+Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || (Jet_puId  ) >0 ) &&   Jet_jetId  > 0  && abs(Jet_eta) < 4.7  &&  
 (Jet_muonIdx1==-1 || TakeDef(Muon_iso,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx1,0)) < 20 || abs(TakeDef(Muon_mediumId,Jet_muonIdx1,0) == 0 )) &&
 (Jet_muonIdx2==-1 || TakeDef(Muon_iso,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx2,0)) < 20 || abs(TakeDef(Muon_mediumId,Jet_muonIdx2,0) == 0 )) 
 ''')
@@ -203,19 +213,19 @@ flow.DefaultConfig(higgsMassWindowWidth=10,mQQcut=400,nominalHMass=125.03) #,bta
 flow.Define("btagCut","(year==2018)?0.4184f:((year==2017)?0.4941f:0.6321f)")
 flow.Define("btagCutL","(year==2018)?0.1241f:((year==2017)?0.1522f:0.2217f)")
 #adding for sync
-flow.Define("nbtagged","int(Nonzero(SelectedJet_btagDeepB > btagCut).size())")
-flow.Define("nbtaggedL","int(Nonzero(SelectedJet_btagDeepB > btagCutL).size())")
-flow.Define("nelectrons","int(Nonzero(Electron_pt > 20 && abs(Electron_eta) < 2.5 && Electron_mvaFall17V2Iso_WPL ).size())")
+flow.Define("nbtagged","int(Nonzero(SelectedJet_btagDeepB > btagCut && abs(SelectedJet_eta)< 2.5).size())")
+flow.Define("nbtaggedL","int(Nonzero(SelectedJet_btagDeepB > btagCutL && abs(SelectedJet_eta)< 2.5).size())")
+flow.Define("nelectrons","int(Nonzero(Electron_pt > 20 && abs(Electron_eta) < 2.5 && Electron_mvaFall17V2Iso_WP90 ).size())")
 
 
 flow.Selection("MassWindow","abs(Higgs.M()-nominalHMass)<higgsMassWindowWidth")
 flow.Selection("MassWindowZ","abs(Higgs.M()-91)<15")
 flow.Selection("VBFRegion","Mqq > mQQcut && QJet0_pt_touse> 35 && QJet1_pt_touse > 25")
-flow.Selection("PreSel","nelectrons==0 && nbtaggedL < 2 && VBFRegion && twoOppositeSignMuons && Max(SelectedJet_btagDeepB) < btagCut && LeadMuon_pt > 30 && SubMuon_pt > 20 && TriggerSel && abs(SubMuon_eta) <2.4 && abs(LeadMuon_eta) < 2.4",requires=["VBFRegion","twoOppositeSignMuons"])
+flow.Selection("PreSel","nelectrons==0 && nbtaggedL < 2 && VBFRegion && twoOppositeSignMuons && nbtagged < 1 && LeadMuon_pt > 30 && SubMuon_pt > 20 && TriggerSel && abs(SubMuon_eta) <2.4 && abs(LeadMuon_eta) < 2.4",requires=["VBFRegion","twoOppositeSignMuons"])
 flow.Selection("SideBand","Higgs_m < 150 && Higgs_m > 110 && ! MassWindow && VBFRegion &&  qqDeltaEta > 2.5",requires=["VBFRegion","PreSel"])
 flow.Selection("SignalRegion","VBFRegion && MassWindow &&  qqDeltaEta > 2.5", requires=["VBFRegion","MassWindow","PreSel"])
 flow.Selection("ZRegion","VBFRegion && MassWindowZ  && qqDeltaEta > 2.5", requires=["VBFRegion","MassWindowZ","PreSel"])
-flow.Selection("ZRegionSMP","VBFRegion && MassWindowZ && QJet0_pt_touse> 50 && QJet1_pt_touse > 30 ", requires=["VBFRegion","MassWindowZ","PreSel"])
+flow.Selection("ZRegionSMP","Mqq > 250 && MassWindowZ && QJet0_pt_touse> 50 && QJet1_pt_touse > 30 && twoOppositeSignMuons && twoJets && TriggerSel&& abs(SubMuon_eta) <2.4 && abs(LeadMuon_eta) < 2.4 ", requires=["twoOppositeSignMuons","twoJets"])
 flow.Selection("TwoJetsTwoMu","twoJets && twoOppositeSignMuons", requires=["twoJets","twoOppositeSignMuons"])
 
 #with bug
@@ -223,14 +233,16 @@ flow.Selection("TwoJetsTwoMu","twoJets && twoOppositeSignMuons", requires=["twoJ
 #flow.Define("SBClassifierNoMass","mva.eval(__slot,{125.,Mqq_log,mmjj_pt_log,qqDeltaEta,float(NSoft5),ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 #flow.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,mmjj_pt_log,qqDeltaEta,0,ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 
+#iggs_m,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,NSoft5New,minEtaHQ,qqDeltaPhi,QJet1_pt_touse
+
 flow.AddExternalCode(header= "mva.h",cppfiles=["mva.C"],libs=["TMVA"],ipaths=["."])
-flow.Define("SBClassifier","mva.eval(__slot,{Higgs_m,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5),minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
-flow.Define("SBClassifierNoMass","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5),minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
-flow.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,0,minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
+flow.Define("SBClassifier","mva.eval(__slot,{Higgs_m,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5New),minEtaHQ,qqDeltaPhi,QJet1_pt_touse})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
+flow.Define("SBClassifierNoMass","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5New),minEtaHQ,qqDeltaPhi,QJet1_pt_touse})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
+#low.Define("SBClassifierNoMassNoNSJ","mva.eval(__slot,{125.,Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,0,minEtaHQ})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 #flow.Define("SBClassifierZ","mva.eval({125.,log(Mqq),mmjj.Pt(),qqDeltaEta,float(NSoft5),ll_zstar,Higgs.Pt(),theta2,mmjj.Pz(),std::max(std::abs(QJet0_eta), std::abs(QJet1_eta))})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 flow.Define("BDTAtan","atanh((SBClassifier+1.)/2.)")
 flow.Define("BDTAtanNoMass","atanh((SBClassifierNoMass+1.)/2.)")
-flow.Define("BDTAtanNoMassNoNSJ","atanh((SBClassifierNoMassNoNSJ+1.)/2.)")
+#low.Define("BDTAtanNoMassNoNSJ","atanh((SBClassifierNoMassNoNSJ+1.)/2.)")
 flow.Selection("SubLeadingEta2p7to3p1","abs(abs(QJet1_eta)-2.7)<0.2 && ZRegion",requires=["ZRegion"])
 flow.Selection("SubLeadingEta2p7to3p1QGL","abs(abs(QJet1_eta)-2.7)<0.2 && QJet1_qgl > 0.5 && ZRegion ",requires=["ZRegion"])
 flow.Selection("SubLeadingEta2p7to3p1Pt45","abs(abs(QJet1_eta)-2.7)<0.2 && ZRegion && QJet0_pt_touse > 45",requires=["ZRegion"])
@@ -244,14 +256,19 @@ flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
 
 flow.AddExternalCode(header= "eval_lwtnn.h",cppfiles=["eval_lwtnn.C"],libs=["lwtnn"],ipaths=["/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn/"],lpaths=["/scratch/lgiannini/HmmPisa/lwtnn/build/lib/"])
 #flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
-flow.Define("DNNClassifier","lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")
-flow.Define("DNNClassifierNoMass","lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,125.,Higgs_mRelReso,Higgs_mReso}, {16,3})")
-flow.Define("DNNAtan","atanh(DNNClassifier)")
-flow.Define("DNNAtanNoMass","atanh(DNNClassifierNoMass)")
-flow.Define("DNNClassifier18","lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
-flow.Define("DNN18Atan","atanh(DNNClassifier18)")
-flow.Define("DNN18AtanNoQGL","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,0.98,0.8,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
-flow.Define("DNN18AtanNoMass","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,125.,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
+flow.Define("DNN18Classifier","lwtnn_all.eval(event, {Mqq_log,Rpt,qqDeltaEta,log(ll_zstar),float(NSoft5New),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {19,3})")
+flow.Define("DNN18ClassifierNoQGL","lwtnn_all.eval(event, {Mqq_log,Rpt,qqDeltaEta,log(ll_zstar),float(NSoft5New),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,0.98,0.98,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {19,3})")
+#lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {16,3})")
+flow.Define("DNN18ClassifierNoMass","lwtnn_all.eval(event, {Mqq_log,Rpt,qqDeltaEta,log(ll_zstar),float(NSoft5New),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),125.,Higgs_mRelReso,Higgs_mReso}, {19,3})")
+
+#lwtnn.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,125.,Higgs_mRelReso,Higgs_mReso}, {16,3})")
+flow.Define("DNN18Atan","atanh(DNN18Classifier)")
+flow.Define("DNN18AtanNoQGL","atanh(DNN18ClassifierNoQGL)")
+flow.Define("DNN18AtanNoMass","atanh(DNN18ClassifierNoMass)")
+#flow.Define("DNNClassifier18","lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
+#flow.Define("DNN18oldAtan","atanh(DNNClassifier18)")
+#flow.Define("DNN18oldAtanNoQGL","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,0.98,0.8,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
+#flow.Define("DNN18oldAtanNoMass","atanh(lwtnn18.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,125.,Higgs_mRelReso,Higgs_mReso}, {18,3}))")
 
 #flow.AddCppCode('\n#include "boost_to_CS.h"\n')
 #flow.Define("CS_pair", "boost_to_CS(LeadMuon_p4, SubMuon_p4)",requires=["twoOppositeSignMuons"])
