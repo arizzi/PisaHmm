@@ -203,9 +203,10 @@ def f(ar):
              rdf=rdf.Define("EWKreweight","1.f")
 	 
 	 if "filter" in samples[s] :
-	   print "Prefiltering",s
-           rdf=specificPreProcessors[s](rdf).rdf
-	   rdf=rdf.Filter(samples[s]["filter"])
+           ou=specificPreProcessors[s](rdf)
+           print "res fetched"
+           rdf=ou.rdf[""]
+           rdf=rdf.Filter(samples[s]["filter"])
 
 	 if "lumi" in samples[s].keys() :
    	    ou=procData(rdf)
@@ -227,7 +228,11 @@ def f(ar):
 	 rep.Print()
 	 print "Above the cutflow for",s
  #        ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-#         ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+        
+         if "training" in samples[s].keys() : 
+             #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+             ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
          print ou.histos.size()#,ouspec.histos.size()
