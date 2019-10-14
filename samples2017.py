@@ -6,8 +6,8 @@
 #ath2017data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2017_FSR/"
 # "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/"
 
-path2017     = "/home/users/sdonato/scratchssd/fileSkimFromNanoAOD/PROD_2_0/"
-path2017data = "/home/users/sdonato/scratchssd/fileSkimFromNanoAOD/PROD_2_0/"
+path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_2_0/"
+path2017data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_2_0/"
 
 
 samples={
