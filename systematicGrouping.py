@@ -114,7 +114,20 @@ def systematicGrouping (background, signal) :
 "EWK":EWK, 
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
-        }
+        },
+        "Alternative":{
+                "type": "shape",
+                "value":1.0,
+                "decorrelate":{
+                    "ggHAMC":["ggHmm"],
+                    "DYAMC" :["DY105VBF","DY105"],
+                },
+                "alternativeSample": {
+                    "ggHmm_2018POWPY":"ggHmm_2018AMCPY",
+                    "DY105_2018MGPY":"DY105_2018AMCPY",
+                    "DY105VBF_2018MGPY":"DY105VBF_2018AMCPY",
+                },
+        },
     }
     from jesnames import jes2016
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
@@ -126,7 +139,7 @@ def systematicGrouping (background, signal) :
 
     from jernames import jernames
     jer={x[0:-4]:{"type": "shape", "value":1.0} for x in jernames if "Down" in x}
-    jerfew={    "JES":{
+    jerfew={    "JER":{
                 "type": "shape",
                 "value":1.0,
        }}

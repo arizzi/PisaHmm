@@ -4,6 +4,7 @@ import sys,os
 import importlib
 import postfitPlot
 import argparse
+import copy
 
 parser = argparse.ArgumentParser()
 parser.add_argument("model", help="model to plot")
@@ -256,7 +257,24 @@ def addFitVariation(h, variationToAdd) :
         relE = 0 if h.GetBinContent(n)<=0. else h.GetBinError(n)/h.GetBinContent(n)
         h.SetBinContent(n, h.GetBinContent(n)+variationToAdd.GetBinContent(n))
         if h.GetBinContent(n)>0 : h.SetBinError(n, h.GetBinContent(n)*relE)
-    
+
+def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample):
+    if not alternativeSample in f: f[alternativeSample] = ROOT.TFile.Open(folder+"/%sHistos.root"%alternativeSample)
+    histoNameUp   = hn.replace("___","__syst__AlternativeUp___")+"__syst__AlternativeUp___"
+    histoUp =  f[alternativeSample].Get(hn).Clone(histoNameUp)
+    histoUp.Scale(totevents(nominalSample) / totevents(alternativeSample))
+    ## up = alternative sample
+    if "Up" in sy: 
+        return copy.copy(histoUp)
+    ## down = nom - (alt - nom) = 2*nom - alt
+    elif "Down" in sy:
+        histoNameDown = hn.replace("___","__syst__AlternativeDown___")+"__syst__AlternativeDown___"
+        histoDown = f[nominalSample].Get(hn).Clone(histoNameDown)
+        histoDown.Scale(2)
+        histoDown.Add(histoUp, -1)
+        return copy.copy(histoDown)
+    else:
+        print "No alternative sample for %s"%d
 
 
 f={}
@@ -359,15 +377,19 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 SumTH1[hn]=h.Clone()
                 stackSys[hn]={}
                 for sy in systematicsSetToUse :
+                    sy_base = sy.replace("Up", "").replace("Down", "")
                     if not data :
-                        hs=f[d].Get(findSyst(hn,sy,f[d]))
+                        if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base] and d in model.systematicDetail[sy_base]["alternativeSample"]:
+                            hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d])
+                        else:
+                            hs=f[d].Get(findSyst(hn,sy,f[d]))
                         if postfit : 
                             hs=f[d].Get(hn).Clone()
                         if hs:
                             if hn.split("___")[0] in model.rebin.keys() : 
                                hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                             if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
-                            if  sy.replace("Up", "").replace("Down", "") in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy.replace("Up", "").replace("Down", "")].keys() and model.systematicDetail[sy.replace("Up", "").replace("Down", "")]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
+                            if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else :hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else :	
@@ -378,7 +400,11 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
             else :
                 SumTH1[hn].Add(h)	
                 for sy in systematicsSetToUse :
-                    hs=f[d].Get(findSyst(hn,sy,f[d]))
+                    sy_base = sy.replace("Up", "").replace("Down", "")
+                    if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base] and d in model.systematicDetail[sy_base]["alternativeSample"]:
+                        hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d])
+                    else:
+                        hs=f[d].Get(findSyst(hn,sy,f[d]))
                     if postfit : 
                         hs=f[d].Get(hn).Clone()
                     if hs:
@@ -386,7 +412,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                         if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                         if not data : 
-                            if  sy.replace("Up", "").replace("Down", "") in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy.replace("Up", "").replace("Down", "")].keys() and model.systematicDetail[sy.replace("Up", "").replace("Down", "")]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
+                            if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
                         addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
