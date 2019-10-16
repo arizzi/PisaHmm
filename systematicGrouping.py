@@ -119,13 +119,13 @@ def systematicGrouping (background, signal) :
                 "type": "shape",
                 "value":1.0,
                 "decorrelate":{
-                    "ggHAMC":["ggHmm"],
-                    "DYAMC" :["DY105VBF","DY105"],
+                    "ggHPOWEG":["ggHmm"],
+                    "DYMADGRAPH" :["DY105VBF","DY105"],
                 },
                 "alternativeSample": {
-                    "ggHmm_2018POWPY":"ggHmm_2018AMCPY",
-                    "DY105_2018MGPY":"DY105_2018AMCPY",
-                    "DY105VBF_2018MGPY":"DY105VBF_2018AMCPY",
+                    "ggHmm_2018AMCPY":"ggHmm_2018POWPY",
+                    "DY105_2018AMCPY":"DY105_2018MGPY",
+                    "DY105VBF_2018AMCPY":"DY105VBF_2018MGPY",
                 },
         },
     }
