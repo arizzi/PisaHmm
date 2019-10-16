@@ -5,26 +5,6 @@ from samples2017 import samples as samples2017
 from samples2018 import samples as samples2018
 import sys
 
-def totevents(fn):
-    totev=1e-9
-    totevCount=1e-9
-    totevSkim=1e-9
-    
-    print "fn ", fn
-    f=ROOT.TFile.Open(fn)
-    run=f.Get("Runs")
-    totevSkim+=f.Get("Events").GetEntries()
-    if run :
-        hw=ROOT.TH1F("hw","", 5,0,5)
-        run.Project("hw","1","genEventSumw")
-        totev+=hw.GetSumOfWeights()
-        run.Project("hw","1","genEventCount")
-        totevCount+=hw.GetSumOfWeights()
-        print "totev   ", totev
-
-    return totev
-
-
 def FindBinDown(hBackground, hSignal, binLimitUp, minNumberOfEventPerBin, MinNumberOfBin_inBinning) :
         
     binLimitDown = 0.
@@ -79,9 +59,7 @@ Nbins_binning = hSignal.GetNbinsX()
 MinNumberOfBin_inBinning = int(binMinWidth/xMax*Nbins_binning)
 binLimitDown = Nbins_binning
 
-totalEvents = 0
-for fileSignalSample in samples[signalSample]["files"] : totalEvents += totevents(fileSignalSample)
-hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"]/totalEvents)
+hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"])
 print "Total number of events:  ", hSignal.Integral(0, Nbins_binning+1)
         
 while binLimitDown>0 :

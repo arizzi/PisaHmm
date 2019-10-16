@@ -135,27 +135,6 @@ def findSyst(hn,sy,f) :
     print "none matching",hn,sy,f
     return ""
 
-def totevents(s):
-    if s not in totev:
-       totev[s]=1e-9
-       totevCount[s]=1e-9
-       totevSkim[s]=1e-9
-       for fn in samples[s]["files"]:
-	  print s
-	  f=ROOT.TFile.Open(fn)
-	  run=f.Get("Runs")
-	  totevSkim[s]+=f.Get("Events").GetEntries()
-	  if run :
-  	    hw=ROOT.TH1F("hw","", 5,0,5)
-	    run.Project("hw","1","genEventSumw")
-	    totev[s]+=hw.GetSumOfWeights()
-	    run.Project("hw","1","genEventCount")
-	    totevCount[s]+=hw.GetSumOfWeights()
-	    print totev[s]
-    return totev[s]
-
-
-
 def writeYields(ftxt, gr, integral, error, dataEvents) :
     line = "%s,%s,%s,%s "%(gr,round(integral[gr]["nom"],5), round(error[gr],5),round(integral[gr]["nom"]/dataEvents,5))
     #line = "%s\t%s +- %s\t%s "%(gr,round(integral[gr]["nom"],5), round(error[gr],5),round(integral[gr]["nom"]/dataEvents,5))
@@ -262,7 +241,6 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample):
     if not alternativeSample in f: f[alternativeSample] = ROOT.TFile.Open(folder+"/%sHistos.root"%alternativeSample)
     histoNameUp   = hn.replace("___","__syst__AlternativeUp___")+"__syst__AlternativeUp___"
     histoUp =  f[alternativeSample].Get(hn).Clone(histoNameUp)
-    histoUp.Scale(totevents(nominalSample) / totevents(alternativeSample))
     ## up = alternative sample
     if "Up" in sy: 
         return copy.copy(histoUp)
@@ -355,8 +333,6 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
     for n in range(len(samplesToPlot[gr])) :
       d = samplesToPlot[gr][n]
       if makeWorkspace : all_histo_all_syst[hn][d]={}
-      nevents = 1 if data else totevents(d)
-      lumi_over_nevents = lumi/nevents
       if f[d] :
         h=f[d].Get(hn)
         histoSingleSyst[hn][d] = {}
@@ -367,8 +343,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
             if data : h.SetMarkerStyle(10)
             else : 
                 if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
-		print h.GetSumOfWeights(),h.GetEntries(),lumi_over_nevents*samples[d]["xsec"],d
-                h.Scale(samples[d]["xsec"]*lumi_over_nevents)
+		print h.GetSumOfWeights(),h.GetEntries(),lumi*samples[d]["xsec"],d
+                h.Scale(samples[d]["xsec"]*lumi)
                 error_b = ROOT.Double(0)
                 integral[gr]["nom"]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
                 error[gr] = sqrt(error[gr]*error[gr] + error_b*error_b)
@@ -390,7 +366,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                                hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
                             if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                             if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
-                            else :hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                            else :hs.Scale(samples[d]["xsec"]*lumi)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else :	
 			    print "missing",sy,"for",hn, gr,d 
@@ -413,7 +389,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                         if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                         if not data : 
                             if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
-                            else : hs.Scale(samples[d]["xsec"]*lumi_over_nevents)
+                            else : hs.Scale(samples[d]["xsec"]*lumi)
                         addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
                         addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 

@@ -11,6 +11,25 @@ ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
 from eventprocessing import flow
 from histograms import histosPerSelection,histosPerSelectionFullJecs
 
+def totevents(files):
+   totev=1e-9
+   totevCount=1e-9
+   totevSkim=1e-9
+   for fn in files:
+	  f=ROOT.TFile.Open(fn)
+	  run=f.Get("Runs")
+	  totevSkim+=f.Get("Events").GetEntries()
+	  if run :
+		 hw=ROOT.TH1F("hw","", 5,0,5)
+		 run.Project("hw","1","genEventSumw")
+		 totev+=hw.GetSumOfWeights()
+		 run.Project("hw","1","genEventCount")
+		 totevCount+=hw.GetSumOfWeights()
+   if totev < 1: totev = 1
+   print totev
+   return totev
+
+
 used=[]
 for s in histosPerSelection:
     used.append(s)
@@ -120,6 +139,7 @@ def f(ar):
      '''%nthreads)
      s,f=ar
      print f
+     totevts = totevents(f)
      rf=ROOT.TFile.Open(f[0])
      ev=rf.Get("Events")
      hessian=False
@@ -251,13 +271,13 @@ def f(ar):
             for h in ouspec.histos :
                 h.GetValue()
                 fff.cd()
-                h.Scale(1./normalization)
+                h.Scale(1./normalization/totevts)
                 h.Write()
          for h in ou.histos : 
 #	    print "histo"
 	    h.GetValue()
 	    fff.cd()
-            h.Scale(1./normalization)
+            h.Scale(1./normalization/totevts)
  	    h.Write()
 	 
          fff.Write()
