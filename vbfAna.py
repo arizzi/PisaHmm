@@ -272,14 +272,27 @@ def f(ar):
                 h.GetValue()
                 fff.cd()
                 h.Scale(1./normalization/totevts)
+                hname = h.GetName()
+                if "__syst__LHEPdf" in hname:
+                    if h.GetMaximum()==0.: continue ## skip empty LHEPdf
+                    if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
+                    else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
                 h.Write()
          for h in ou.histos : 
-#	    print "histo"
-	    h.GetValue()
-	    fff.cd()
+#            print "histo"
+            h.GetValue()
+            fff.cd()
             h.Scale(1./normalization/totevts)
- 	    h.Write()
+            hname = h.GetName()
+            if "__syst__LHEPdf" in hname:
+                if h.GetMaximum()==0.: continue ## skip empty LHEPdf
+                if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
+                else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
+            h.Write()
 	 
+         totalEvents = getattr(ROOT,"TParameter<double>")("totalEvents", totevts)
+         totalEvents.Write()
+         
          fff.Write()
          fff.Close()
 	 return 0
