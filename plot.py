@@ -111,7 +111,7 @@ def setStyle(h, isRatio=False) :
         h.GetXaxis().SetTitleSize(0)
 
 
-def findSyst(hn,sy,f) :
+def findSyst(hn,sy,f, silent=False) :
   #  print hnForSys.keys()
     if hn in hnForSys and sy in hnForSys[hn]:
  #       print hn,sy,hnForSys[hn]
@@ -132,7 +132,7 @@ def findSyst(hn,sy,f) :
     if h3 in allh:
 	 hnForSys[hn][sy]=h3
 	 return h3
-    print "none matching",hn,sy,f
+    if not silent: print "none matching",hn,sy,f
     return ""
 
 def writeYields(ftxt, gr, integral, error, dataEvents) :
@@ -142,7 +142,8 @@ def writeYields(ftxt, gr, integral, error, dataEvents) :
         if sy is not 'nom' : line+=",%s "%(round(integral[gr][sy],5))
     ftxt.write(line+"\n")
 
-
+'''
+## PostFit functions
 def setName (d, sv) :
     if "decorrelate" not in model.systematicDetail[sv].keys() : return sv
     else :
@@ -236,6 +237,7 @@ def addFitVariation(h, variationToAdd) :
         relE = 0 if h.GetBinContent(n)<=0. else h.GetBinError(n)/h.GetBinContent(n)
         h.SetBinContent(n, h.GetBinContent(n)+variationToAdd.GetBinContent(n))
         if h.GetBinContent(n)>0 : h.SetBinError(n, h.GetBinContent(n)*relE)
+'''
 
 def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample):
     if not alternativeSample in f: f[alternativeSample] = ROOT.TFile.Open(folder+"/%sHistos.root"%alternativeSample)
@@ -254,6 +256,51 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample):
     else:
         print "No alternative sample for %s"%d
 
+def makeEnvelopeShape(hn,sy,f, d, model):
+    sy_base = sy.replace("Up", "").replace("Down", "")
+    envelope = model.systematicDetail[sy_base]["envelope"]
+    envelopeFunction = model.systematicDetail[sy_base]["envelopeFunction"]
+    envelopeFunctionParameter = model.systematicDetail[sy_base]["envelopeFunctionParameter"]
+    envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
+    
+    nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
+    (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
+    ratio = nomHistoRebinned.Clone("ratio")
+    
+    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
+    funct.SetParameters(*envelopeFunctionParameterValues)
+    pdfHessian = "LHEPdfHessian"
+    pdfReplica = "LHEPdfReplica"
+    if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
+    elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
+    else:
+        print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found" 
+        return
+    
+    par2 = 0
+    i = 0
+    hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+    while hs and hs.GetMaximum()>0:
+        (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
+        ratio.Divide(hs, nomHistoRebinned)
+        ratio.Fit(funct,"QN0")
+        par2 += funct.GetParameter(envelopeFunctionParameter)**2
+        i = i + 1
+        hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+    
+    if pdf == pdfReplica: par2 = (par2/i)
+    
+    funct.SetParameters(*envelopeFunctionParameterValues)
+    if "Up" in sy:
+        funct.SetParameter(envelopeFunctionParameter, par2**0.5)
+    elif "Down" in sy:
+        funct.SetParameter(envelopeFunctionParameter, -par2**0.5)
+    else: raise Exception("Error in makeEnvelopeShape")
+
+    nhisto = f[d].Get(hn).Clone(hn+sy)
+    nhisto.Multiply(funct)
+#    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+    return copy.copy(nhisto)
 
 f={}
 folder=args.folder
@@ -357,6 +404,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                     if not data :
                         if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base] and d in model.systematicDetail[sy_base]["alternativeSample"]:
                             hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d])
+                        elif sy_base in model.systematicDetail and "envelope" in model.systematicDetail[sy_base]:
+                            hs=makeEnvelopeShape(hn,sy,f, d, model)
                         else:
                             hs=f[d].Get(findSyst(hn,sy,f[d]))
                         if postfit : 
@@ -379,6 +428,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                     sy_base = sy.replace("Up", "").replace("Down", "")
                     if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base] and d in model.systematicDetail[sy_base]["alternativeSample"]:
                         hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d])
+                    elif sy_base in model.systematicDetail and "envelope" in model.systematicDetail[sy_base]:
+                        hs=makeEnvelopeShape(hn,sy,f, d, model)
                     else:
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
                     if postfit : 
