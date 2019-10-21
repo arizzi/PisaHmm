@@ -241,14 +241,14 @@ def addFitVariation(h, variationToAdd) :
 
 def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample):
     if not alternativeSample in f: f[alternativeSample] = ROOT.TFile.Open(folder+"/%sHistos.root"%alternativeSample)
-    histoNameUp   = hn.replace("___","__syst__AlternativeUp___")+"__syst__AlternativeUp___"
+    histoNameUp   = hn.replace("___","__syst__AlternativeUp___")+"__syst__AlternativeUp"
     histoUp =  f[alternativeSample].Get(hn).Clone(histoNameUp)
     ## up = alternative sample
     if "Up" in sy: 
         return copy.copy(histoUp)
     ## down = nom - (alt - nom) = 2*nom - alt
     elif "Down" in sy:
-        histoNameDown = hn.replace("___","__syst__AlternativeDown___")+"__syst__AlternativeDown___"
+        histoNameDown = hn.replace("___","__syst__AlternativeDown___")+"__syst__AlternativeDown"
         histoDown = f[nominalSample].Get(hn).Clone(histoNameDown)
         histoDown.Scale(2)
         histoDown.Add(histoUp, -1)
@@ -386,7 +386,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 
                 #print "Rebin",hn
-                h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
+                h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
             if data : h.SetMarkerStyle(10)
             else : 
                 if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
