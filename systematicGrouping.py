@@ -117,7 +117,8 @@ def systematicGrouping (background, signal) :
         },
         "Alternative":{
                 "type": "shape",
-                "value":1.0,
+                "value": 1.0,
+                "powerDown": -1., ## down = nom * (up/nom)^powerDown 
                 "decorrelate":{
                    "vbfHmm" :["vbfHmm"],
                 },
@@ -125,6 +126,21 @@ def systematicGrouping (background, signal) :
                     "vbfHmm_2016POWPY":"vbfHmm_2016POWHERWIG",
                 },
         },
+        #"Alternative":{
+                #"type": "shape",
+                #"value":1.0,
+                #"powerDown": -1., ## down = nom * (up/nom)^powerDown 
+                #"decorrelate":{
+                   #"DY" :["DY105","DY105VBF"],
+                #},
+                #"alternativeSample": {
+                    #"DY105_2018AMCPY":"DY105_2018MGPY",
+                    #"DY105VBF_2018AMCPY":"DY105VBF_2018MGPY",
+                #},
+        #},
+
+
+
         "PDFX1":{
                 "type": "shape",
                 "value":1.0,

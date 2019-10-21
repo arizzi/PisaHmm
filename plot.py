@@ -239,19 +239,36 @@ def addFitVariation(h, variationToAdd) :
         if h.GetBinContent(n)>0 : h.SetBinError(n, h.GetBinContent(n)*relE)
 '''
 
-def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample):
+def powerHisto(histo1, power):
+        print histo1.GetName(), len(histo1)
+        for i in range(len(histo1)+2):
+                val = histo1.GetBinContent(i)
+                print val
+                if val !=0:
+                        histo1.SetBinContent( i, pow(val, power) )
+                else:
+                        histo1.SetBinContent( i, 0. )
+        return histo1
+
+def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample, alphaDown = 0):
     if not alternativeSample in f: f[alternativeSample] = ROOT.TFile.Open(folder+"/%sHistos.root"%alternativeSample)
     histoNameUp   = hn.replace("___","__syst__AlternativeUp___")+"__syst__AlternativeUp"
     histoUp =  f[alternativeSample].Get(hn).Clone(histoNameUp)
+    if hn.split("___")[0] in model.rebin.keys(): 
+            histoUp = (histoUp.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     ## up = alternative sample
     if "Up" in sy: 
         return copy.copy(histoUp)
-    ## down = nom - (alt - nom) = 2*nom - alt
+    ## down = ( up / nom)^alpha  * nom = ( nom/up)^-alpha  * nom   with alpha = -1
     elif "Down" in sy:
+        histoNom = f[nominalSample].Get(hn)
+        if hn.split("___")[0] in model.rebin.keys(): 
+            histoNom = (histoNom.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
         histoNameDown = hn.replace("___","__syst__AlternativeDown___")+"__syst__AlternativeDown"
-        histoDown = f[nominalSample].Get(hn).Clone(histoNameDown)
-        histoDown.Scale(2)
-        histoDown.Add(histoUp, -1)
+        histoDown = histoNom.Clone(histoNameDown)
+        histoDown.Divide( histoUp )
+        histoDown = powerHisto( histoDown, -alphaDown )
+        histoDown.Multiply( histoNom )
         return copy.copy(histoDown)
     else:
         print "No alternative sample for %s"%d
@@ -264,7 +281,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
     
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
-    (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn)
+    if hn.split("___")[0] in model.rebin.keys(): nomHistoRebinned = (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     ratio = nomHistoRebinned.Clone("ratio")
     
     funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
@@ -297,7 +314,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         funct.SetParameter(envelopeFunctionParameter, -par2**0.5)
     else: raise Exception("Error in makeEnvelopeShape")
 
-    nhisto = f[d].Get(hn).Clone(hn+sy)
+    nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
 #    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
     return copy.copy(nhisto)
@@ -389,7 +406,7 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
             if data : h.SetMarkerStyle(10)
             else : 
-                if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
+                #if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
 		print h.GetSumOfWeights(),h.GetEntries(),lumi*samples[d]["xsec"],d
                 h.Scale(samples[d]["xsec"]*lumi)
                 error_b = ROOT.Double(0)
@@ -403,17 +420,17 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                     sy_base = sy.replace("Up", "").replace("Down", "")
                     if not data :
                         if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base] and d in model.systematicDetail[sy_base]["alternativeSample"]:
-                            hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d])
+                            hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d], model.systematicDetail[sy_base]["powerDown"] if model.systematicDetail[sy_base] else -1)
                         elif sy_base in model.systematicDetail and "envelope" in model.systematicDetail[sy_base]:
                             hs=makeEnvelopeShape(hn,sy,f, d, model)
                         else:
                             hs=f[d].Get(findSyst(hn,sy,f[d]))
-                        if postfit : 
-                            hs=f[d].Get(hn).Clone()
+                            if hs and hn.split("___")[0] in model.rebin.keys() : 
+                               hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName()+"rebinned")
+                        #if postfit : 
+                            #hs=f[d].Get(hn).Clone()
                         if hs:
-                            if hn.split("___")[0] in model.rebin.keys() : 
-                               hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
-                            if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
+                            #if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                             if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else :hs.Scale(samples[d]["xsec"]*lumi)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
@@ -427,17 +444,17 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 for sy in systematicsSetToUse :
                     sy_base = sy.replace("Up", "").replace("Down", "")
                     if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base] and d in model.systematicDetail[sy_base]["alternativeSample"]:
-                        hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d])
+                        hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d], model.systematicDetail[sy_base]["powerDown"] if model.systematicDetail[sy_base] else -1)
                     elif sy_base in model.systematicDetail and "envelope" in model.systematicDetail[sy_base]:
                         hs=makeEnvelopeShape(hn,sy,f, d, model)
                     else:
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
-                    if postfit : 
-                        hs=f[d].Get(hn).Clone()
+                        if hs and hn.split("___")[0] in model.rebin.keys() : 
+                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName()+"rebinned")
+                    #if postfit : 
+                        #hs=f[d].Get(hn).Clone()
                     if hs:
-                        if hn.split("___")[0] in model.rebin.keys() : 
-                            hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
-                        if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
+                        #if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                         if not data : 
                             if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else : hs.Scale(samples[d]["xsec"]*lumi)
