@@ -1,10 +1,14 @@
 from nail.nail import *
 import ROOT
 import sys
-FSR=False
+FSR=True
+FSRnew=False
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
 if FSR :
-    flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_FSR/VBF_HToMuMu_nano2016.root")
+    if FSRnew :
+       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/Skim/CMSSW_10_2_6/src/PhysicsTools/NanoAODTools/crab/myNanoProdMc2016_NANO_1_Skim.root")
+    else:
+       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/VBF_HToMuMu_nano2016.root")
 else:
     flow=SampleProcessing("VBF Hmumu Analysis","/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/VBF_HToMuMu_nano2016.root")
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/hmmNail/crab/CMSSW_9_4_6/src/PhysicsTools/NanoAODTools/python/postprocessing/examples/skimmed.root") #/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2016_tmp/VBF_HToMuMu_nano2016.root")
@@ -38,12 +42,28 @@ flow.Define("Muon_mass_FSR","0.f*Muon_pt")
 
 #need FSR inputs
 if FSR:
-  flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
+  flow.Define("FsrPhoton_mass","FsrPhoton_pt*0.f")
+  flow.Define("FsrPhoton_p4","@p4v(FsrPhoton)")
+  if FSRnew:
+    flow.Define("Muon_FSR_p4","TakeDef(FsrPhoton_p4,Muon_fsrPhotonIdx,ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >())")
+  else :
+    flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
+  flow.Define("Muon_FSR_pt","TakeDef(FsrPhoton_pt,Muon_fsrPhotonIdx,0)")
+  flow.Define("Muon_FSR_iso","TakeDef(FsrPhoton_relIso03,Muon_fsrPhotonIdx,99.)")
+  flow.Define("Muon_FSR_drEt2","TakeDef(FsrPhoton_dROverEt2,Muon_fsrPhotonIdx,99.)")
+
   #flow.Define("Muon_wFSR_p4","Where(Muon_iso_FSR < 0.8,Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
 ##  flow.Define("Muon_wFSR_p4","Muon_FSR_p4*(Muon_iso_FSR < 0.8)+Muon_p4_orig")
-  flow.Define("Muon_wFSR_p4","Where((Muon_iso_FSR < 0.8),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
-  flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
-  flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
+  if FSRnew:
+    flow.Define("Muon_wFSR_p4","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 0.8 && Muon_FSR_drEt2 < 0.019 ),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
+    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+    flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_pt-Muon_FSR_pt)/Muon_correctedFSR_pt")
+  else:
+    flow.Define("Muon_wFSR_p4","Where((Muon_iso_FSR < 0.8),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
+    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+    flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
+
+
 else :
 #replacements without FSR inputs
   flow.Define("Muon_iso","Muon_pfRelIso04_all")
