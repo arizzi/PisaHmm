@@ -10,19 +10,19 @@ std::vector<std::string> v18 = {
 "/scratch/lgiannini/CMSSW_10_4_0_pre1/src/retrainVBF3/separatebg3/prova_tutto_ok18_QGL_fold3/model_preparation/nn_evt3.json"};
 LwtnnWrapper lwtnn18 = LwtnnWrapper(v18);
 
-/*std::vector<std::string> vall = {
+std::vector<std::string> vall = {
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt0_all.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt1_all.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_all.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_all.json"
 };
-*/
 
 
-std::vector<std::string> vall = {
+
+/*std::vector<std::string> vall = {
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt0_focal.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt1_focal.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_focal.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_focal.json"
-};
+};*/
 LwtnnWrapper lwtnn_all = LwtnnWrapper(vall);
