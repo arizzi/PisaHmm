@@ -282,10 +282,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     if hn.split("___")[0] in model.rebin.keys(): nomHistoRebinned = (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
-    ratio = nomHistoRebinned.Clone("ratio")
     
-    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
-    funct.SetParameters(*envelopeFunctionParameterValues)
     pdfHessian = "LHEPdfHessian"
     pdfReplica = "LHEPdfReplica"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
@@ -295,25 +292,41 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         return
     
     par2 = 0
-    i = 0
-    hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
-    while hs and hs.GetMaximum()>0:
-        (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName())
-        ratio.Divide(hs, nomHistoRebinned)
-        ratio.Fit(funct,"QN0")
-        par2 += funct.GetParameter(envelopeFunctionParameter)**2
-        i = i + 1
+    ratio = nomHistoRebinned.Clone("ratio")
+    for bin_ in range(len(ratio)):
+        sum_ = 0.
+        sumSquare = 0.
+        i = 0 ## nominal is the first entry.
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+        while hs and hs.GetMaximum()>0:
+            sum_ = sum_ + hs.GetBinContent(bin_)
+            sumSquare = sumSquare + hs.GetBinContent(bin_)**2
+            i = i + 1
+            hs=f[d].Get(findSyst(hn,pdf+str(i),f[d], silent=True))
+        sum_ = sum_ + 1
+        sumSquare = sumSquare + 1
+        i = i + 1 ## nominal is a entry.
+        rms = (sumSquare/i - (sum_/i)**2)**0.5 
+        if pdf == pdfHessian:
+            rms = rms*(i**0.5)
+        
+        ratio.SetBinContent(bin_, 1.)
+        ratio.SetBinError(bin_, rms)
     
-    if pdf == pdfReplica: par2 = (par2/i)
+    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
+    funct.SetParameters(*envelopeFunctionParameterValues)
+    
+    ratio.Fit(funct,"QN0")
+    parError = funct.GetParError(envelopeFunctionParameter)
     
     funct.SetParameters(*envelopeFunctionParameterValues)
     if "Up" in sy:
-        funct.SetParameter(envelopeFunctionParameter, par2**0.5)
+        funct.FixParameter(envelopeFunctionParameter, +parError)
     elif "Down" in sy:
-        funct.SetParameter(envelopeFunctionParameter, -par2**0.5)
+        funct.FixParameter(envelopeFunctionParameter, -parError)
     else: raise Exception("Error in makeEnvelopeShape")
 
+    ratio.Fit(funct,"QN0")
     nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
 #    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
