@@ -125,6 +125,18 @@ def systematicGrouping (background, signal) :
                     "vbfHmm_2016POWPY":"vbfHmm_2016POWHERWIG",
                 },
         },
+        "PDFX1":{
+                "type": "shape",
+                "value":1.0,
+                "decorrelate":{
+                    "ggH":["ggHmm"],
+                    "DY" :["DY105VBF","DY105"],
+                },
+                "envelope": "LHEPdf",
+                "envelopeFunction": "[0] + [1]*x",
+                "envelopeFunctionParameter": 1,
+                "envelopeFunctionParameterValues": (1, 0),
+        },
     }
     from jesnames import jes2016
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
