@@ -11,24 +11,31 @@ ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
 from eventprocessing import flow
 from histograms import histosPerSelection,histosPerSelectionFullJecs
 
-def totevents(files):
-   totev=1e-9
-   totevCount=1e-9
-   totevSkim=1e-9
+def sumwsents(files):
+   sumws=1e-9
+   LHEPdfSumw=[]
    for fn in files:
 	  f=ROOT.TFile.Open(fn)
 	  run=f.Get("Runs")
-	  totevSkim+=f.Get("Events").GetEntries()
 	  if run :
 		 hw=ROOT.TH1F("hw","", 5,0,5)
 		 run.Project("hw","1","genEventSumw")
-		 totev+=hw.GetSumOfWeights()
-		 run.Project("hw","1","genEventCount")
-		 totevCount+=hw.GetSumOfWeights()
-   if totev < 1: totev = 1
-   print totev
-   return totev
+                 sumws+=hw.GetSumOfWeights()
+                 run.GetEvent()
+                 nLHEScaleSumw = run.nLHEPdfSumw
+                 for i in range(nLHEScaleSumw):
+                        run.Project("hw","1","LHEPdfSumw[%d]"%i)
+                        if i<len(LHEPdfSumw):
+                                LHEPdfSumw[i] = LHEPdfSumw[i] + hw.GetSumOfWeights()
+                        else:
+                                LHEPdfSumw.append(hw.GetSumOfWeights())
+   if sumws < 1: sumws = 1
+   return sumws, LHEPdfSumw
 
+def isHessianPdf(LHAdown): ##See https://lhapdf.hepforge.org/pdfsets
+    for i in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400]:
+            if LHAdown==i or LHAdown==i+1: return True
+    return False
 
 used=[]
 for s in histosPerSelection:
@@ -139,15 +146,23 @@ def f(ar):
      '''%nthreads)
      s,f=ar
      print f
-     totevts = totevents(f)
+     if not "lumi" in samples[s].keys()  :
+        sumws, LHEPdfSumw = sumwsents(f)
+     else:
+        sumws, LHEPdfSumw = 1., []
      rf=ROOT.TFile.Open(f[0])
      ev=rf.Get("Events")
      hessian=False
+     PdfLHA_down, PdfLHA_down = 0, 0
      if ev :
-	 br =ev.GetBranch("LHEPdfWeight")
-	 if br and "306000" in br.GetTitle():	
-	    print "Sample",s,"has Hessian PDF"
-	    hessian = True
+	 br = ev.GetBranch("LHEPdfWeight")
+         if br:
+                 brTitle = br.GetTitle()
+                 PdfLHA_down, PdfLHA_up = brTitle.split("LHA IDs ")[-1].split("-")
+                 PdfLHA_down, PdfLHA_up = int(PdfLHA_down), int(PdfLHA_up)
+                 if isHessianPdf(PdfLHA_down):
+                    print "Sample",s,"has Hessian PDF"
+                    hessian = True
 
      vf=ROOT.vector("string")()
      map(lambda x : vf.push_back(x), f)
@@ -271,28 +286,44 @@ def f(ar):
             for h in ouspec.histos :
                 h.GetValue()
                 fff.cd()
-                h.Scale(1./normalization/totevts)
+                h.Scale(1./normalization/sumws)
                 hname = h.GetName()
                 if "__syst__LHEPdf" in hname:
                     if h.GetMaximum()==0.: continue ## skip empty LHEPdf
-                    if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
-                    else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
+                    PdfIdx = hname.split("__syst__LHEPdf")[-1]
+                    if PdfIdx.isdigit():
+                            PdfIdx = int(PdfIdx)
+                            if PdfIdx<len(LHEPdfSumw): h.Scale(1./LHEPdfSumw[PdfIdx])
+                            if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
+                            else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
                 h.Write()
          for h in ou.histos : 
 #            print "histo"
             h.GetValue()
             fff.cd()
-            h.Scale(1./normalization/totevts)
+            h.Scale(1./normalization/sumws)
             hname = h.GetName()
             if "__syst__LHEPdf" in hname:
                 if h.GetMaximum()==0.: continue ## skip empty LHEPdf
-                if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
-                else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
+                PdfIdx = hname.split("__syst__LHEPdf")[-1]
+                if PdfIdx.isdigit():
+                        PdfIdx = int(PdfIdx)
+                        if PdfIdx<len(LHEPdfSumw): h.Scale(1./LHEPdfSumw[PdfIdx])
+                        if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
+                        else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
             h.Write()
 	 
-         totalEvents = getattr(ROOT,"TParameter<double>")("totalEvents", totevts)
-         totalEvents.Write()
-         
+         sumWeights = getattr(ROOT,"TParameter<double>")("sumWeights", sumws)
+         sumWeights.Write()
+         if not "lumi" in samples[s].keys() :
+                 LHApdf_down =  getattr(ROOT,"TParameter<int>")("LHApdf_down", PdfLHA_down)
+                 LHApdf_down.Write()
+                 LHApdf_up   =  getattr(ROOT,"TParameter<int>")("LHApdf_up",   PdfLHA_up)
+                 LHApdf_up.Write()
+                 sumWeightPDF = {}
+                 for i in range(len(LHEPdfSumw)):
+                         sumWeightPDF[i] = getattr(ROOT,"TParameter<double>")("sumWeightsPDF%d"%i, sumws*LHEPdfSumw[i])
+                         sumWeightPDF[i].Write()
          fff.Write()
          fff.Close()
 	 return 0
