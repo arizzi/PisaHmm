@@ -1,6 +1,7 @@
 from nail.nail import *
 import ROOT
 nthreads=50
+nprocesses=5
 import sys
 import copy
 ROOT.gROOT.ProcessLine(".x softactivity.h")
@@ -158,8 +159,9 @@ def f(ar):
 	 br = ev.GetBranch("LHEPdfWeight")
          if br:
                  brTitle = br.GetTitle()
-                 PdfLHA_down, PdfLHA_up = brTitle.split("LHA IDs ")[-1].split("-")
-                 PdfLHA_down, PdfLHA_up = int(PdfLHA_down), int(PdfLHA_up)
+                 if "LHA IDs" in brTitle:
+                    PdfLHA_down, PdfLHA_up = brTitle.split("LHA IDs ")[-1].split("-")
+                    PdfLHA_down, PdfLHA_up = int(PdfLHA_down), int(PdfLHA_up)
                  if isHessianPdf(PdfLHA_down):
                     print "Sample",s,"has Hessian PDF"
                     hessian = True
@@ -292,8 +294,6 @@ def f(ar):
                     if h.GetMaximum()==0.: continue ## skip empty LHEPdf
                     PdfIdx = hname.split("__syst__LHEPdf")[-1]
                     if PdfIdx.isdigit():
-                            PdfIdx = int(PdfIdx)
-                            if PdfIdx<len(LHEPdfSumw): h.Scale(1./LHEPdfSumw[PdfIdx])
                             if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
                             else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
                 h.Write()
@@ -307,8 +307,6 @@ def f(ar):
                 if h.GetMaximum()==0.: continue ## skip empty LHEPdf
                 PdfIdx = hname.split("__syst__LHEPdf")[-1]
                 if PdfIdx.isdigit():
-                        PdfIdx = int(PdfIdx)
-                        if PdfIdx<len(LHEPdfSumw): h.Scale(1./LHEPdfSumw[PdfIdx])
                         if hessian: h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfHessian"))
                         else:     h.SetName(hname.replace("__syst__LHEPdf","__syst__LHEPdfReplica"))
             h.Write()
@@ -338,7 +336,7 @@ def f(ar):
 
 #from multiprocessing.pool import ThreadPool as Pool
 from multiprocessing import Pool
-runpool = Pool(5)
+runpool = Pool(nprocesses)
 
 print samples.keys()
 sams=samples.keys()
@@ -368,6 +366,10 @@ if len(sys.argv[2:]) :
 
 print "Will process", toproc
    
-results=zip(runpool.map(f, toproc ),[x[0] for x in toproc])
+if nprocesses>1:
+        results=zip(runpool.map(f, toproc ),[x[0] for x in toproc])
+else:
+        results=zip([f(x) for x in toproc] ,[x[0] for x in toproc])
+
 print "Results",results
 print "To resubmit",[x[1] for x in results if x[0] ]
