@@ -240,10 +240,8 @@ def addFitVariation(h, variationToAdd) :
 '''
 
 def powerHisto(histo1, power):
-        print histo1.GetName(), len(histo1)
         for i in range(len(histo1)+2):
                 val = histo1.GetBinContent(i)
-                print val
                 if val !=0:
                         histo1.SetBinContent( i, pow(val, power) )
                 else:
@@ -288,30 +286,36 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
-        print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found" 
+        print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn) 
         return
     
-    par2 = 0
     ratio = nomHistoRebinned.Clone("ratio")
+    ratio.Reset()
     for bin_ in range(len(ratio)):
         sum_ = 0.
         sumSquare = 0.
         i = 0 ## nominal is the first entry.
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+        if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+#        Calculate ratio wrt to PDF0:
+        hs0=hs
         while hs and hs.GetMaximum()>0:
-            sum_ = sum_ + hs.GetBinContent(bin_)
-            sumSquare = sumSquare + hs.GetBinContent(bin_)**2
+            rat = hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
+            sum_ = sum_ + rat
+            sumSquare = sumSquare + rat**2
             i = i + 1
             hs=f[d].Get(findSyst(hn,pdf+str(i),f[d], silent=True))
-        sum_ = sum_ + 1
-        sumSquare = sumSquare + 1
-        i = i + 1 ## nominal is a entry.
-        rms = (sumSquare/i - (sum_/i)**2)**0.5 
-        if pdf == pdfHessian:
-            rms = rms*(i**0.5)
+        if sumSquare>0:
+            rms = (sumSquare/i - (sum_/i)**2)**0.5 
+            if  pdf == pdfHessian: ##if hessian
+                rms = rms*(i**0.5)
+        else:
+            rms = 10. ## large error if no MC stat
         
         ratio.SetBinContent(bin_, 1.)
         ratio.SetBinError(bin_, rms)
+#        print bin_, i, sum_, sumSquare, rms
+        
     
     funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
     funct.SetParameters(*envelopeFunctionParameterValues)
@@ -330,6 +334,11 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
 #    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+    ### DEBUG: Save ratio plots
+#    testFile = ROOT.TFile("%s_%s_%s.root"%(hn,sy, d),"recreate")
+#    funct.Write()
+#    ratio.Write()
+#    testFile.Close()
     return copy.copy(nhisto)
 
 f={}
