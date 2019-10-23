@@ -291,32 +291,31 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     
     ratio = nomHistoRebinned.Clone("ratio")
     ratio.Reset()
-    for bin_ in range(len(ratio)):
-        sum_ = 0.
-        sumSquare = 0.
-        i = 0 ## nominal is the first entry.
-        hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
-        if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+    sums = [0]*len(ratio)
+    sumSquares = [0]*len(ratio)
+    i = 0 ## nominal is the first entry.
+    hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+    if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
 #        Calculate ratio wrt to PDF0:
-        hs0=hs
-        while hs and hs.GetMaximum()>0:
-            if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+    hs0=hs
+    while hs and hs.GetMaximum()>0:
+        if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+        for bin_ in range(len(ratio)):
             rat = hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
-#            if bin_==2: print rat
-            sum_ = sum_ + rat
-            sumSquare = sumSquare + rat**2
-            i = i + 1
-            hs=f[d].Get(findSyst(hn,pdf+str(i),f[d], silent=True))
-        if sumSquare>0:
-            rms = (sumSquare/i - (sum_/i)**2)**0.5 
+            sums[bin_] += rat
+            sumSquares[bin_] += rat**2
+        i = i + 1
+        hs=f[d].Get(findSyst(hn,pdf+str(i),f[d], silent=True))
+    for bin_ in range(len(ratio)):
+        if sumSquares[bin_]>0:
+            rms = (sumSquares[bin_]/i - (sums[bin_]/i)**2)**0.5 
             if  pdf == pdfHessian: ##if hessian
                 rms = rms*(i**0.5)
         else:
             rms = 10. ## large error if no MC stat
-        
         ratio.SetBinContent(bin_, 1.)
         ratio.SetBinError(bin_, rms)
-#        print bin_, i, sum_, sumSquare, rms
+    #        print bin_, i, sum_, sumSquare, rms
         
     
     funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
