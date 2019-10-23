@@ -301,7 +301,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     while hs and hs.GetMaximum()>0:
         if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
         for bin_ in range(len(ratio)):
-            rat = hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
+            rat = 1. - hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0.
             sums[bin_] += rat
             sumSquares[bin_] += rat**2
         i = i + 1
@@ -334,7 +334,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     ratio.Fit(funct,"QN0")
     nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
-#    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+    nhisto.Add(nomHistoRebinned)
+    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
     ### DEBUG: Save ratio plots
     #testFile = ROOT.TFile("%s_%s_%s.root"%(hn,sy, d),"recreate")
     #funct.Write()
