@@ -281,8 +281,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     if hn.split("___")[0] in model.rebin.keys(): nomHistoRebinned = (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     
-    pdfHessian = "LHEPdfHessian"
     pdfReplica = "LHEPdfReplica"
+    pdfHessian = "LHEPdfHessian"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
@@ -300,7 +300,9 @@ def makeEnvelopeShape(hn,sy,f, d, model):
 #        Calculate ratio wrt to PDF0:
         hs0=hs
         while hs and hs.GetMaximum()>0:
+            if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
             rat = hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
+#            if bin_==2: print rat
             sum_ = sum_ + rat
             sumSquare = sumSquare + rat**2
             i = i + 1
@@ -335,10 +337,10 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nhisto.Multiply(funct)
 #    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
     ### DEBUG: Save ratio plots
-#    testFile = ROOT.TFile("%s_%s_%s.root"%(hn,sy, d),"recreate")
-#    funct.Write()
-#    ratio.Write()
-#    testFile.Close()
+    #testFile = ROOT.TFile("%s_%s_%s.root"%(hn,sy, d),"recreate")
+    #funct.Write()
+    #ratio.Write()
+    #testFile.Close()
     return copy.copy(nhisto)
 
 f={}
