@@ -281,8 +281,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     if hn.split("___")[0] in model.rebin.keys(): nomHistoRebinned = (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     
-    pdfReplica = "LHEPdfReplica"
-    pdfHessian = "LHEPdfHessian"
+    pdfReplica = "LHEPdfHessian"
+    pdfHessian = "LHEPdfReplica"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
@@ -301,46 +301,56 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     while hs and hs.GetMaximum()>0:
         if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
         for bin_ in range(len(ratio)):
-            rat = 1. - hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0.
+            rat =  hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
             sums[bin_] += rat
             sumSquares[bin_] += rat**2
         i = i + 1
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d], silent=True))
+    meanrms=0.
+    ngood=0
     for bin_ in range(len(ratio)):
         if sumSquares[bin_]>0:
             rms = (sumSquares[bin_]/i - (sums[bin_]/i)**2)**0.5 
             if  pdf == pdfHessian: ##if hessian
                 rms = rms*(i**0.5)
+      	    meanrms+=rms	
+	    ngood+=1
         else:
             rms = 10. ## large error if no MC stat
-        ratio.SetBinContent(bin_, 1.)
+        ratio.SetBinContent(bin_, 0.)
         ratio.SetBinError(bin_, rms)
+
+    meanrms/=ngood if ngood !=0 else 1 
+    print 'mean rms',meanrms
     #        print bin_, i, sum_, sumSquare, rms
         
     
-    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
-    funct.SetParameters(*envelopeFunctionParameterValues)
+#   funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
+ #  funct.SetParameters(*envelopeFunctionParameterValues)
     
-    ratio.Fit(funct,"QN0")
-    parError = funct.GetParError(envelopeFunctionParameter)
+  # ratio.Fit(funct,"QN0")
+   #parError = funct.GetParError(envelopeFunctionParameter)
     
-    funct.SetParameters(*envelopeFunctionParameterValues)
-    if "Up" in sy:
-        funct.FixParameter(envelopeFunctionParameter, +parError)
-    elif "Down" in sy:
-        funct.FixParameter(envelopeFunctionParameter, -parError)
-    else: raise Exception("Error in makeEnvelopeShape")
+#    funct.SetParameters(*envelopeFunctionParameterValues)
+ #   if "Up" in sy:
+  #      funct.FixParameter(envelopeFunctionParameter, +parError)
+   # elif "Down" in sy:
+    #    funct.FixParameter(envelopeFunctionParameter, -parError)
+   # else: raise Exception("Error in makeEnvelopeShape")
 
-    ratio.Fit(funct,"QN0")
+    #ratio.Fit(funct,"QN0")
+    funct = ROOT.TF1("funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax()),nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
+    print "funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax())
     nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
-    nhisto.Add(nomHistoRebinned)
-    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+#   nhisto.Add(nomHistoRebinned)
+#    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral()
     ### DEBUG: Save ratio plots
-    #testFile = ROOT.TFile("%s_%s_%s.root"%(hn,sy, d),"recreate")
-    #funct.Write()
-    #ratio.Write()
-    #testFile.Close()
+#    testFile = ROOT.TFile("debug/%s_%s_%s.root"%(hn,sy, d),"recreate")
+ #   funct.Write()
+  #  ratio.Write()
+    
+  #  testFile.Close()
     return copy.copy(nhisto)
 
 f={}
@@ -403,6 +413,7 @@ postFit = postfitPlot.PostFit()
     
 
 def addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) :
+#    print "Adding %s with integral %f"%(hs.GetName(), hs.Integral())
     if sy not in stackSys[hn].keys() : stackSys[hn][sy]=hs.Clone()
     else : stackSys[hn][sy].Add(hs)
     
@@ -427,7 +438,8 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
         if  h:
             if hn.split("___")[0] in model.rebin.keys() : 
                 #print "Rebin",hn
-                h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+                h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]])))
+            h = h.Clone(hn+"rebinned")
             if data : h.SetMarkerStyle(10)
             else : 
                 #if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
