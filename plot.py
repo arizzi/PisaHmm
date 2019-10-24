@@ -277,9 +277,25 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     envelopeFunction = model.systematicDetail[sy_base]["envelopeFunction"]
     envelopeFunctionParameter = model.systematicDetail[sy_base]["envelopeFunctionParameter"]
     envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
+    envelopeNBins = model.systematicDetail[sy_base]["envelopeNBins"]
+    if not "envelopeBinning" in model.systematicDetail[sy_base]:  model.systematicDetail[sy_base]["envelopeBinning"]={}
+    if not (hn, d) in model.systematicDetail[sy_base]["envelopeBinning"]:
+        binning = [0]
+        nomHisto = f[d].Get(hn).Clone()
+        binWeight = nomHisto.Integral()/envelopeNBins
+        tmp = 0
+        for i in range(len(nomHisto)):
+            tmp += nomHisto.GetBinContent(i)
+            if tmp>binWeight:
+                tmp = 0
+                binning.append(nomHisto.GetBinLowEdge(i))
+        binning.append(nomHisto.GetBinLowEdge(i))
+        model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = binning
     
+    
+    envelopeBinning = model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)]
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
-    if hn.split("___")[0] in model.rebin.keys(): nomHistoRebinned = (nomHistoRebinned.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+    nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
     
     pdfReplica = "LHEPdfHessian"
     pdfHessian = "LHEPdfReplica"
@@ -295,12 +311,12 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     sumSquares = [0]*len(ratio)
     i = 0 ## nominal is the first entry.
     hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
-    if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+    hs = hs.Rebin(len(envelopeBinning)-1, hs.GetName(), array('d',envelopeBinning))
 #        Calculate ratio wrt to PDF0:
     hs0=hs
     while hs and hs.GetMaximum()>0:
-        if hn.split("___")[0] in model.rebin.keys(): hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
-        for bin_ in range(len(ratio)):
+        hs = hs.Rebin(len(envelopeBinning)-1, hs.GetName(), array('d',envelopeBinning))
+        for bin_ in range(1,len(ratio)):
             rat =  hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
             sums[bin_] += rat
             sumSquares[bin_] += rat**2
@@ -308,7 +324,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d], silent=True))
     meanrms=0.
     ngood=0
-    for bin_ in range(len(ratio)):
+    for bin_ in range(len(ratio)-1):
         if sumSquares[bin_]>0:
             rms = (sumSquares[bin_]/i - (sums[bin_]/i)**2)**0.5 
             if  pdf == pdfHessian: ##if hessian
@@ -341,16 +357,16 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     #ratio.Fit(funct,"QN0")
     funct = ROOT.TF1("funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax()),nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
     print "funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax())
-    nhisto = nomHistoRebinned.Clone(hn+sy)
+    nhisto = f[d].Get(hn).Clone(hn+sy)
+    if hn.split("___")[0] in model.rebin.keys(): nhisto = (nhisto.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     nhisto.Multiply(funct)
 #   nhisto.Add(nomHistoRebinned)
 #    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral()
     ### DEBUG: Save ratio plots
 #    testFile = ROOT.TFile("debug/%s_%s_%s.root"%(hn,sy, d),"recreate")
- #   funct.Write()
-  #  ratio.Write()
-    
-  #  testFile.Close()
+#    funct.Write()
+#    ratio.Write()
+#    testFile.Close()
     return copy.copy(nhisto)
 
 f={}
