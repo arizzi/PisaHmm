@@ -50,6 +50,15 @@ ftxt.write(flow.Describe(used))
 snap=[] 
 snaplist=["event","Higgs_m_uncalib","nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
+snaplist=[ "event",
+    "Higgs_pt", "Higgs_eta", "Higgs_mRelReso", "Higgs_mReso", "Higgs_m", "ll_zstar_log", "ll_zstar",
+    "QJet0_pt_touse", "QJet0_phi", "QJet0_eta", "QJet0_pt_nom", "QJet0_puId", "QJet0_qgl",
+    "QJet1_pt_touse", "QJet1_phi", "QJet1_eta", "QJet1_pt_nom", "QJet1_puId", "QJet1_qgl",
+    "qqDeltaEta", "qqDeltaPhi", "qq_pt", "Mqq", "Mqq_log", "MaxJetAbsEta", "mmjj_pt", "mmjj_pt_log", "mmjj_pz", "mmjj_pz_logabs",
+    "DeltaRelQQ", "DeltaEtaQQSum", "PhiHQ1", "PhiHQ2", "EtaHQ1", "EtaHQ2", "minEtaHQ", "Rpt", "theta2", "NSoft5", "NSoft5New", "SAHT",
+    "SBClassifier", "DNN18Atan","DNN18Classifier", "year",
+     #"genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "QGLweight"
+]
 
 from histobinning import binningrules
 flow.binningRules = binningrules
@@ -79,7 +88,7 @@ addQGLvariation(flow)
 addPreFiringVariation(flow)
 
 
-snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","QJet1_partonFlavour","QJet0_partonFlavour"]
+snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "QGLweight","QJet1_partonFlavour","QJet0_partonFlavour"]
 systematics=flow.variations #take all systematic variations
 print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
@@ -266,7 +275,7 @@ def f(ar):
 	 print "Above the cutflow for",s
  #        ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
         
-         if "training" in samples[s].keys() : 
+         if "training" in samples[s].keys() and samples[s]["training"] : 
              #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
              ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 
