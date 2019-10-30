@@ -14,7 +14,7 @@ binningrules=[
 (".*_m(_|$).*" , "%s , 0,500"%nbins),
 (".*_M(_|$).*" , "%s , 0,500"%nbins),
 (".*_Mass(_|$).*" , "%s , 0,500"%nbins),
-(".*Higgs_m.*" , "%s , 70,150"%(nbins*3)),
+(".*Higgs_m.*" , "80 , 70,150"),
 (".*Higgs_mReso.*" , "%s , 0,20"%(nbins)),
 (".*_.*tag.*" , "%s , 0,1"%nbins),
 (".*Class.*" , "%s , -1,1"%nbins),
@@ -22,7 +22,7 @@ binningrules=[
 (".*DNN18Atan*" , "%s , 0,5"%(nbins*100)),
 (".*NNAtan.*" , "%s , 0,5"%(nbins*120)),
 (".*Soft.*" , "10 , -0.5,9.5"),
-(".*Mqq_log.*" , "%s , 0,10"%nbins),
+(".*Mqq_log.*" , "%s , 5,10"%nbins),
 (".*zstar.*" , "%s , -2,2"%nbins),
 (".*mmjj_pz.*" , "%s , 0,5000"%nbins),
 (".*mmjj_pz_logabs.*" , "%s , 0,10"%nbins),
@@ -39,6 +39,7 @@ binningrules=[
 ("Higgs_mRelReso","%s , 0 , 0.2"%nbins),
 ("Jet_jetId.*","%s , 0 , %s"%(nbins,nbins-1)),
 ("Jet_puId.*","%s , 0 , %s"%(nbins,nbins-1)),
+("fixedGridRhoFastjetAll*","40 , 0 , 40"),
 ("CS*","%s , -3.2 , 3.2"%nbins),
 ]
 

@@ -5,8 +5,8 @@
 #path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 #path2016data = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 
-path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_2_0/"
-path2016data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_2_0/"
+path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_1/"
+path2016data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_1/"
 
 
 samples={
@@ -14,9 +14,9 @@ samples={
 #"DY105Inclusuve_2016MGPY"      : {"xsec": 41.25},
 
 "DY105_2016AMCPY"     : {"xsec": 41.81, "filter": "VBFFilterAntiFlag"},
-"DY105_2016MGPY"      : {"xsec": 41.25, "filter": "VBFFilterAntiFlag"},
+"DY105_2016MGPY"      : {"xsec": 41.25, "filter": "VBFFilterAntiFlag", "training":False},
 "DY105VBF_2016AMCPY"  : {"xsec": 41.81*0.0425242, "filter": "VBFFilterFlag"}, #this name has to change
-"DY105VBF_2016MGPY"   : {"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag"},
+"DY105VBF_2016MGPY"   : {"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag", "training":False},
 
 "DY0J_2016AMCPY"  : {"xsec": 4620.52},
 "DY1J_2016AMCPY"  : {"xsec":859.59},
@@ -24,7 +24,7 @@ samples={
 #"DYTau_2016AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 "DYM50_2016AMCPY" : {"xsec":5765.40},
 
-"EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896},
+"EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2016MGHERWIG" : {"xsec":1.664},
 "EWKZ_2016MGPY"     : {"xsec":1.664},
 "EWKZint_2016MGPY"  : {"xsec":0.128},
@@ -37,7 +37,7 @@ samples={
 
 "data2016": {"lumi":35900.,"data":True},
 
-"TT_2016POWPY"      : {"xsec":809.},
+"TT_2016POWPY"      : {"xsec":809., "training":False},
 "TTlep_2016POWPY"   : {"xsec":85.65},
 "TTsemi_2016POWPY"  : {"xsec":356.18677888},
 #"TThad_2016POWPY"   : {"xsec":366.20181056}, # it does not exist
@@ -82,7 +82,7 @@ samples={
 "ggHmm_2016AMCPY"       : {"xsec":0.01057}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;
 "ggHmm_2016POWPY"       : {"xsec":0.01057},
 
-"vbfHmm_2016POWPY"      : {"xsec":0.0008210722},
+"vbfHmm_2016POWPY"      : {"xsec":0.0008210722, "training":False},
 "vbfHmm_2016POWHERWIG"  : {"xsec":0.0008210722},
 "vbfHmm_2016AMCPY"      : {"xsec":0.0008210722},
 "vbfHmm_2016AMCHERWIG"  : {"xsec":0.0008210722},

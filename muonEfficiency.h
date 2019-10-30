@@ -72,7 +72,9 @@ float mcMuonEffCorrection(int year, int run, float pt1, float eta1, float pt2, f
     if (year == 2018) {
         float efficiencyLS316361  = ( 1 - (1-muEff(hDATA4, eta1, pt1)) * (1-muEff(hDATA4, eta2, pt2)) ) / ( 1 - (1-muEff(hMC4, eta1, pt1)) * (1-muEff(hMC4, eta2, pt2)) );
         float efficiencyGR316361  = ( 1 - (1-muEff(hDATA5, eta1, pt1)) * (1-muEff(hDATA5, eta2, pt2)) ) / ( 1 - (1-muEff(hMC5, eta1, pt1)) * (1-muEff(hMC5, eta2, pt2)) );
-        return  50.79/59.74*efficiencyLS316361 + 8.95/59.74*efficiencyGR316361; 
+        float r=   50.79/59.74*efficiencyLS316361 + 8.95/59.74*efficiencyGR316361; 
+	return isnan(r)?1.:r;
+        
     }
      
     
