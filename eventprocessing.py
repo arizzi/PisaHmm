@@ -2,7 +2,7 @@ from nail.nail import *
 import ROOT
 import sys
 FSR=True
-FSRnew=False
+FSRnew=True
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
 if FSR :
     if FSRnew :
@@ -25,12 +25,14 @@ flow.AddExpectedInput("EWKreweight","float")
 flow.AddExpectedInput("TriggerSel","bool")
 flow.AddExpectedInput("lhefactor","float")
 flow.AddExpectedInput("LHEPdfHasHessian","bool")
+flow.AddExpectedInput("nnlopsWeight","float")
 flow.AddExpectedInput("PrefiringWeight","float")
 flow.AddExpectedInput("PrefiringWeightUp","float")
 flow.AddExpectedInput("PrefiringWeightDown","float")
 
 flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
 flow.Define("PSWeightSafe","nPSWeight>=4?PSWeight:std::vector<float>(4,1)")
+#flow.Define("Jet_pt_touse","Jet_pt_newJEC")
 flow.Define("Jet_pt_touse","Jet_pt")
 flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 
@@ -108,9 +110,8 @@ flow.DefaultConfig(jetPtCut=25)
 #''') 
 #flow.Define("Jet_associatedMuonPt","abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx1,0))")
 flow.SubCollection("SelectedJet","Jet",'''
-(year != 2017 ||  Jet_pt_touse > 50 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.0 ) && 
-(year != 2017 ||   abs(Jet_eta) < 2.4 || ( Jet_pt > 30  &&   Jet_puId > 6 )) &&
-Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || (Jet_puId  ) >0 ) &&   Jet_jetId  > 0  && abs(Jet_eta) < 4.7  &&  
+(year != 2017 ||  Jet_puId17 > 6 || abs(Jet_eta) < 2.7 || abs(Jet_eta) > 3.1 ) && 
+Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 || ( (Jet_puId17 ) > 0 && year==2017) || ((Jet_puId ) > 0 && year!=2017 ) ) &&   Jet_jetId  > 0  && abs(Jet_eta) < 4.7  &&  
 (Jet_muonIdx1==-1 || TakeDef(Muon_iso,Jet_muonIdx1,100) > 0.25 || abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx1,0)) < 20 || abs(TakeDef(Muon_mediumId,Jet_muonIdx1,0) == 0 )) &&
 (Jet_muonIdx2==-1 || TakeDef(Muon_iso,Jet_muonIdx2,100) > 0.25 || abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx2,0)) < 20 || abs(TakeDef(Muon_mediumId,Jet_muonIdx2,0) == 0 )) 
 ''')
@@ -303,6 +304,9 @@ flow.Define("DNN18AtanNoMass","atanh(DNN18ClassifierNoMass)")
 #flow.Define("CS_pair", "boost_to_CS(LeadMuon_p4, SubMuon_p4)",requires=["twoOppositeSignMuons"])
 #flow.Define("CS_theta","CS_pair.first")
 #flow.Define("CS_phi","CS_pair.second")
+
+
+flow.AddExternalCode(header="nnlops.h",cppfiles=["nnlops.C"],ipaths=["."])
 
 #unused MC stuff
 flow.Selection("hasHiggs","Sum(GenPart_pdgId == 25) > 0")
