@@ -84,7 +84,7 @@ float boost_to_CS(const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>
 //         return CS_pair;
 
         if (returnPhi) return phi_cs;
-        if (returnPhi) return cos_theta_cs;
+        if (!returnPhi) return cos_theta_cs;
         
 }
 
