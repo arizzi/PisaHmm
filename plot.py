@@ -438,7 +438,11 @@ def addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorks
     
     if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
     
-
+def getYear(sample):
+        if "201" in sample: return "201"+sample.split("201")[1][:1]
+        else: 
+                raise Exception("ERROR in getYear ( sample = %s ) "%sample)
+                return
 
 def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ftxt, lumi=0, data=False) :
     integral[gr]={}
@@ -579,9 +583,17 @@ def makeplot(hn,saveintegrals=True):
    if makeWorkspace : all_histo_all_syst[hn] = {}
 
    lumitot=0
+   lumis = {}
+   print("model.data=", model.data)
    for gr in model.data:
      for d in model.data[gr]:
        lumitot+=samples[d]["lumi"]
+       print "lumitot=%f"%lumitot
+       yr = getYear(d)
+       if yr in lumis: lumis[yr] += samples[d]["lumi"]
+       else: lumis[yr] = samples[d]["lumi"]
+   
+   print ("lumis=",lumis)
    
    histoSingleSyst[hn] = {}
    histosSignal[hn]={} 
@@ -596,12 +608,14 @@ def makeplot(hn,saveintegrals=True):
 
    
    for gr in model.backgroundSorted:
-     fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot) 
+     yr = getYear(d)
+     fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumis[yr]) 
 
 
    
    for gr in model.signal:
-     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumitot)
+     yr = getYear(d)
+     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumis[yr])
 
 
      
@@ -638,22 +652,22 @@ def makeplot(hn,saveintegrals=True):
    myLegend.Draw() #NEW  
    canvas[hn].cd(1)
    histos[hn].SetTitle("") 
-   datastack[hn].Draw("E P")
+   datasum[hn].Draw("E P")
    #datastack[hn].GetXaxis().SetTitle(hn)
-   setStyle(datastack[hn].GetHistogram())
-   datastack[hn].Draw("E P")
+   setStyle(datasum[hn])
+   datasum[hn].Draw("E P")
    histos[hn].Draw("hist same")
 #  histos[hn].Draw("hist")                                                               
    histosum[hn].SetLineWidth(0)                                                           
    histosum[hn].SetFillColor(ROOT.kBlack);                                                
    histosum[hn].SetFillStyle(3004);                                                                       
-   setStyle(histos[hn].GetHistogram())
+   setStyle(histos[hn].GetStack().Last())
    canvas[hn].Update()                
    histosum[hn].Draw("same E2")        
 
 
-   datastack[hn].Draw("E P sameaxis")
-   datastack[hn].Draw("E P same")
+   datasum[hn].Draw("E P sameaxis")
+   datasum[hn].Draw("E P same")
    for gr in model.signal:     histosSignal[hn][gr].Draw("hist same")                                                
                                                                          
    t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
@@ -666,7 +680,7 @@ def makeplot(hn,saveintegrals=True):
    t2.Draw()                                                             
    t3.Draw()                                     
    td.Draw()                                     
-   datastack[hn].GetHistogram().SetMarkerStyle(10)                       
+   datasum[hn].SetMarkerStyle(10)                       
 
    
    
@@ -747,7 +761,16 @@ if not makeWorkspace :
  print "Preload-done"
 
 if makeWorkspace:
-    for hn in variablesToFit[1:] :  makeplot(hn,True)
+    for hn in variablesToFit[1:] :  
+        makeplot(hn,True)
+    #Merge data in one plot for workspace
+    for hn in variablesToFit :  
+        for group in model.data :
+            for d in model.data[group] :
+                if not "data"+year in all_histo_all_syst[hn]: all_histo_all_syst[hn]["data"+year] = {}
+                for syst in all_histo_all_syst[hn][d].keys():
+                    if not syst in all_histo_all_syst[hn]["data"+year]: all_histo_all_syst[hn]["data"+year][syst] = all_histo_all_syst[hn][d][syst].Clone()
+                    else: all_histo_all_syst[hn]["data"+year][syst].Add(all_histo_all_syst[hn][d][syst])
     WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
 else :
    from multiprocessing import Pool
