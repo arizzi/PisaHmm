@@ -41,7 +41,7 @@ print
 
 
 #sorting
-backgroundSorted=["Other","Top","DY0J","DY1J","DY2J","EWKZ"]
+backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 fillcolor={}
