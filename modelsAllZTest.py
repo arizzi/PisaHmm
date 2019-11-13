@@ -7,10 +7,10 @@ samples.update(samples2016.samples)
 samples.update(samples2017.samples)
 samples.update(samples2018.samples)
 
-import models2016H as models2016
-import models2017H as models2017
-import models2018H as models2018
-name="H"
+import models2016Z as models2016
+import models2017Z as models2017
+import models2018Z as models2018
+name="Z"
 
 
 background={}
@@ -41,7 +41,7 @@ print
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+backgroundSorted=["Other","Top","DY0J","DY1J","DY2J","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 fillcolor={}
@@ -68,3 +68,7 @@ systematicDetail = systematicGrouping(background, signal)
 linecolor=fillcolor
 markercolor=fillcolor
 
+
+### REMVE SYSTEMATICS !!! ###
+systematicsToPlot=[]
+systematicsForDC=[]

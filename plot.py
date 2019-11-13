@@ -444,13 +444,16 @@ def getYear(sample):
                 raise Exception("ERROR in getYear ( sample = %s ) "%sample)
                 return
 
-def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ftxt, lumi=0, data=False) :
+def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ftxt, lumis=[], data=False) :
     integral[gr]={}
     integral[gr]["nom"]=0
     error[gr]=0
     #for d in samplesToPlot[gr]: 
     for n in range(len(samplesToPlot[gr])) :
       d = samplesToPlot[gr][n]
+      if lumis:
+          yr = getYear(d)
+          lumi = lumis[yr]
       if makeWorkspace : all_histo_all_syst[hn][d]={}
       if f[d] :
         h=f[d].Get(hn)
@@ -608,14 +611,12 @@ def makeplot(hn,saveintegrals=True):
 
    
    for gr in model.backgroundSorted:
-     yr = getYear(d)
-     fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumis[yr]) 
+     fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumis=lumis) 
 
 
    
    for gr in model.signal:
-     yr = getYear(d)
-     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumi=lumis[yr])
+     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumis=lumis)
 
 
      
@@ -652,6 +653,7 @@ def makeplot(hn,saveintegrals=True):
    myLegend.Draw() #NEW  
    canvas[hn].cd(1)
    histos[hn].SetTitle("") 
+   datasum[hn].SetMinimum(max(0.1*datasum[hn].GetMinimum(),0.1)) ## zoom out y axis
    datasum[hn].Draw("E P")
    #datastack[hn].GetXaxis().SetTitle(hn)
    setStyle(datasum[hn])
@@ -763,14 +765,17 @@ if not makeWorkspace :
 if makeWorkspace:
     for hn in variablesToFit[1:] :  
         makeplot(hn,True)
-    #Merge data in one plot for workspace
-    for hn in variablesToFit :  
-        for group in model.data :
-            for d in model.data[group] :
-                if not "data"+year in all_histo_all_syst[hn]: all_histo_all_syst[hn]["data"+year] = {}
-                for syst in all_histo_all_syst[hn][d].keys():
-                    if not syst in all_histo_all_syst[hn]["data"+year]: all_histo_all_syst[hn]["data"+year][syst] = all_histo_all_syst[hn][d][syst].Clone()
-                    else: all_histo_all_syst[hn]["data"+year][syst].Add(all_histo_all_syst[hn][d][syst])
+    #Merge data in one plot for workspace, if is not already there
+    for hn in variablesToFit:  
+        if not "data"+year in all_histo_all_syst[hn]: 
+            all_histo_all_syst[hn]["data"+year] = {}
+            for group in model.data :
+                for d in model.data[group] :
+                    for syst in all_histo_all_syst[hn][d].keys():
+                        if not syst in all_histo_all_syst[hn]["data"+year]: 
+                            all_histo_all_syst[hn]["data"+year][syst] = all_histo_all_syst[hn][d][syst].Clone()
+                        else: 
+                            all_histo_all_syst[hn]["data"+year][syst].Add(all_histo_all_syst[hn][d][syst])
     WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
 else :
    from multiprocessing import Pool
