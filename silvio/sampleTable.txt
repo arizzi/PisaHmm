@@ -1,0 +1,35 @@
+Group	Sample	2016Z	2017Z	2018Z	2016H	2017H	2018H	  
+EWKZ	EWKZ_MGHERWIG	 X 	 X 	 X 	   	   	   	  
+EWKZ	EWKZint_MGPY	   	 X 	   	   	 X 	   	  
+EWKZ	EWKZ105_MGHERWIG	   	   	   	 X 	 X 	 X 	  
+VBF H	vbfHmm_POWPY	 X 	 X 	 X 	 X 	 X 	 X 	  
+gg H	ggHmm_POWPY	   	   	 X 	   	   	 X 	  
+gg H	ggHmm_AMCPY	 X 	   	   	 X 	 X 	   	  
+ZH	zHmm_POWPY	 X 	   	   	   	 X 	 X 	  
+WH	WplusHmm_POWPY	 X 	   	   	   	 X 	   	  
+WH	WminusHmm_POWPY	 X 	   	   	   	 X 	 X 	  
+ttH	ttHmm_POWPY	 X 	   	   	   	 X 	   	  
+Top	TTlep_POWPY	 X 	 X 	 X 	 X 	 X 	 X 	  
+Top	TTsemi_POWPY	   	 X 	 X 	   	 X 	 X 	  
+Top	STs_AMCPY	 X 	 X 	   	 X 	 X 	   	  
+Top	STwtbar_POWPY	 X 	 X 	   	 X 	 X 	 X 	  
+Top	STwt_POWPY	 X 	 X 	   	 X 	 X 	 X 	  
+Top	STtbar_POWPY	   	 X 	   	   	 X 	   	  
+Top	STt_POWPY	   	 X 	   	   	 X 	   	  
+DY0J	DY0J_AMCPY	 X 	 X 	 X 	   	   	   	  
+DY1J	DY1J_AMCPY	 X 	 X 	 X 	   	   	   	  
+DY2J	DY2J_AMCPY	 X 	 X 	 X 	   	   	   	  
+DY	DY105_AMCPY	   	   	   	 X 	 X 	 X 	  
+DYVBF	DY105VBF_AMCPY	   	   	   	 X 	 X 	 X 	  
+Other	WW2l2n_POWPY	 X 	 X 	 X 	 X 	 X 	 X 	  
+Other	WWlnqq_POWPY	   	 X 	 X 	   	 X 	   	  
+Other	WZ1l3n_AMCPY	 X 	 X 	 X 	 X 	 X 	   	  
+Other	WZ2l2q_AMC_MADSPIN_PY	   	   	   	   	   	   	  
+Other	WZ3l1n_POWPY	   	 X 	 X 	   	 X 	   	  
+Other	ZZ2l2q_POWPY	 X 	 X 	 X 	 X 	 X 	 X 	  
+Other	W2J_AMCPY	   	 X 	   	   	 X 	   	  
+Other	WLLJJln_MG_MADSPIN_PY	   	   	   	   	   	   	  
+Other	WZ1l1n2q_AMCPY	   	 X 	   	   	 X 	   	  
+Other	ZZ2l2n_POWPY	   	 X 	   	   	 X 	   	  
+Other	ZZ4l_POWPY	   	 X 	   	   	 X 	   	  
+Other	W1J_AMCPY	 X 	   	   	 X 	   	   	  
