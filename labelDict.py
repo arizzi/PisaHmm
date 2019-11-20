@@ -52,5 +52,8 @@ labelVariable={
 "DNN18AtanNoMass"   : "atanh(DNN) (m=125)",
 "DNNAtan"           : "atanh(DNN)",
 "DNNAtanNoMass"     : "atanh(DNN) (m=125)",
+"DNNZAtan"          : "atanh(DNN Z vs DY)",
+"DNNwithZAtan"           : "atanh(DNN with Z peak)",
+"DNNwithZAtanNoMass"     : "atanh(DNN with Z peak) (m=125)",
 
 }

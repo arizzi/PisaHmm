@@ -19,7 +19,7 @@
 
 // std::pair <float,float> boost_to_CS(const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Plus,const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Minus,const int& mucharge = -1)
 // std::vector<float> pippo(const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Plus,const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Minus,const int& mucharge = -1)
-float boost_to_CS(const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Plus,const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Minus, int returnPhi, const int& mucharge = -1)
+std::pair<float,float> boost_to_CS(const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Plus,const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>> mu_Minus, const int& mucharge = -1)
 {
 //         using namespace std;
 
@@ -76,15 +76,16 @@ float boost_to_CS(const ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float>
         float phi_cs = muminusVec.Phi();
 
 //         std::cout <<  theta_cs << " \t " <<cos_theta_cs << " \t " << phi_cs << " \t " <<std::endl;
-//         std::pair <float,float> CS_pair (cos_theta_cs, phi_cs);
+         std::pair <float,float> CS_pair (cos_theta_cs, phi_cs);
+	return CS_pair;
 //         std::vector<float> CS_pair (cos_theta_cs, phi_cs);
 //         std::vector<float> CS_pair;
 //         CS_pair.push_back(cos_theta_cs);
 //         CS_pair.push_back(phi_cs);
 //         return CS_pair;
 
-        if (returnPhi) return phi_cs;
-        if (!returnPhi) return cos_theta_cs;
+//        if (returnPhi) return phi_cs;
+  //      if (returnPhi) return cos_theta_cs;
         
 }
 
