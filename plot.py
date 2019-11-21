@@ -751,7 +751,7 @@ print "variablesToFit", variablesToFit
 
 
 
-his=[x for x in histoNames if "__syst__" not in x]
+his=[x for x in histoNames if "__syst__" not in x and "sumWeight" not in x]
 print his[0]
 makeplot(variablesToFit[0] if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
