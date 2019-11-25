@@ -45,3 +45,12 @@ std::vector<std::string> vWithZ = {
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_withZpeak_evt3.json"
 };
 LwtnnWrapper lwtnn_withZ = LwtnnWrapper(vWithZ);
+
+
+std::vector<std::string> vNov = {
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt0_nov.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt1_nov.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_nov.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_nov.json"
+};
+LwtnnWrapper lwtnn_nov = LwtnnWrapper(vNov);
