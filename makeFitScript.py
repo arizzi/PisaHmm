@@ -27,17 +27,17 @@ def getBins(fName):
             return [bin_.replace("\t","") for bin_ in l[3:].split(" ") if len(bin_)>2]
 
 # Define the bins of the future datacard (eg. ['ch1_DNN18AtanNoMass___ZRegion', 'ch1_DNNZAtan___ZRegion', 'ch2_DNN18AtanNoMass___SideBand', 'ch2_DNN18Atan___SignalRegion'])
-def getBinsFromScratch(inputFolder, year):
+def getBinsFromScratch(inputDirectory, year):
     bins = []
     if year=="Comb":
         for y in ['2016', '2017', '2018']:
-            bins += ["run%s_ch1_"%y+b for b in getBins(inputFolder+"/datacard%sZ.txt"%y)]
-            bins += ["run%s_ch2_"%y+b for b in getBins(inputFolder+"/datacard%sH.txt"%y)]
+            bins += ["run%s_ch1_"%y+b for b in getBins(inputDirectory+"/datacard%sZ.txt"%y)]
+            bins += ["run%s_ch2_"%y+b for b in getBins(inputDirectory+"/datacard%sH.txt"%y)]
     else:
         for y in ['2016', '2017', '2018', 'All']:
             if y==year:
-                bins += ["ch1_"+b for b in getBins(inputFolder+"/datacard%sZ.txt"%y)]
-                bins += ["ch2_"+b for b in getBins(inputFolder+"/datacard%sH.txt"%y)]
+                bins += ["ch1_"+b for b in getBins(inputDirectory+"/datacard%sZ.txt"%y)]
+                bins += ["ch2_"+b for b in getBins(inputDirectory+"/datacard%sH.txt"%y)]
     return bins
 
 # Create mask option for combine, masking all bins that are excluded from the fit (eg. mask_ch1_DNN18AtanNoMass___ZRegion=1,mask_ch1_DNNZAtan___ZRegion=1,mask_ch2_DNN18AtanNoMass___SideBand=0,mask_ch2_DNN18Atan___SignalRegion=1).
@@ -70,7 +70,7 @@ parser.add_argument('-v','--verbose',           help="Verbose option passed to c
 
 args = parser.parse_args()
 
-inputFolder = vars(args)["inputFolder"]
+inputDirectory = vars(args)["inputDirectory"]
 directory = vars(args)["directory"]
 verbose = vars(args)["verbose"]
 years = vars(args)["years"]
@@ -82,7 +82,7 @@ partialfitPlots = vars(args) ["partialfitPlots"]
 fitOptions = vars(args) ["fitOptions"]
 nprocesses = vars(args) ["nprocesses"]
 
-if len(inputFolder)>0 and inputFolder[0]!="/": inputFolder = os.getcwd() + "/" + inputFolder
+if len(inputDirectory)>0 and inputDirectory[0]!="/": inputDirectory = os.getcwd() + "/" + inputDirectory
 
 if not (directory and years and steps):
     print "Please set --directory, --years, and --steps"
@@ -117,8 +117,8 @@ for year in years.split(","):
 #    if [step for step in steps.split(",") if "makeDC" in step]:
 #        bins = getBins("%s/datacard%s.txt"%(directory, year))
 #    else:
-#        bins = getBinsFromScratch(inputFolder, year)
-    bins = getBinsFromScratch(inputFolder, year)
+#        bins = getBinsFromScratch(inputDirectory, year)
+    bins = getBinsFromScratch(inputDirectory, year)
     print "Bins = ", bins
     maskFullFit        = makeMask(   fullfitPlots, bins)
     maskPartialFit     = makeMask(partialfitPlots, bins)
@@ -131,15 +131,15 @@ for year in years.split(","):
         # Make datacard, ie. copy datacard file, run combineCards.py, run text2workspace setting the correct parameter of interested (--fitZ or --fitH).
         if "makeDC" in step:
             launch("############ Make datacard: %s #################"%step)
-            launch("cp %s/decorrelate.sh ."%(inputFolder))
+            launch("cp %s/decorrelate.sh ."%(inputDirectory))
             launch("ln -s ../*py .")
             launch("ln -s ../workspace/*py .")
             if not (year == "Comb"):
-                launch("cp %s/datacard%s?.txt ."%(inputFolder, year))
-                launch("cp %s/fileCombine%s?.root ."%(inputFolder, year))
+                launch("cp %s/datacard%s?.txt ."%(inputDirectory, year))
+                launch("cp %s/fileCombine%s?.root ."%(inputDirectory, year))
             else:
-                launch("cp %s/datacard?????.txt ."%(inputFolder))
-                launch("cp %s/fileCombine?????.root ."%(inputFolder))
+                launch("cp %s/datacard?????.txt ."%(inputDirectory))
+                launch("cp %s/fileCombine?????.root ."%(inputDirectory))
             if not (year == "Comb"):
                 launch("combineCards.py datacard%sZ.txt datacard%sH.txt > datacard%s.txt"%(year, year, year))
             else:
@@ -174,13 +174,17 @@ for year in years.split(","):
             elif "fullfit" in step:  maskToUse = maskFullFit
             else: raise Exception('Either "partialfit" or "fullfit" must be used with postFitPlot')
             launch("combineTool.py -M FitDiagnostics -n%s -m 125 -d datacard%s.root --there %s --saveWorkspace --verbose %s --setParameters %s,r=1 >> %s 2>&1"%(name, year, options, verbose, maskToUse, logFile))
-            launch("PostFitShapesFromWorkspace -d datacard%s.txt -w datacard%s.root -o shapes%s.root --print --postfit --sampling -f fitDiagnostics%s.root:fit_s >> %s 2>&1"%(year, year, name, name, logFile))
+            freezeOpt = " "
+            if fitH: freezeOpt += " --freeze r=1. "
+            launch("PostFitShapesFromWorkspace -d datacard%s.txt -w datacard%s.root -o shapes%s.root --print --postfit --sampling -f fitDiagnostics%s.root:fit_s %s >> %s 2>&1"%(year, year, name, name, freezeOpt, logFile))
             for bin_ in bins:
                 ch = "ch"+bin_.split("ch")[1][0]
                 plot = bin_.split(ch+"_")[1]
                 y_axis_min = '"1E-2"'
+                blindOpt = ""
+                if "SignalRegion" in bin_: blindOpt = " --blind --x_blind_min 1.5  --x_blind_max 4.0 "
                 for fit in ["prefit", "postfit"]:
-                    launch('python ./postFitPlot.py --year=%s --file=shapes%s.root --ratio --extra_pad=0.43   --ratio_range 0.4,1.6 --empty_bin_error --channel=%s --outname %s  --mode %s --log_y --custom_y_range --y_axis_min %s  --channel_label "VBF Hmm" --file_dir %s_%s_%s >> %s 2>&1'%(year, name, ch, fit, plot, y_axis_min, ch, plot, fit, logFile))
+                    launch('python ./postFitPlot.py --year=%s --file=shapes%s.root --ratio --extra_pad=0.43   --ratio_range 0.4,1.6 --empty_bin_error --channel=%s --outname %s  --mode %s --log_y --custom_y_range --y_axis_min %s %s --channel_label "VBF Hmm" --file_dir %s_%s_%s >> %s 2>&1'%(year, name, ch, fit, plot, y_axis_min, blindOpt, ch, plot, fit, logFile))
                     launch('cp %s_shapes%s_%s_logy.png  ../figure/%s/ >> %s 2>&1'%(plot, name, fit, year, logFile))
         
         # Calculate the impact of the systematic uncertainties with combine by fitting the parameter of interest (--fitZ or --fitH) using the regions defined in "--fullfitPlots".  
