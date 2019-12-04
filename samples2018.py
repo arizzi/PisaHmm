@@ -6,17 +6,17 @@
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
-path2018data = path2018
+path2018data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
 
 
 samples={
 #"DY105Inclusuve_2018AMCPY"     : {"xsec": 41.81},
 #"DY105Inclusuve_2018MGPY"      : {"xsec": 41.25},
 
-"DY105_2018AMCPY"     : {"xsec": 41.81, "filter": "VBFFilterAntiFlag", "training":False},
-"DY105_2018MGPY"      : {"xsec": 41.25, "filter": "VBFFilterAntiFlag"},
-"DY105VBF_2018AMCPY"  : {"xsec": 41.81*0.0425242, "filter": "VBFFilterFlag", "training":False}, #this name has to change
-"DY105VBF_2018MGPY"   : {"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag"},
+"DY105_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
+"DY105_2018MGPY"      : {"xsec": 47.17, "filter": "VBFFilterAntiFlag"},
+"DY105VBF_2018AMCPY"  : {"xsec": 2.03, "filter": "VBFFilterFlag", "training":False}, #this name has to change
+"DY105VBF_2018MGPY"   : {"xsec": 2.03, "filter": "VBFFilterFlag"},
 
 "DY0J_2018AMCPY"  : {"xsec": 4620.52},
 "DY1J_2018AMCPY"  : {"xsec":859.59},   
@@ -91,7 +91,7 @@ samples={
 
 "vbfHmm_2018POWPY"      : {"xsec":0.0008210722, "training":False},
 #"vbfHmm_PSw_2018POWPY"      : {"xsec":0.0008210722}, # it exists but it has not been hadded
-#"vbfHmm_2018AMCPY"      : {"xsec":0.0008210722},
+"vbfHmm_2018AMCPY"      : {"xsec":0.0008210722},
 
 
 "zHmm_2018POWPY"        : {"xsec":0.00019201024},

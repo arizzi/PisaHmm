@@ -5,18 +5,18 @@
 #path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 #path2016data = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 
-path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
-path2016data = path2016
+path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
+path2016data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
 
 
 samples={
 #"DY105Inclusuve_2016AMCPY"     : {"xsec": 41.81},
 #"DY105Inclusuve_2016MGPY"      : {"xsec": 41.25},
 
-"DY105_2016AMCPY"     : {"xsec": 41.81, "filter": "VBFFilterAntiFlag"},
-"DY105_2016MGPY"      : {"xsec": 41.25, "filter": "VBFFilterAntiFlag", "training":False},
-"DY105VBF_2016AMCPY"  : {"xsec": 41.81*0.0425242, "filter": "VBFFilterFlag"}, #this name has to change
-"DY105VBF_2016MGPY"   : {"xsec": 41.25*0.0419533, "filter": "VBFFilterFlag", "training":False},
+"DY105_2016AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag"},
+"DY105_2016MGPY"      : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
+"DY105VBF_2016AMCPY"  : {"xsec": 1.77, "filter": "VBFFilterFlag"}, #this name has to change
+"DY105VBF_2016MGPY"   : {"xsec": 1.77, "filter": "VBFFilterFlag", "training":False},
 
 "DY0J_2016AMCPY"  : {"xsec": 4620.52},
 "DY1J_2016AMCPY"  : {"xsec":859.59},
