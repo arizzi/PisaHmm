@@ -33,7 +33,7 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                 #elif "decorrelate" not in systematicDetail[syst].keys() and "decorrelate" not in systematicDetail[s].keys() :
                     #sysToPop.append(s)
 
-
+    sysToPop=[]
     for syst in systematicDetail :
         if  "sysToMerge" in systematicDetail[syst].keys() :
             for s in systematicDetail[syst]["sysToMerge"] :
@@ -52,10 +52,12 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                                 hUp.Scale(systematicDetail[s]["value"]-1.)
                                 all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Add(hUp)
                                 all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].Add(hUp, -1)
-
+                            sysToPop.append(s)
 
     
-    
+    for syst in set(sysToPop) : 
+        print "popping ", syst
+        systematicDetail.pop(syst, None) 
     
     #different systematic have to be created for different regions if they are normalizationOnly
     sysToSplitInRegions=[]
