@@ -92,6 +92,7 @@ def systematicGrouping (background, signal) :
                 "type": "lnN",
                 "value":1.1, #AR: Giulio questo non ha senso... 
                 "groupvalue":{},
+                "sysToMerge":{"TTxsec", "lumi", "STxsec"},
         },
         "MuScale":{
                 "type": "shape",
