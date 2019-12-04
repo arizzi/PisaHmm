@@ -6,26 +6,26 @@
 #ath2017data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2017_FSR/"
 # "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/"
 
-path2017     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
-path2017data = path2017
+path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_1/"
+path2017data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_1/"
 
 
 samples={
 #"DY105Inclusive_2017AMCPY"     : {"xsec": 41.81, "filter": "MqqGen < 350"},
 #"DY105Inclusive_2017MGPY"      : {"xsec": 41.25, "filter": "MqqGen < 350"},
 
-"DY105_2017AMCPY"     : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag"},
-"DY105_2017MGPY"      : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag", "training":False},
-"DY105VBF_2017AMCPY"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
-#"DY105VBF_2017AMCPYnew"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
-"DY105VBF_2017MGPY"   : {"xsec": 2.04, "filter":  "VBFFilterFlag", "training":False},
+"DY105_2017AMCPY"     : {"xsec": 41.81, "filter":  "VBFFilterAntiFlag"},
+"DY105_2017MGPY"      : {"xsec": 41.25, "filter":  "VBFFilterAntiFlag"},
+"DY105VBF_2017AMCPY"  : {"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
+#"DY105VBF_2017AMCPYnew"  : {"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
+"DY105VBF_2017MGPY"   : {"xsec": 41.25*0.0419533, "filter":  "VBFFilterFlag"},
 
 "DY0J_2017AMCPY"  : {"xsec": 4620.52},
 "DY1J_2017AMCPY"  : {"xsec":859.59},
 "DY2J_2017AMCPY"  : {"xsec":338.26},
 "DYTau_2017AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 #"DYM50_2017AMCPY" : {"xsec":5765.40},
-"EWKZ105_2017MGHERWIG"     : {"xsec":0.0508896, "training":False},
+"EWKZ105_2017MGHERWIG"     : {"xsec":0.0508896},
 "EWKZ_2017MGHERWIG" : {"xsec":1.664}, #it does not exist yet
 "EWKZ_2017MGPY"     : {"xsec":1.664},
 "EWKZint_2017MGPY"  : {"xsec":0.128},
@@ -38,7 +38,7 @@ samples={
 
 "data2017": {"lumi":41530.,"data":True},
 
-"TT_2017AMCPY"      : {"xsec":809., "training":False},    #generator is different from 2016
+"TT_2017AMCPY"      : {"xsec":809.},    #generator is different from 2016
 "TT_2017MGPY"       : {"xsec":809.},
 "TTlep_2017POWPY"   : {"xsec":85.65},
 "TTsemi_2017POWPY"  : {"xsec":356.18677888},
@@ -90,7 +90,7 @@ samples={
 "ggHmm_2017POWPY2"      : {"xsec":0.009582794},
 "ggHmm_2017AMCPY2"      : {"xsec":0.009582794},
 
-"vbfHmm_2017POWPY"      : {"xsec":0.0008210722, "training":False},
+"vbfHmm_2017POWPY"      : {"xsec":0.0008210722},
 "vbfHmm_2017AMCPY"      : {"xsec":0.0008210722},
 "vbfHmm_2017AMCPY2"     : {"xsec":0.0008210722},
 
