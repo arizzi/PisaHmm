@@ -1,7 +1,8 @@
 import ROOT
 import os
 import collections
-
+import math
+import copy
 
 def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_syst, availableSamples, datacard, year) :
     
@@ -17,6 +18,45 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
         h_data_obs = all_histo_all_syst[x]["data"+year]["nom"].Clone(varName[x]+"_"+region[x]+"_data_obs")
         h_data_obs.Write()
         
+    
+    #sysToPop=[]
+    #for syst in systematicDetail :
+        #if  "sysToMerge" in systematicDetail[syst].keys() :
+            #systematicDetail[syst]["groupvalue"] = {}
+            #for s in systematicDetail[syst]["sysToMerge"] : 
+                #print syst, s, systematicDetail[syst]["sysToMerge"]
+                #tmpValue = systematicDetail[syst]["groupvalue"][s] if s in systematicDetail[syst]["groupvalue"] else systematicDetail[s]["value"]
+                #systematicDetail[syst]["groupvalue"][s] = math.exp( ( math.log(tmpValue)**2. + math.log(systematicDetail[syst]["value"])**2. )**0.5  )
+                #if "decorrelate" in systematicDetail[syst].keys() and "decorrelate" in systematicDetail[s].keys() :
+                    #for x in systematicDetail[syst]["decorrelate"] :
+                        #if x in systematicDetail[s]["decorrelate"] : systematicDetail[s]["decorrelate"].pop(s, None)
+                #elif "decorrelate" not in systematicDetail[syst].keys() and "decorrelate" not in systematicDetail[s].keys() :
+                    #sysToPop.append(s)
+
+
+    for syst in systematicDetail :
+        if  "sysToMerge" in systematicDetail[syst].keys() :
+            for s in systematicDetail[syst]["sysToMerge"] :
+                for x in region.keys() :
+                    for samp in availableSamples[x] :
+                        if ("decorrelate" not in systematicDetail[s].keys()) or any(samp.split("_")[0] in systematicDetail[s]["decorrelate"][g] for g in systematicDetail[s]["decorrelate"]) :
+                            if s.split("_")[-1]+"Up" in all_histo_all_syst[x][samp].keys() and s.split("_")[-1]+"Down" in all_histo_all_syst[x][samp].keys() :
+                                hUp   = copy.copy(all_histo_all_syst[x][samp][s.split("_")[-1]+"Up"])
+                                hDown = copy.copy(all_histo_all_syst[x][samp][s.split("_")[-1]+"Down"])
+                                hUp.Add(all_histo_all_syst[x][samp]["nom"], -1)
+                                hDown.Add(all_histo_all_syst[x][samp]["nom"], -1)
+                                all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Add(hUp)
+                                all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].Add(hDown)
+                            else :
+                                hUp   = copy.copy(all_histo_all_syst[x][samp]["nom"])
+                                hUp.Scale(systematicDetail[s]["value"]-1.)
+                                all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Add(hUp)
+                                all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].Add(hUp, -1)
+
+
+    
+    
+    
     #different systematic have to be created for different regions if they are normalizationOnly
     sysToSplitInRegions=[]
     sysToPop=[]
@@ -24,6 +64,8 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
         if  all(syst+"Up" not in all_histo_all_syst[x][samp].keys() for x in region.keys() for samp in availableSamples[x]) and ( not systematicDetail[syst]["type"]=="lnN" or ( "normalizationType" in systematicDetail[syst].keys() and systematicDetail[syst]["normalizationType"]=="normalizationOnly" )) : sysToPop.append(syst)   # check if systematics in systematicGrouping are in model, if there are not they are popped
         if "normalizationType" in systematicDetail[syst].keys() and systematicDetail[syst]["normalizationType"] == "normalizationOnly":
             sysToSplitInRegions.append(syst)
+            
+
     for syst in sysToPop : 
         print "popping ", syst
         systematicDetail.pop(syst, None)
@@ -33,7 +75,7 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                 systematicDetail[region[x].split("___")[-1]+"_"+syst] = systematicDetail[syst]
             systematicDetail.pop(syst, None)
     
-    
+
     for syst in systematicDetail :
         systName = syst
         listSamp = []
@@ -46,6 +88,8 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                     systnameDict[x][samp][sy] = sy
                             
         for x in availableSamples : listSamp = listSamp + availableSamples[x]
+
+        
 
         sampleWithSystematic = [s.split("_")[0] for s in set(listSamp)]
         allSampleWithOneSystematic = sampleWithSystematic
@@ -76,7 +120,11 @@ def writeSystematic (fname, region, varName, systematicDetail, all_histo_all_sys
                                 for samp in availableSamples[x] :
                                     if "groupvalue" in systematicDetail[syst].keys() : 
                                         if g not in systematicDetail[syst]["groupvalue"].keys() and samp.split("_")[0] in systematicDetail[syst]["decorrelate"][g] : 
-                                            systematicDetail[syst]["groupvalue"][g] = ( all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].GetNbinsX()+1)/all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1) + all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1)/all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].GetNbinsX()+1) ) /2.
+                                            systematicDetail[syst]["groupvalue"][g] = ( 
+                                                all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Up"].GetNbinsX()+1) / 
+                                                all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1) +
+                                                all_histo_all_syst[x][samp]["nom"].Integral(0,all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1) / 
+                                                all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].Integral(0,all_histo_all_syst[x][samp][syst.split("_")[-1]+"Down"].GetNbinsX()+1) ) /2.
 
                                         
                         
