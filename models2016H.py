@@ -58,7 +58,7 @@ background={
 ### MISSING ### "ZZ2q2n_2016POWPY",
 
          ### Vector boson scattering ###
-         "WWJJlnln_2016MGPY",          ## VBS W(lv)W(ln) + 2jets 
+### LHE Weights broken "WWJJlnln_2016MGPY",          ## VBS W(lv)W(ln) + 2jets 
          "WLLJJln_2016MG_MADSPIN_PY",  ## VBS W(lv)Z(ll) + 2jets 
 
          ### Double scattering ###
@@ -73,8 +73,8 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
 signal={
-"VBF H":["vbfHmm_2016POWPY"],
-"gg H":["ggHmm_2016POWPY"], ## Alternative: "ggHmm_2016AMCPY"
+"VBF H":["vbfHmm_2016AMCPY"], ## Alternative: "vbfHmm_2016POWPY"
+"gg H":["ggHmm_2016AMCPY"],   ## Alternative: "ggHmm_2016POWPY"
 "ZH":["zHmm_2016POWPY"],
 "WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
 "ttH":["ttHmm_2016POWPY"]

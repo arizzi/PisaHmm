@@ -14,11 +14,11 @@ samples={
 #"DY105Inclusive_2017AMCPY"     : {"xsec": 41.81, "filter": "MqqGen < 350"},
 #"DY105Inclusive_2017MGPY"      : {"xsec": 41.25, "filter": "MqqGen < 350"},
 
-"DY105_2017AMCPY"     : {"xsec": 41.81, "filter":  "VBFFilterAntiFlag"},
-"DY105_2017MGPY"      : {"xsec": 41.25, "filter":  "VBFFilterAntiFlag", "training":False},
-"DY105VBF_2017AMCPY"  : {"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
-#"DY105VBF_2017AMCPYnew"  : {"xsec": 41.81*0.0425242, "filter":  "VBFFilterFlag"},
-"DY105VBF_2017MGPY"   : {"xsec": 41.25*0.0419533, "filter":  "VBFFilterFlag", "training":False},
+"DY105_2017AMCPY"     : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag"},
+"DY105_2017MGPY"      : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag", "training":False},
+"DY105VBF_2017AMCPY"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
+#"DY105VBF_2017AMCPYnew"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
+"DY105VBF_2017MGPY"   : {"xsec": 2.04, "filter":  "VBFFilterFlag", "training":False},
 
 "DY0J_2017AMCPY"  : {"xsec": 4620.52},
 "DY1J_2017AMCPY"  : {"xsec":859.59},

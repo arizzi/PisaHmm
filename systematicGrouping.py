@@ -116,17 +116,17 @@ def systematicGrouping (background, signal) :
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
-        "Alternative":{
-                "type": "shape",
-                "value": 1.0,
-                "powerDown": -1., ## down = nom * (up/nom)^powerDown 
-                "decorrelate":{
-                   "vbfHmm" :["vbfHmm"],
-                },
-                "alternativeSample": {
-                    "vbfHmm_2016POWPY":"vbfHmm_2016POWHERWIG",
-                },
-        },
+        #"Alternative":{
+                #"type": "shape",
+                #"value": 1.0,
+                #"powerDown": -1., ## down = nom * (up/nom)^powerDown 
+                #"decorrelate":{
+                   #"vbfHmm" :["vbfHmm"],
+                #},
+                #"alternativeSample": {
+                    #"vbfHmm_2016POWPY":"vbfHmm_2016POWHERWIG",
+                #},
+        #},
         #"Alternative":{
                 #"type": "shape",
                 #"value":1.0,
@@ -142,18 +142,18 @@ def systematicGrouping (background, signal) :
 
 
 
-        "PDFX1":{
-                "type": "shape",
-                "value":1.0,
-                "decorrelate":{
-                    "ggH":["ggHmm"],
-                    "DY" :["DY105VBF","DY105"],
-                },
-                "envelope": "LHEPdf",
-                "envelopeFunction": "[0] + [1]*x",
-                "envelopeFunctionParameter": 1,
-                "envelopeFunctionParameterValues": (1, 0),
-        },
+        #"PDFX1":{
+                #"type": "shape",
+                #"value":1.0,
+                #"decorrelate":{
+                    #"ggH":["ggHmm"],
+                    #"DY" :["DY105VBF","DY105"],
+                #},
+                #"envelope": "LHEPdf",
+                #"envelopeFunction": "[0] + [1]*x",
+                #"envelopeFunctionParameter": 1,
+                #"envelopeFunctionParameterValues": (1, 0),
+        #},
     }
     from jesnames import jes2016
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
