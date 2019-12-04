@@ -22,7 +22,7 @@ def addLhePdf(flow):
     flow.Define("LHEPdfDown","LHEPdfHasHessian?(1.-LHEPdfSquaredSum):(1.-LHEPdfRMS)")	
     flow.VariationWeight("LHEPdfUp")
     flow.VariationWeight("LHEPdfDown")
-    for i in range(0,100):
+    for i in range(0,110):
         flow.Define("LHEPdf%s"%i,"nLHEPdfWeight>%s?LHEPdfWeight[%s]:0."%(i,i))
         flow.VariationWeight("LHEPdf%s"%i)
 	

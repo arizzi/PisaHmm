@@ -1,20 +1,70 @@
 from samples2017 import *
 name="H"
 background={
-#"DY":["DY105_2017AMCPY", "DY105VBF_2017AMCPY"],
-"DY":["DY105_2017AMCPY"],
-"DYVBF":[ "DY105VBF_2017AMCPY"],
-"EWKZ":["EWKZ105_2017MGHERWIG","EWKZint_2017MGPY"],  # --------------- EWKZ_2017MGPY -> HERWIG ----------------     
-"Top":["STs_2017AMCPY","STwtbar_2017POWPY","STwt_2017POWPY","STtbar_2017POWPY","STt_2017POWPY","TTlep_2017POWPY","TTsemi_2017POWPY"],
-"Other":["W2J_2017AMCPY",#"W0J_2017AMCPY",     # ,"W1J_2017AMCPY"   to be added when ready
-#         "WWdps_2017MGPY",
-"WWJJlnln_2017MGPY","WLLJJln_2017MG_MADSPIN_PY",
-         "WW2l2n_2017POWPY","WWlnqq_2017POWPY",
-         "WZ1l1n2q_2017AMCPY","WZ1l3n_2017AMCPY","WZ2l2q_2017AMC_MADSPIN_PY","WZ3l1n_2017POWPY",
-         "ZZ2l2q_2017POWPY","ZZ2l2n_2017POWPY","ZZ4l_2017POWPY"
+"DY":["DY105_2017AMCPY"], ## Alternative: "DY105_2017MGPY"
+"DYVBF":[ "DY105VBF_2017AMCPY"], ## Alternative: "DY105VBF_2017MGPY"
+"EWKZ":[
+   "EWKZ105_2017MGHERWIG",
+   # interference with DY
+   "EWKZint_2017MGPY" 
+],
+"Top":[
+   ### Single Top (s, t, tW channels) ###
+   "STs_2017AMCPY",
+### MISSING ### "STt_2017POW_MADSPIN_PY",
+   "STwt_2017POWPY", 
+   
+   ### Single Anti-Top (s, t, tW channels) ###
+### MISSING ### "STsbar_2017AMCPY",
+### MISSING ### "STtbar_2017POW_MADSPIN_PY",
+   "STwtbar_2017POWPY",
+   
+   ### TTbar (leptonic, semileptonic, hadronic)
+   "TTlep_2017POWPY",   # 2 lept
+   "TTsemi_2017POWPY",  # 1 lept
+   #"TThad_2017POWPY",  # 0 lept
+   ### TTbar alternatives (inclusive): "TT_2017POWPY", "TT_2017AMCPY",
+],
+"Other":[
+         ### W+jets ###
+         #--- inclusive ---
+         "W2J_2017AMCPY",
+### MISSING ### "W1J_2017AMCPY",
+         "W0J_2017AMCPY", 
+         
+         ### WW ###
+         #--- 2 lept ---
+         "WW2l2n_2017POWPY",
+         #--- 1 lept ---
+### MISSING ### "WWlnqq_2017AMC_MADSPIN_PY", ## Alternative: "WWlnqq_2017POWPY",
+         #--- incl ---
+         
+         ### WZ ###
+         #--- 3 lept ---
+         "WZ3l1n_2017AMCPY", ## Alternative #"WZ3l1n_2017POWPY"
+         #--- 2 lept ---
+         "WZ2l2q_2017AMC_MADSPIN_PY",
+         #--- 1 lept ---
+         "WZ1l1n2q_2017AMCPY",
+         "WZ1l3n_2017AMCPY", 
+         
+         ### ZZ ###
+         #--- 4 lept ---
+         "ZZ4l_2017POWPY",
+         #--- 2 lept ---
+         "ZZ2l2q_2017POWPY",
+         "ZZ2l2n_2017POWPY",
+         #--- 0 lept ---
+### MISSING ### "ZZ2q2n_2017POWPY",
+
+         ### Vector boson scattering ###
+### MISSING ### "WWJJlnln_2017MGPY",          ## VBS W(lv)W(ln) + 2jets 
+         "WLLJJln_2017MG_MADSPIN_PY",  ## VBS W(lv)Z(ll) + 2jets 
+
+         ### Double scattering ###
+### MISSING ### "WWdps_2017MGPY",             ## WW double scattering
 ],
 }
-
 
 
 #sorting
@@ -24,8 +74,7 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 signal={
 "VBF H":["vbfHmm_2017POWPY"],
-#"gg H":["ggHmm_2017POWPY"],
-"gg H":["ggHmm_2017AMCPY"],
+"gg H":["ggHmm_2017POWPY"], ## Alternative: "ggHmm_2017AMCPY"
 "ZH":["zHmm_2017POWPY"],
 "WH":["WplusHmm_2017POWPY","WminusHmm_2017POWPY"],
 "ttH":["ttHmm_2017POWPY"]
@@ -55,7 +104,6 @@ fillcolor={
 #systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown"]
 
-#ystematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]#,"LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
 from jesnames import jes2016
 from jernames import jernames
 systematicsForDC=systematicsToPlot+[x[10:] for x in jes2016 ]+jernames
@@ -65,10 +113,10 @@ systematicsToPlot+=["JESUp","JESDown"]
 linecolor=fillcolor
 markercolor=fillcolor
 
-
 from rebinning import *
 
 
 from systematicGrouping import *
 systematicDetail = systematicGrouping(background, signal)
+
 

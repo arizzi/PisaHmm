@@ -1,73 +1,88 @@
 from samples2018 import *
-from rebinning import *
 name="H"
 background={
-"DY":["DY105_2018AMCPY"],
-"DYVBF":[ "DY105VBF_2018AMCPY"],
-#"DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"],
-"EWKZ":["EWKZ105_2018MGHERWIG","EWKZint_2018MGPY"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
-#"EWKZ":["EWKZint_2018MGPY","EWKZ105_2016MGHERWIG"],  # --------------- EWKZ_2018MGPY -> HERWIG ----------------     
-"Top":[
-#"STs_2018AMCPY",
-"STwtbar_2018POWPY","STwt_2018POWPY",
-#"STtbar_2018POWPY",
-#"STt_2018POWPY",
-"TTlep_2018POWPY","TTsemi_2018POWPY",
-#"TThad_2018POWPY"
+"DY":["DY105_2018AMCPY"], ## Alternative: "DY105_2018MGPY"
+"DYVBF":[ "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
+"EWKZ":[
+   "EWKZ105_2018MGHERWIG", ## Alternative "EWKZ_2018MGPY"
+   # interference with DY
+### MISSING ### "EWKZint_2018MGPY" 
 ],
-
-#"WJ":["W2J_2018AMCPY","W0J_2018AMCPY"],     # ,"W1J_2018AMCPY"   to be added when ready
-#"WW" :[ "WWdps_2018MGPY","WWJJlnln_2018MGPY","WLLJJln_2018MG_MADSPIN_PY",
-#         "WW2l2n_2018POWPY","WWlnqq_2018POWPY"],
-#"WZ":[    "WZ1l3n_2018AMCPY","WZ2l2q_2018AMC_MADSPIN_PY","WZ3l1n_2018POWPY"],
-#"ZZ":[     "ZZ2l2q_2018POWPY","ZZ2l2n_2018POWPY","ZZ4l_2018POWPY"]
-
-
-#"WWdps":["WWdps_2018MGPY"],
-#"WWJJnn":["WWJJlnln_2018MGPY"],
-#"WWLLJJln":["WLLJJln_2018MG_MADSPIN_PY"],
-#"WW2L2n":["WW2l2n_2018POWPY"],
-#"WWlnqq":["WWlnqq_2018POWPY"],
-
-
+"Top":[
+   ### Single Top (s, t, tW channels) ###
+   "STs_2018AMCPY",
+### MISSING ### "STt_2018POW_MADSPIN_PY",
+   "STwt_2018POWPY", 
+   
+   ### Single Anti-Top (s, t, tW channels) ###
+### MISSING ### "STsbar_2018AMCPY",
+### MISSING ### "STtbar_2018POW_MADSPIN_PY",
+   "STwtbar_2018POWPY",
+   
+   ### TTbar (leptonic, semileptonic, hadronic)
+   "TTlep_2018POWPY",   # 2 lept
+   "TTsemi_2018POWPY",  # 1 lept
+### MISSING ### "TThad_2018POWPY",  # 0 lept
+   ### TTbar alternatives (inclusive): "TT_2018POWPY", "TT_2018AMCPY",
+],
 "Other":[
-#"W2J_2018AMCPY",
-#"W1J_2018AMCPY",
-#"W0J_2018AMCPY",     
- #       "WWdps_2018MGPY",
-#EWK WWJJ
-"WWJJlnln_2018MGPY",
-"WLLJJln_2018MG_MADSPIN_PY",
-#WW
-"WW2l2n_2018POWPY",
-#"WWlnqq_2018POWPY",
-#WZ
-#"WZ1l3n_2018AMCPY",
-"WZ2l2q_2018AMC_MADSPIN_PY",
-#"WZ3l1n_2018POWPY",
-#ZZ
-"ZZ2l2q_2018POWPY",#"ZZ2l2n_2018POWPY",
-"ZZ4l_2018POWPY"
+         ### W+jets ###
+         #--- inclusive ---
+### MISSING ### "W2J_2018AMCPY",
+### MISSING ### "W1J_2018AMCPY",
+### MISSING ### "W0J_2018AMCPY", 
+         
+         ### WW ###
+         #--- 2 lept ---
+         "WW2l2n_2018POWPY",
+         #--- 1 lept ---
+### MISSING ### "WWlnqq_2018AMC_MADSPIN_PY", ## Alternative: "WWlnqq_2018POWPY",
+         "WWlnqq_2018POWPY", ## as alternative
+         #--- incl ---
+         
+         ### WZ ###
+         #--- 3 lept ---
+### MISSING ### "WZ3l1n_2018AMCPY", ## Alternative: #"WZ3l1n_2018POWPY"
+         "WZ3l1n_2018POWPY", ## as alternative
+         #--- 2 lept ---
+         "WZ2l2q_2018AMC_MADSPIN_PY",
+         #--- 1 lept ---
+### MISSING ### "WZ1l1n2q_2018AMCPY",
+         "WZ1l3n_2018AMCPY", 
+         
+         ### ZZ ###
+         #--- 4 lept ---
+### MISSING ### "ZZ4l_2018POWPY",
+         #--- 2 lept ---
+         "ZZ2l2q_2018POWPY",
+### MISSING ### "ZZ2l2n_2018POWPY",
+         #--- 0 lept ---
+### MISSING ### "ZZ2q2n_2018POWPY",
+
+         ### Vector boson scattering ###
+### MISSING ### "WWJJlnln_2018MGPY",           ## VBS W(lv)W(ln) + 2jets 
+### MISSING ### "WLLJJln_2018MG_MADSPIN_PY",   ## VBS W(lv)Z(ll) + 2jets 
+
+         ### Double scattering ###
+### MISSING ### "WWdps_2018MGPY",              ## WW double scattering
 ],
 }
 
 
 #sorting
-#backgroundSorted=["Top","DY","DYVBF","EWKZ"]
-#backgroundSorted=["WW","WZ","ZZ","Top","DY","DYVBF","EWKZ"]
-
-#backgroundSorted=["WWdps","WWJJnn","WWLLJJln","WW2L2n","WWlnqq","Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
 signal={
 "VBF H":["vbfHmm_2018POWPY"],
-#"gg H":["ggHmm_2018POWPY"],
-"gg H":["ggHmm_2018AMCPY"],
+"gg H":["ggHmm_2018POWPY"], ## Alternative: "ggHmm_2018AMCPY"
 "ZH":["zHmm_2018POWPY"],
-"WH":["WplusHmm_2018POWPY","WminusHmm_2018POWPY"],
-"ttH":["ttHmm_2018POWPY"]
+"WH":[
+"WminusHmm_2018POWPY", 
+### MISSING ### "WplusHmm_2018POWPY"
+],
+### MISSING ### "ttH":["ttHmm_2018POWPY"]
 }
 
 data={
@@ -81,15 +96,6 @@ fillcolor={
 "EWKZ": ROOT.kViolet,
 "Top": ROOT.kGreen,
 "Other" : ROOT.kGreen+1,
-"WWdps":ROOT.kBlue,
-"WWJJnn":ROOT.kCyan,
-"WWLLJJln": ROOT.kCyan+4,
-"WW2L2n": ROOT.kViolet,
-"WWlnqq":ROOT.kMagenta,
-"WJ" : ROOT.kBlue,
-"WZ" : ROOT.kBlue+1,
-"ZZ" : ROOT.kBlue+2,
-"WW" : ROOT.kBlue+3,
 "VBF H":ROOT.kRed,
 "gg H":ROOT.kRed+4,
 "ZH":ROOT.kPink+4,
@@ -98,18 +104,10 @@ fillcolor={
 }
 
 #systematicsToPlot=["MuScaleUp"]
-#systematicsToPlot=["LHEScaleWeightSafe0","LHEScaleWeightSafe1","LHEScaleWeightSafe3","JERUp","JERDown","JESUp","JESDown"]+["MuScaleUp","MuScaleDown"]
-#ystematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
-
-systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-#systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]
-
-#jesnames=[ "JESPt0To30Eta0To2","JESPt30To50Eta0To2","JESPt50To100Eta0To2","JESPt100To2000Eta0To2","JESPt0To30Eta2To2p5","JESPt30To50Eta2To2p5","JESPt50To100Eta2To2p5","JESPt100To2000Eta2To2p5","JESPt0To30Eta2p5To3p1","JESPt30To50Eta2p5To3p1","JESPt50To100Eta2p5To3p1","JESPt100To2000Eta2p5To3p1","JESPt0To30Eta3p1To5","JESPt30To50Eta3p1To5","JESPt50To100Eta3p1To5","JESPt100To2000Eta3p1To5" ]
-
-#systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown"]+[x+"Down" for x in jesnames]+[x+"Up" for x in jesnames]
+#ystematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 #systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-systematicsToPlot=["LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown"]
+systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown"]
 
 from jesnames import jes2016
 from jernames import jernames
@@ -117,19 +115,13 @@ systematicsForDC=systematicsToPlot+[x[10:] for x in jes2016 ]+jernames
 systematicsToPlot+=["JESUp","JESDown"]
 
 
+linecolor=fillcolor
+markercolor=fillcolor
 
-
+from rebinning import *
 
 
 from systematicGrouping import *
 systematicDetail = systematicGrouping(background, signal)
 
-
-
-
-
-
-
-linecolor=fillcolor
-markercolor=fillcolor
 
