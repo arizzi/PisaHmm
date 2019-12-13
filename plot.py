@@ -25,7 +25,8 @@ from math import *
 from array import array
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
-import WorkSpace
+#import WorkSpace
+import WorkSpace2 as WorkSpace
 
 ROOT.gROOT.SetBatch(True)
 
