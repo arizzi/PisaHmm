@@ -44,6 +44,9 @@ flow.Define("Muon_id","Muon_tightId*4+Muon_mediumId*2+Muon_softId")
 flow.Define("Muon_p4_orig","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_corrected_pt , Muon_eta, Muon_phi, Muon_mass)")
 flow.Define("Muon_mass_FSR","0.f*Muon_pt")
 
+flow.AddCppCode('\n#include "geoFitCorr.h"\n')
+
+
 #need FSR inputs
 if FSR:
   flow.Define("FsrPhoton_mass","FsrPhoton_pt*0.f")
@@ -60,18 +63,21 @@ if FSR:
 ##  flow.Define("Muon_wFSR_p4","Muon_FSR_p4*(Muon_iso_FSR < 0.8)+Muon_p4_orig")
   if FSRnew:
     flow.Define("Muon_wFSR_p4","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 0.8 && Muon_FSR_drEt2 < 0.019 ),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
-    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+    #flow.Define("Muon_correctedFSR_pt_tmp","MemberMap(Muon_wFSR_p4,Pt())")
+    flow.Define("Muon_correctedFSR_pt","Map(Muon_dxy, MemberMap(Muon_wFSR_p4,Pt()),Muon_eta, [ year](float d0_BS_charge, float pt_Roch, float eta) { return GeoFit::PtCorrGeoFit(d0_BS_charge, pt_Roch, eta, year); })")
     flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_pt-Muon_FSR_pt)/Muon_correctedFSR_pt")
   else:
     flow.Define("Muon_wFSR_p4","Where((Muon_iso_FSR < 0.8),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
-    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+    #flow.Define("Muon_correctedFSR_pt_tmp","MemberMap(Muon_wFSR_p4,Pt())")
+    flow.Define("Muon_correctedFSR_pt","Map(Muon_dxy, MemberMap(Muon_wFSR_p4,Pt()),Muon_eta, [ year](float d0_BS_charge, float pt_Roch, float eta) { return GeoFit::PtCorrGeoFit(d0_BS_charge, pt_Roch, eta, year); })")
     flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
 
 
 else :
 #replacements without FSR inputs
   flow.Define("Muon_iso","Muon_pfRelIso04_all")
-  flow.Define("Muon_correctedFSR_pt","Muon_corrected_pt")
+  #flow.Define("Muon_correctedFSR_pt_tmp","Muon_corrected_pt")
+  flow.Define("Muon_correctedFSR_pt","Map(Muon_dxy, MemberMap(Muon_wFSR_p4,Pt()),Muon_eta, [ year](float d0_BS_charge, float pt_Roch, float eta) { return GeoFit::PtCorrGeoFit(d0_BS_charge, pt_Roch, eta, year); })")
 
 flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId && Muon_correctedFSR_pt > 20. && abs(Muon_eta) < 2.4") 
 
