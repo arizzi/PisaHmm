@@ -21,6 +21,7 @@ binningrules=[
 (".*Atan.*" , "%s , 0,2"%(nbins*100)),
 (".*DNN18Atan*" , "%s , 0,5"%(nbins*100)),
 (".*DNNnovAtan*" , "%s , 0,5"%(nbins*100)),
+(".*DNNnovGFAtan*" , "%s , 0,5"%(nbins*100)),
 (".*NNAtan.*" , "%s , 0,5"%(nbins*100)),
 (".*NNZAtan.*" , "%s , 0,5"%(nbins*100)),
 (".*DNNwithZAtan.*" , "%s , 0,5"%(nbins*100)),

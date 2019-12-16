@@ -12,6 +12,9 @@ ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
 from eventprocessing import flow
 from histograms import histosPerSelection,histosPerSelectionFullJecs
 
+year=sys.argv[1]
+
+
 def sumwsents(files):
    sumws=1e-9
    LHEPdfSumw=[]
@@ -20,12 +23,16 @@ def sumwsents(files):
 	  run=f.Get("Runs")
 	  if run :
 		 hw=ROOT.TH1F("hw","", 5,0,5)
-		 run.Project("hw","1","genEventSumw")
+		 if year == "2018": run.Project("hw","1","genEventSumw_")
+		 else : run.Project("hw","1","genEventSumw")
                  sumws+=hw.GetSumOfWeights()
                  run.GetEvent()
-                 nLHEScaleSumw = run.nLHEPdfSumw
+                 nLHEScaleSumw = 0
+                 if year == "2018": nLHEScaleSumw = run.nLHEPdfSumw_
+                 else : nLHEScaleSumw = run.nLHEPdfSumw
                  for i in range(nLHEScaleSumw):
-                        run.Project("hw","1","LHEPdfSumw[%d]"%i)
+                        if year == "2018": run.Project("hw","1","LHEPdfSumw_[%d]"%i)
+                        else : run.Project("hw","1","LHEPdfSumw[%d]"%i)
                         if i<len(LHEPdfSumw):
                                 LHEPdfSumw[i] = LHEPdfSumw[i] + hw.GetSumOfWeights()
                         else:
@@ -54,9 +61,9 @@ snaplist=[ "event",
     "Higgs_pt", "Higgs_eta", "Higgs_mRelReso", "Higgs_mReso", "Higgs_m", "ll_zstar_log", "ll_zstar",
     "QJet0_pt_touse", "QJet0_phi", "QJet0_eta", "QJet0_pt_nom", "QJet0_puId", "QJet0_qgl",
     "QJet1_pt_touse", "QJet1_phi", "QJet1_eta", "QJet1_pt_nom", "QJet1_puId", "QJet1_qgl",
-    "qqDeltaEta", "qqDeltaPhi", "qq_pt", "Mqq", "Mqq_log", "MaxJetAbsEta", "mmjj_pt", "mmjj_pt_log", "mmjj_pz", "mmjj_pz_logabs",
+    "qqDeltaEta", "qqDeltaPhi", "qq_pt", "Mqq", "Mqq_log", "MaxJetAbsEta", "mmjj_pt", "mmjj_pt_log", "mmjj_pz", "mmjj_pz_logabs", "CS_theta", "CS_phi","NSoft5NewNoRapClean", "SAHT2","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt", "nLHEPart", "LHEPart_pt", "LHEPart_eta", "LHEPart_phi",  "LHEPart_pdgId", 
     "DeltaRelQQ", "DeltaEtaQQSum", "PhiHQ1", "PhiHQ2", "EtaHQ1", "EtaHQ2", "minEtaHQ", "Rpt", "theta2", "NSoft5", "NSoft5New", "SAHT",
-    "SBClassifier", "DNN18Atan","DNN18Classifier", "year",
+    "SBClassifier", "DNN18Atan","DNN18Classifier","DNNwithZAtan","DNNZAtan","DNNnovAtan","year",
      #"genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "QGLweight"
 ]
 
@@ -88,7 +95,7 @@ addQGLvariation(flow)
 addPreFiringVariation(flow)
 
 
-snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "QGLweight","QJet1_partonFlavour","QJet0_partonFlavour"]
+snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "PrefiringWeight", "QGLweight","QJet1_partonFlavour","QJet0_partonFlavour"]
 systematics=flow.variations #take all systematic variations
 print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
@@ -120,7 +127,6 @@ from samples2016 import samples as samples2016
 from samples2017 import samples as samples2017
 from samples2018 import samples as samples2018
 
-year=sys.argv[1]
 if year == "2016":
    samples=samples2016
    trigger="HLT_IsoMu24 || HLT_IsoTkMu24"
@@ -194,6 +200,7 @@ def f(ar):
 		rdf=rdf.Define("Jet_pt_nom","Jet_pt") 
 	   rdf=rdf.Define("LHE_NpNLO","0")
 	   rdf=rdf.Define("Jet_partonFlavour","ROOT::VecOps::RVec<int>(nJet, 0)")
+	   #if  year == "2018": rdf=rdf.Define("Jet_puId17","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 else :
 	   if year == "2018" :
 		  rdf=rdf.Define("PrefiringWeight","1.f")
@@ -280,14 +287,15 @@ def f(ar):
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
-         rep=ou.rdf[""].Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Report() 
+         rep=ou.rdf[""].Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","ZRegion").Report() 
 	 rep.Print()
 	 print "Above the cutflow for",s
  #        ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
         
-#        if "training" in samples[s].keys() and samples[s]["training"] : 
+         if "training" in samples[s].keys() and samples[s]["training"] : 
              #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-#            ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+           #ou.rdf["ZRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+           ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
