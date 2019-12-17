@@ -88,10 +88,10 @@ flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId &
 #need FSR
 if FSR:
   flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
-  flow.Define("SelectedMuon_GFp4","Where((Muon_FSR_pt > 0.),SelectedMuon_p4GFcorr+SelectedMuon_p4,SelectedMuon_p4)")
+  flow.Define("SelectedMuon_GFp4","Where((Muon_FSR_pt > 0.),SelectedMuon_p4GFcorr,SelectedMuon_p4)")
 else :
   flow.Define("SelectedMuon_p4","SelectedMuon_p4_orig")
-  flow.Define("SelectedMuon_GFp4","SelectedMuon_p4GFcorr+SelectedMuon_p4")
+  flow.Define("SelectedMuon_GFp4","SelectedMuon_p4GFcorr")
 
 flow.Define("SelectedMuon_p4uncalib","@p4v(SelectedMuon)")
 flow.Selection("twoUnpreselMuons","nMuon>=2")
