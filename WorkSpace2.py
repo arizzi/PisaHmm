@@ -125,11 +125,15 @@ def writeUncertainities (orderedUncertainties, lenght, position) :
 def printSystematicGrouping (systematicDetail, outputFile = "groupingCheck.py") :
 
     outputName = open(outputFile, 'w')
+    print >> outputName , '{'
+    
     for syst in systematicDetail : 
         print >> outputName , '"'+syst+'" : {'
         for k in systematicDetail[syst] :
-            print >> outputName , '"'+k+'" : ', systematicDetail[syst][k], ','
+            print >> outputName , '\t"'+k+'" : ', systematicDetail[syst][k], ','
         print >> outputName , '}'
+    
+    print >> outputName , '}'
 
 
 
@@ -245,7 +249,7 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
 
 
 def SumErrors(v1, v2) :
-    print "valori", v1, v2
+    #print "valori", v1, v2
     return math.exp( ( (math.log(v1))**2. + (math.log(v2))**2. )**0.5  )
     
     
@@ -261,15 +265,15 @@ def mergeTwoSystematics(systematicDetail, syst1, syst2, listAllSample_noYear) :
         
         if "valueFromPlots" not in systematicDetail[syst2].keys() : 
             systematicDetail[syst2]["valueFromPlots"] = {}
-            for s in samples2 : systematicDetail[syst2]["valueFromPlots"][s] = systematicDetail[syst2]["value"]
+            for s in samples2 : systematicDetail[syst2]["valueFromPlots"][s] = 1. if "value" not in systematicDetail[syst2].keys() else systematicDetail[syst2]["value"]
         if "valueFromPlots" not in systematicDetail[syst1].keys() : 
             systematicDetail[syst1]["valueFromPlots"] = {}
-            for s in samples1 : systematicDetail[syst1]["valueFromPlots"][s] = systematicDetail[syst1]["value"]
+            for s in samples1 : systematicDetail[syst1]["valueFromPlots"][s] = 1. if "value" not in systematicDetail[syst1].keys() else systematicDetail[syst1]["value"]
         
-        print syst1, "    \t ", systematicDetail[syst1]["decorrelate"]
-        print "valueFromPlots \t ", systematicDetail[syst1]["valueFromPlots"]
-        print syst2, "    \t ", systematicDetail[syst2]["decorrelate"]
-        print "valueFromPlots \t ", systematicDetail[syst2]["valueFromPlots"]
+        #print syst1, "    \t ", systematicDetail[syst1]["decorrelate"]
+        #print "valueFromPlots \t ", systematicDetail[syst1]["valueFromPlots"]
+        #print syst2, "    \t ", systematicDetail[syst2]["decorrelate"]
+        #print "valueFromPlots \t ", systematicDetail[syst2]["valueFromPlots"]
         
         newValues = {}
         for s in samples1 : 
@@ -289,8 +293,8 @@ def mergeToSys(systematicDetail, listAllSample_noYear) :
     systKeys = systematicDetail.keys()
     mergedSystematic = [] # the pop() cannot be done on the fly because several systematics can have identical "mergeToSys"
     for syst in systKeys :
-        if "mergeToSys" in systematicDetail[syst].keys() :
-            sysTomergeList = systematicDetail[syst]["mergeToSys"]
+        if "mergeWith" in systematicDetail[syst].keys() :
+            sysTomergeList = systematicDetail[syst]["mergeWith"]
             for s in sysTomergeList :
                 for sysTomerge in systKeys :
                     if re.search(s, sysTomerge) :

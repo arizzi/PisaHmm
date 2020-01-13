@@ -76,7 +76,7 @@ def systematicGrouping (background, signal) :
                 "decorrelate":allSamples, #{x:allSamples[x] for x in allSamples if "EWK" not in x},
                 "type": "normalizationOnly",
                 "value":1.1, #AR: Giulio questo non ha senso... 
-                "mergeToSys": ["TTxsec", "STxsec"]
+                "mergeWith": ["TTxsec", "STxsec"]
         },
         "MuScale":{
                 "type": "shape",
@@ -93,7 +93,7 @@ def systematicGrouping (background, signal) :
 "EWK":EWK,
  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
-                #"mergeToSys": ["TTxsec", "STxsec", "DYxsec","LHEPdf"]
+                #"mergeWith": ["TTxsec", "STxsec", "DYxsec","LHEPdf"]
         },
         "LHEFac":{
                 #"type": "shapeAndNorm",
