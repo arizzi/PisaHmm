@@ -137,6 +137,21 @@ def printSystematicGrouping (systematicDetail, outputFile = "groupingCheck.py") 
 
 
 
+def createNewSystematicForMergeWithOption (systematicDetail) :
+        
+    systKeys = systematicDetail.keys()
+    for syst in systKeys :
+        if "mergeWith" in systematicDetail[syst].keys() :
+            systematicDetail[syst]["type"] = "lnN"
+            systematicToAdd = systematicDetail[syst]["mergeWith"]
+            for n in range(len(systematicToAdd)) :
+                s = systematicToAdd[n]
+                systematicDetail[syst+"__"+s] = copy.deepcopy(systematicDetail[syst])
+                systematicDetail[syst+"__"+s].pop("mergeWith", None)
+                systematicDetail[syst+"__"+s]["type"] = "normalizationOnly"
+                systematicDetail[syst]["mergeWith"][n] = syst+"__"+s
+
+
 def divideShapeAndNormalization (systematicDetail) :
         
     systKeys = systematicDetail.keys()
@@ -233,8 +248,8 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
                         value = 0.
                         for samp in all_histo_all_syst[x] :
                             if re.search(s+"_", samp) :
-                                systName = ""
                                 systName = syst[:-len(sKey)]
+                                if re.search("__", syst) : systName = re.match("^.*__(.*)$",syst).group(1)[:-len(sKey)]
                                 Nbins = all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1
                                 variationUp   = 1. if all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)<=0           else all_histo_all_syst[x][samp][systName+"Up"].Integral(0,Nbins) / all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)
                                 variationDown = 1. if all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)<=0 else all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)         / all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)
@@ -393,29 +408,31 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     #print "\n ---------------------------- \n" 
 
 
-
-
+    createNewSystematicForMergeWithOption (model.systematicDetail) 
+    #printSystematicGrouping (model.systematicDetail, "grouping0.py")
+    
     divideShapeAndNormalization (model.systematicDetail) 
-    #decorrelateNormOnly (model.systematicDetail, availableSamples) 
+    #decorrelateNormOnly (model.systematicDetail, availableSamples)
+    #printSystematicGrouping (model.systematicDetail, "grouping1.py")
 
     modifySystematicDetail(model.systematicDetail, listAllSample_noYear) 
-    #printSystematicGrouping (model.systematicDetail, "grouping0.py") 
-    
-    
-    removeUnusedSystematics(model.systematicDetail, all_histo_all_syst) 
-    #printSystematicGrouping (model.systematicDetail, "grouping1.py") 
-    
-    
-    valuesFromPlots(model.systematicDetail, all_histo_all_syst, region)
     #printSystematicGrouping (model.systematicDetail, "grouping2.py") 
     
     
-    ScaleShapeOnlyPlot(model.systematicDetail, all_histo_all_syst) 
+    removeUnusedSystematics(model.systematicDetail, all_histo_all_syst) 
     #printSystematicGrouping (model.systematicDetail, "grouping3.py") 
     
     
-    mergeToSys(model.systematicDetail, listAllSample_noYear) 
+    valuesFromPlots(model.systematicDetail, all_histo_all_syst, region)
     #printSystematicGrouping (model.systematicDetail, "grouping4.py") 
+    
+    
+    ScaleShapeOnlyPlot(model.systematicDetail, all_histo_all_syst) 
+    #printSystematicGrouping (model.systematicDetail, "grouping5.py") 
+    
+    
+    mergeToSys(model.systematicDetail, listAllSample_noYear) 
+    #printSystematicGrouping (model.systematicDetail, "grouping6.py") 
 
 
 
