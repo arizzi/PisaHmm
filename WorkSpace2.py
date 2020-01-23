@@ -141,15 +141,15 @@ def createNewSystematicForMergeWithOption (systematicDetail) :
         
     systKeys = systematicDetail.keys()
     for syst in systKeys :
-        if "mergeWith" in systematicDetail[syst].keys() :
+        if "additionalNormalizations" in systematicDetail[syst].keys() :
             systematicDetail[syst]["type"] = "lnN"
-            systematicToAdd = systematicDetail[syst]["mergeWith"]
+            systematicToAdd = systematicDetail[syst]["additionalNormalizations"]
             for n in range(len(systematicToAdd)) :
                 s = systematicToAdd[n]
                 systematicDetail[syst+"__"+s] = copy.deepcopy(systematicDetail[syst])
-                systematicDetail[syst+"__"+s].pop("mergeWith", None)
+                systematicDetail[syst+"__"+s].pop("additionalNormalizations", None)
                 systematicDetail[syst+"__"+s]["type"] = "normalizationOnly"
-                systematicDetail[syst]["mergeWith"][n] = syst+"__"+s
+                systematicDetail[syst]["additionalNormalizations"][n] = syst+"__"+s
 
 
 def divideShapeAndNormalization (systematicDetail) :
@@ -308,8 +308,8 @@ def mergeToSys(systematicDetail, listAllSample_noYear) :
     systKeys = systematicDetail.keys()
     mergedSystematic = [] # the pop() cannot be done on the fly because several systematics can have identical "mergeToSys"
     for syst in systKeys :
-        if "mergeWith" in systematicDetail[syst].keys() :
-            sysTomergeList = systematicDetail[syst]["mergeWith"]
+        if "additionalNormalizations" in systematicDetail[syst].keys() :
+            sysTomergeList = systematicDetail[syst]["additionalNormalizations"]
             for s in sysTomergeList :
                 for sysTomerge in systKeys :
                     if re.search(s, sysTomerge) :
