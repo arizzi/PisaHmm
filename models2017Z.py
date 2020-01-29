@@ -51,6 +51,6 @@ markercolor=fillcolor
 
 
 from rebinning import *
-from systematicGrouping import *
+from systematicGrouping2 import *
 systematicDetail = systematicGrouping(background, signal)
 

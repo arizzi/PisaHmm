@@ -125,13 +125,53 @@ def writeUncertainities (orderedUncertainties, lenght, position) :
 def printSystematicGrouping (systematicDetail, outputFile = "groupingCheck.py") :
 
     outputName = open(outputFile, 'w')
+    print >> outputName , '{'
+    
     for syst in systematicDetail : 
         print >> outputName , '"'+syst+'" : {'
         for k in systematicDetail[syst] :
-            print >> outputName , '"'+k+'" : ', systematicDetail[syst][k], ','
+            print >> outputName , '\t"'+k+'" : ', systematicDetail[syst][k], ','
         print >> outputName , '}'
+    
+    print >> outputName , '}'
 
 
+
+def createNewSystematicForMergeWithOption (systematicDetail) :
+        
+    systKeys = systematicDetail.keys()
+    for syst in systKeys :
+        if "additionalNormalizations" in systematicDetail[syst].keys() :
+            systematicDetail[syst]["type"] = "lnN"
+            systematicToAdd = systematicDetail[syst]["additionalNormalizations"]
+            for n in range(len(systematicToAdd)) :
+                s = systematicToAdd[n]
+                systematicDetail[syst+"__"+s] = copy.deepcopy(systematicDetail[syst])
+                systematicDetail[syst+"__"+s].pop("additionalNormalizations", None)
+                systematicDetail[syst+"__"+s].pop("groupValues", None)
+                systematicDetail[syst+"__"+s]["type"] = "normalizationOnly"
+                systematicDetail[syst]["additionalNormalizations"][n] = syst+"__"+s
+        if "groupValues" in systematicDetail[syst].keys() :
+            systematicDetail[syst]["type"] = "lnN"
+            systematicToAdd = systematicDetail[syst]["groupValues"]
+            for g in systematicToAdd.keys() :
+                v = systematicToAdd[g]
+                systematicDetail[syst+"__Norm"+g] = copy.deepcopy(systematicDetail[syst])
+                systematicDetail[syst+"__Norm"+g]["value"] = systematicToAdd[g]
+                systematicDetail[syst+"__Norm"+g].pop("decorrelate", None)
+                systematicDetail[syst+"__Norm"+g]["decorrelate"] = {g : systematicDetail[syst]["decorrelate"][g]}
+                systematicDetail[syst+"__Norm"+g].pop("additionalNormalizations", None)
+                systematicDetail[syst+"__Norm"+g].pop("groupValues", None)
+                systematicDetail[syst+"__Norm"+g]["type"] = "lnN"
+            systematicDetail[syst]["additionalNormalizations"] = systematicDetail[syst]["additionalNormalizations"] + [syst+"__Norm"]
+                
+                
+                
+            
+            
+            
+            
+            
 
 def divideShapeAndNormalization (systematicDetail) :
         
@@ -229,8 +269,8 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
                         value = 0.
                         for samp in all_histo_all_syst[x] :
                             if re.search(s+"_", samp) :
-                                systName = ""
                                 systName = syst[:-len(sKey)]
+                                if re.search("__", syst) : systName = re.match("^.*__(.*)$",syst).group(1)[:-len(sKey)]
                                 Nbins = all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1
                                 variationUp   = 1. if all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)<=0           else all_histo_all_syst[x][samp][systName+"Up"].Integral(0,Nbins) / all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)
                                 variationDown = 1. if all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)<=0 else all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)         / all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)
@@ -261,10 +301,10 @@ def mergeTwoSystematics(systematicDetail, syst1, syst2, listAllSample_noYear) :
         
         if "valueFromPlots" not in systematicDetail[syst2].keys() : 
             systematicDetail[syst2]["valueFromPlots"] = {}
-            for s in samples2 : systematicDetail[syst2]["valueFromPlots"][s] = systematicDetail[syst2]["value"]
+            for s in samples2 : systematicDetail[syst2]["valueFromPlots"][s] = 1. if "value" not in systematicDetail[syst2].keys() else systematicDetail[syst2]["value"]
         if "valueFromPlots" not in systematicDetail[syst1].keys() : 
             systematicDetail[syst1]["valueFromPlots"] = {}
-            for s in samples1 : systematicDetail[syst1]["valueFromPlots"][s] = systematicDetail[syst1]["value"]
+            for s in samples1 : systematicDetail[syst1]["valueFromPlots"][s] = 1. if "value" not in systematicDetail[syst1].keys() else systematicDetail[syst1]["value"]
         
         print syst1, "    \t ", systematicDetail[syst1]["decorrelate"]
         print "valueFromPlots \t ", systematicDetail[syst1]["valueFromPlots"]
@@ -273,13 +313,14 @@ def mergeTwoSystematics(systematicDetail, syst1, syst2, listAllSample_noYear) :
         
         newValues = {}
         for s in samples1 : 
-            #print "check   ", s, 1 if s not in samples1 else systematicDetail[syst1]["valueFromPlots"][s],  1 if s not in samples2 else systematicDetail[syst2]["valueFromPlots"][s]
+            print "check   ", s, 1 if s not in samples1 else systematicDetail[syst1]["valueFromPlots"][s],  1 if s not in samples2 else systematicDetail[syst2]["valueFromPlots"][s]
             newValues[s] = SumErrors(1 if s not in samples1 else systematicDetail[syst1]["valueFromPlots"][s],
                                                            1 if s not in samples2 else systematicDetail[syst2]["valueFromPlots"][s]
                                                            )
-        systematicDetail[syst1]["decorrelate"]       = {"merged" : samples1}
+        #systematicDetail[syst1]["decorrelate"]       = {"merged" : samples1}
         systematicDetail[syst1]["valueFromPlots"]    = newValues
     
+        print "merging ", syst1, " \t ", syst2
         #systematicDetail.pop(syst2, None)
 
 
@@ -289,11 +330,11 @@ def mergeToSys(systematicDetail, listAllSample_noYear) :
     systKeys = systematicDetail.keys()
     mergedSystematic = [] # the pop() cannot be done on the fly because several systematics can have identical "mergeToSys"
     for syst in systKeys :
-        if "mergeToSys" in systematicDetail[syst].keys() :
-            sysTomergeList = systematicDetail[syst]["mergeToSys"]
+        if "additionalNormalizations" in systematicDetail[syst].keys() :
+            sysTomergeList = systematicDetail[syst]["additionalNormalizations"]
             for s in sysTomergeList :
                 for sysTomerge in systKeys :
-                    if re.search(s, sysTomerge) :
+                    if re.search(s + systematicDetail[syst]["decorrelate"].keys()[0], sysTomerge) :
                 #if sysTomerge in systKeys : 
                         if systematicDetail[syst]["type"] == "lnN" and  systematicDetail[sysTomerge]["type"] == "lnN" : 
                             mergedSystematic.append(sysTomerge)
@@ -389,29 +430,31 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     #print "\n ---------------------------- \n" 
 
 
-
-
+    createNewSystematicForMergeWithOption (model.systematicDetail) 
+    #printSystematicGrouping (model.systematicDetail, "grouping0.py")
+    
     divideShapeAndNormalization (model.systematicDetail) 
-    #decorrelateNormOnly (model.systematicDetail, availableSamples) 
+    #decorrelateNormOnly (model.systematicDetail, availableSamples)
+    #printSystematicGrouping (model.systematicDetail, "grouping1.py")
 
     modifySystematicDetail(model.systematicDetail, listAllSample_noYear) 
-    #printSystematicGrouping (model.systematicDetail, "grouping0.py") 
-    
-    
-    removeUnusedSystematics(model.systematicDetail, all_histo_all_syst) 
-    #printSystematicGrouping (model.systematicDetail, "grouping1.py") 
-    
-    
-    valuesFromPlots(model.systematicDetail, all_histo_all_syst, region)
     #printSystematicGrouping (model.systematicDetail, "grouping2.py") 
     
     
-    ScaleShapeOnlyPlot(model.systematicDetail, all_histo_all_syst) 
+    removeUnusedSystematics(model.systematicDetail, all_histo_all_syst) 
     #printSystematicGrouping (model.systematicDetail, "grouping3.py") 
     
     
-    mergeToSys(model.systematicDetail, listAllSample_noYear) 
+    valuesFromPlots(model.systematicDetail, all_histo_all_syst, region)
     #printSystematicGrouping (model.systematicDetail, "grouping4.py") 
+    
+    
+    ScaleShapeOnlyPlot(model.systematicDetail, all_histo_all_syst) 
+    #printSystematicGrouping (model.systematicDetail, "grouping5.py") 
+    
+    
+    mergeToSys(model.systematicDetail, listAllSample_noYear) 
+    #printSystematicGrouping (model.systematicDetail, "grouping6.py") 
 
 
 
