@@ -5,8 +5,11 @@
 #path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 #path2016data = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 
-path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
-path2016data = path2016
+#path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
+path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
+path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
+#path2016data = path2016
+path2016data = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_00/"
 
 samples={
 #"DY105Inclusuve_2016AMCPY"     : {"xsec": 41.81},
@@ -17,12 +20,14 @@ samples={
 "DY105VBF_2016AMCPY"  : {"xsec": 1.77, "filter": "VBFFilterFlag"}, #this name has to change
 "DY105VBF_2016MGPY"   : {"xsec": 1.77, "filter": "VBFFilterFlag", "training":False},
 
+
 "DY0J_2016AMCPY"  : {"xsec": 4620.52},
 "DY1J_2016AMCPY"  : {"xsec":859.59},
 "DY2J_2016AMCPY"  : {"xsec":338.26},
 #"DYTau_2016AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 "DYM50_2016AMCPY" : {"xsec":5765.40},
 
+"EWKZ105NEW_2016MGHERWIG"   : {"xsec": 0.07486, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_03/EWKZ105_2016MGHERWIG.root"]},
 "EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2016MGHERWIG" : {"xsec":1.664},
 "EWKZ_2016MGPY"     : {"xsec":1.664},
@@ -34,7 +39,7 @@ samples={
 "STtbar_2016POW_MADSPIN_PY" : {"xsec":80.95}, ##or 26.38!??  80.95 is for inclusive decays (used), 26.38 is for lepton decays (not used)
 "STt_2016POW_MADSPIN_PY"    : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
-"data2016": {"lumi":35900.,"data":True},
+"data2016": {"lumi":35900.,"data":True,"files":[path2016data+"/data2016.root"]},
 
 "TT_2016POWPY"      : {"xsec":809., "training":False},
 "TTlep_2016POWPY"   : {"xsec":85.65},

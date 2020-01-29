@@ -7,6 +7,7 @@
 # "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2017_Z/"
 
 path2017     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
+path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
 path2017data = path2017
 
 

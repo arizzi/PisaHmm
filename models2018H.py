@@ -76,7 +76,7 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 signal={
 ### MISSING ### "VBF H":["vbfHmm_2018AMCPY"], ## Alternative: "vbfHmm_2018POWPY"
-"VBF H":["vbfHmm_2018POWPY"],
+"VBF H":["vbfHmm_2018AMCPY"],
 ### MISSING ### "gg H":["ggHmm_2018AMCPY"],   ## Alternative: "ggHmm_2018POWPY"
 "gg H":["ggHmm_2018POWPY"],
 "ZH":["zHmm_2018POWPY"],

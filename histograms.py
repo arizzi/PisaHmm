@@ -3,8 +3,8 @@ genericHistos=["Higgs_m","pTbalanceAll","LeadMuon_pt","LeadMuon_eta","SubMuon_pt
 bdtInputHistos=["Mqq_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zstar","Higgs_pt","theta2","mmjj_pz","MaxJetAbsEta","Higgs_m_uncalib","NSoft5New","ll_zstar_log", "Higgs_mReso","QJet0_qgl","QJet1_qgl","Jet_jetId","Jet_puId"]
 #signalHistosVariations=["SBClassifierNoMass","BDTAtanNoMass","SBClassifierNoMassNoNSJ","BDTAtanNoMassNoNSJ","DNNClassifierNoMass", "DNNAtanNoMass","DNN18AtanNoMass"]
 #signalHistos=["SBClassifier","BDTAtan","LHE_NpNLO","DNNClassifier", "DNNAtan", "DNN18Atan"]#,"DNN18AtanNoQGL"]
-signalHistosVariations=["DNN18AtanNoMass","BDTAtanNoMass","DNNClassifierZ","DNNwithZAtan","DNNwithZAtanNoMass","DNNZAtan","DNNnovAtanNoMass"]
-signalHistos=["DNN18Atan","BDTAtan","DNN18AtanNoQGL","DNNnovAtan", "DNNnovGFAtan"]
+signalHistosVariations=["DNN18AtanNoMass"]
+signalHistos=["DNN18Atan"]
 
 snapregion="SignalRegion"
 #signalHistos=["SBClassifier"]
@@ -18,36 +18,10 @@ histosPerSelection={
 #"BDT1p1" : bdtInputHistos+genericHistos,
 #"BDT1p2" : bdtInputHistos+genericHistos,
 }
-hh={
-"ZRegionPt0To30Eta0To2":["pTbalanceAll"],
-"ZRegionPt30To50Eta0To2":["pTbalanceAll"],
-"ZRegionPt50To100Eta0To2":["pTbalanceAll"],
-"ZRegionPt100To2000Eta0To2":["pTbalanceAll"],
-"ZRegionPt0To30Eta2To2p5":["pTbalanceAll"],
-"ZRegionPt30To50Eta2To2p5":["pTbalanceAll"],
-"ZRegionPt50To100Eta2To2p5":["pTbalanceAll"],
-"ZRegionPt100To2000Eta2To2p5":["pTbalanceAll"],
-"ZRegionPt0To30Eta2p5To3p1":["pTbalanceAll"],
-"ZRegionPt30To50Eta2p5To3p1":["pTbalanceAll"],
-"ZRegionPt50To100Eta2p5To3p1":["pTbalanceAll"],
-"ZRegionPt100To2000Eta2p5To3p1":["pTbalanceAll"],
-"ZRegionPt0To30Eta3p1To5":["pTbalanceAll"],
-"ZRegionPt30To50Eta3p1To5":["pTbalanceAll"],
-"ZRegionPt50To100Eta3p1To5":["pTbalanceAll"],
-"ZRegionPt100To2000Eta3p1To5":["pTbalanceAll"]
-
-#"BDTNoMN1p0" : bdtInputHistos+genericHistos+signalHistosVariations+signalHistos,
-#"BDTNoMN1p2" : bdtInputHistos+genericHistos+signalHistosVariations+signalHistos,
-#"BDT0p8" : bdtInputHistos,
-#"BDT1p0" : bdtInputHistos,
-#"BDT1p1" : bdtInputHistos,
-#"BDT1p2" : bdtInputHistos,
-#"TwoJetsTwoMu" : genericHistos
-}
 histosPerSelectionFullJecs={
-"SignalRegion":["DNN18Atan","BDTAtan","DNN18AtanNoQGL","DNNwithZAtan","DNNnovAtan"],
-"SideBand":["DNN18AtanNoMass","BDTAtanNoMass","DNNZAtan","DNNwithZAtanNoMass","DNNnovAtanNoMass"],
-"ZRegion":["pTbalanceAll","DNN18AtanNoMass","BDTAtanNoMass","DNNZAtan","DNNwithZAtanNoMass","DNNnovAtanNoMass"],
+"SignalRegion":signalHistos,
+"SideBand":signalHistosVariations,
+"ZRegion":signalHistosVariations,
 #"ZRegionSMP":["pTbalanceAll","DNN18AtanNoMass"],
 #"SignalRegion":["BDTAtan","DNNAtan","DNN18Atan"],#,"DNN18AtanNoQGL"],
 #"SideBand":["BDTAtanNoMass","DNNAtanNoMass","DNN18AtanNoMass"],
@@ -57,27 +31,11 @@ histosPerSelectionFullJecs={
 
 
 #quick override for missing plots
-if True:
+if False:
   histosPerSelectionFullJecs={
-#"SignalRegion": ["DNNwithZAtan","DNNZAtan","DNN18Atan","DNNnovAtan"],#ericHistos+bdtInputHistos,
-#"SideBand":     ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-#"ZRegion":      ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-    "SignalRegion": ["DNNwithZAtan","DNNZAtan","DNN18Atan","DNNnovAtan", "DNNnovGFAtan"],#ericHistos+bdtInputHistos,
-    "SideBand":     ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-    "ZRegion":      ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
 }
   histosPerSelection={
-#"SignalRegion": ["DNNwithZAtan","DNNZAtan","DNN18Atan","DNNnovAtan"],#ericHistos+bdtInputHistos,
-#"SideBand":     ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-#"ZRegion":      ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-    "SignalRegion": ["DNNwithZAtan","DNNZAtan","DNN18Atan","DNNnovAtan", "DNNnovGFAtan"],#ericHistos+bdtInputHistos,
-    "SideBand":     ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-    "ZRegion":      ["DNNwithZAtanNoMass","DNNZAtan","DNN18AtanNoMass","DNNnovAtanNoMass"],#ericHistos+bdtInputHistos,
-#"PreSel" :      ["PV_npvs", "fixedGridRhoFastjetAll", "Higgs_m"]
-#"SubLeadingEta2p7to3p1": genericHistos+bdtInputHistos,
-#"SubLeadingEta2p7to3p1Pt45": genericHistos+bdtInputHistos,
-#"SubLeadingEta2p7to3p1QGL": genericHistos+bdtInputHistos,
-#"SubLeadingEta2p7to3p1QGLPt45": genericHistos+bdtInputHistos,
+    "SignalRegion":      ["Higgs_m","Higgs_m_GF"],#ericHistos+bdtInputHistos,
 }
 
 

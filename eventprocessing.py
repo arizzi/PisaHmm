@@ -7,7 +7,7 @@ FSRnew=True
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
 if FSR :
     if FSRnew :
-       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/Skim/CMSSW_10_2_6/src/PhysicsTools/NanoAODTools/crab/myNanoProdMc2016_NANO_1_Skim.root")
+       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/vbfHmm_2016AMCPY.root")
     else:
        flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/VBF_HToMuMu_nano2016.root")
 else:
@@ -70,7 +70,7 @@ if FSR:
     flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
     flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
 
-  flow.Define("Muon_pt_GeoFitCorrection","Map(Muon_dxy, Muon_pt,Muon_eta, [ year](float d0, float pt, float eta) { return PtGeoCor::PtGeoFit_mod(d0, pt, eta, year); })")
+  flow.Define("Muon_pt_GeoFitCorrection","Map(Muon_dxybs*Muon_charge, Muon_pt,Muon_eta, [ year](float d0, float pt, float eta) { return PtGeoCor::PtGeo_BS_Roch(d0, pt, eta, year); })")
   #flow.Define("Muon_pt_GeoFitCorrection","Muon_pt*2.f")
   
 else :
@@ -79,7 +79,7 @@ else :
   flow.Define("Muon_correctedFSR_pt","Muon_corrected_pt")
   flow.Define("Muon_pt_GeoFitCorrection","Muon_pt*0.f")
   
-flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_eta*0.f)")
+flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_eta*0.f)")
   
 flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId && Muon_correctedFSR_pt > 20. && abs(Muon_eta) < 2.4") 
 
@@ -88,7 +88,7 @@ flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId &
 #need FSR
 if FSR:
   flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
-  flow.Define("SelectedMuon_GFp4","Where((Muon_FSR_pt > 0.),SelectedMuon_p4GFcorr,SelectedMuon_p4)")
+  flow.Define("SelectedMuon_GFp4","Where((Muon_FSR_pt == 0.),SelectedMuon_p4GFcorr,SelectedMuon_p4)")
 else :
   flow.Define("SelectedMuon_p4","SelectedMuon_p4_orig")
   flow.Define("SelectedMuon_GFp4","SelectedMuon_p4GFcorr")
@@ -100,11 +100,11 @@ flow.Distinct("MuMu","SelectedMuon")
 flow.Define("OppositeSignMuMu","Nonzero(MuMu0_charge != MuMu1_charge)",requires=["twoMuons"])
 flow.Selection("twoOppositeSignMuons","OppositeSignMuMu.size() > 0")
 flow.TakePair("Mu","SelectedMuon","MuMu","At(OppositeSignMuMu,0,-200)",requires=["twoOppositeSignMuons"])
-flow.Define("Higgs","Mu0_p4+Mu1_p4")
+flow.Define("Higgs","Mu0_GFp4+Mu1_GFp4")
+flow.Define("Higgs_noGF","Mu0_p4+Mu1_p4")
 flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
-flow.Define("Higgs_GF","Mu0_GFp4+Mu1_GFp4")
-flow.Define("Higgs_m_GF","Higgs_GF.M()")
+#low.Define("Higgs_m_GF","Higgs_GF.M()")
 
 
 

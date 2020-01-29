@@ -36,41 +36,41 @@ def systematicGrouping (background, signal) :
                 },
         "lumi":{
                 "type": "lnN",
-                "value":1.0025
+                "value":1.025
             },
         "VVxsec":{
                 "type": "lnN",
                 "decorrelate":{"ZZ":ZZ,"WZ":WZ,"WW":WW},
-                "value":1.010,
+                "value":1.10,
                 #"groupvalue":{"ZZ":2.,"WZ":3.,"WW":4.},
                 #"samplevalue":{}
         },
         "WJetsxsec":{
                 "type": "lnN",
                 "decorrelate":{"WJets":WJets},
-                "value":1.010,
+                "value":1.10,
                 #"groupvalue":{},
                 #"samplevalue":{"W2J":2.,"W1J":3.,"W0J":4.}
         },
         "EWKZJJxsec":{
                 "type": "lnN",
                 "decorrelate":{"EWK":EWK},
-                "value":1.005,
+                "value":1.10,
         },
         "DYxsec":{
                 "type": "lnN",
                 "decorrelate":{"DY":DY},
-                "value":1.010,
+                "value":1.10,
         },
         "TTxsec":{
                 "type": "lnN",
                 "decorrelate":{"TT":TT},
-                "value":1.005,
+                "value":1.05,
         },
         "STxsec":{
                 "type": "lnN",
                 "decorrelate":{"ST":ST},
-                "value":1.005,
+                "value":1.05,
         },
 #        "JER":{
 #                "type": "shape",
@@ -96,6 +96,7 @@ def systematicGrouping (background, signal) :
         },
         "MuScale":{
                 "type": "shape",
+                "normalizationType": "shapeOnly",
                 "value":1.0,
         },
         "PrefiringWeight":{
@@ -104,6 +105,7 @@ def systematicGrouping (background, signal) :
         },
         "LHERen":{
                 "type": "shape",
+                "normalizationType": "shapeOnly",
                 "decorrelate":{"Hmm":Hmm, "DY":DY, 
 "EWK":EWK,
  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
@@ -111,6 +113,7 @@ def systematicGrouping (background, signal) :
         },
         "LHEFac":{
                 "type": "shape",
+                "normalizationType": "shapeOnly",
                 "decorrelate":{"Hmm":Hmm, "DY":DY, 
 "EWK":EWK, 
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},

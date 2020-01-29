@@ -24,6 +24,7 @@ namespace PtGeoCor{
 
 
   float PtGeo_BS_Roch(float d0, float pt, float eta, int year) {
+    if (abs(d0) > 1) { return pt;}
     float pt_cor = 0.0;
     if (year == 2016) {
       if      (abs(eta) < 0.9) pt_cor = 411.34 * d0 * pt * pt / 10000.0;

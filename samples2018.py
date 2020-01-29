@@ -5,7 +5,7 @@
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 
-path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
+path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
 path2018data = path2018
 
 samples={
@@ -14,7 +14,7 @@ samples={
 
 "DY105_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
 "DY105_2018MGPY"      : {"xsec": 47.17, "filter": "VBFFilterAntiFlag"},
-"DY105VBF_2018AMCPY"  : {"xsec": 2.03, "filter": "VBFFilterFlag", "training":False}, #this name has to change
+"DY105VBF_2018AMCPY"  : {"xsec": 2.03, "filter": "VBFFilterFlag", "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_7_2/DY105VBF_2018AMCPY.root"], "training":False}, #this name has to change
 "DY105VBF_2018MGPY"   : {"xsec": 2.03, "filter": "VBFFilterFlag"},
 
 "DY0J_2018AMCPY"  : {"xsec": 4620.52},
@@ -36,7 +36,7 @@ samples={
 "STt_2018POWPY"             : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
 
-"data2018": {"lumi":59970.,"data":True},
+"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2018.root"]},
 #data2018V16": {"lumi":59970.,"data":True},
 
 
