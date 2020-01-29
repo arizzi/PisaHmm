@@ -148,9 +148,30 @@ def createNewSystematicForMergeWithOption (systematicDetail) :
                 s = systematicToAdd[n]
                 systematicDetail[syst+"__"+s] = copy.deepcopy(systematicDetail[syst])
                 systematicDetail[syst+"__"+s].pop("additionalNormalizations", None)
+                systematicDetail[syst+"__"+s].pop("groupValues", None)
                 systematicDetail[syst+"__"+s]["type"] = "normalizationOnly"
                 systematicDetail[syst]["additionalNormalizations"][n] = syst+"__"+s
-
+        if "groupValues" in systematicDetail[syst].keys() :
+            systematicDetail[syst]["type"] = "lnN"
+            systematicToAdd = systematicDetail[syst]["groupValues"]
+            for g in systematicToAdd.keys() :
+                v = systematicToAdd[g]
+                systematicDetail[syst+"__Norm"+g] = copy.deepcopy(systematicDetail[syst])
+                systematicDetail[syst+"__Norm"+g]["value"] = systematicToAdd[g]
+                systematicDetail[syst+"__Norm"+g].pop("decorrelate", None)
+                systematicDetail[syst+"__Norm"+g]["decorrelate"] = {g : systematicDetail[syst]["decorrelate"][g]}
+                systematicDetail[syst+"__Norm"+g].pop("additionalNormalizations", None)
+                systematicDetail[syst+"__Norm"+g].pop("groupValues", None)
+                systematicDetail[syst+"__Norm"+g]["type"] = "lnN"
+            systematicDetail[syst]["additionalNormalizations"] = systematicDetail[syst]["additionalNormalizations"] + [syst+"__Norm"]
+                
+                
+                
+            
+            
+            
+            
+            
 
 def divideShapeAndNormalization (systematicDetail) :
         
@@ -296,9 +317,10 @@ def mergeTwoSystematics(systematicDetail, syst1, syst2, listAllSample_noYear) :
             newValues[s] = SumErrors(1 if s not in samples1 else systematicDetail[syst1]["valueFromPlots"][s],
                                                            1 if s not in samples2 else systematicDetail[syst2]["valueFromPlots"][s]
                                                            )
-        systematicDetail[syst1]["decorrelate"]       = {"merged" : samples1}
+        #systematicDetail[syst1]["decorrelate"]       = {"merged" : samples1}
         systematicDetail[syst1]["valueFromPlots"]    = newValues
     
+        #print "merging ", syst1, " \t ", syst2
         #systematicDetail.pop(syst2, None)
 
 
@@ -312,7 +334,7 @@ def mergeToSys(systematicDetail, listAllSample_noYear) :
             sysTomergeList = systematicDetail[syst]["additionalNormalizations"]
             for s in sysTomergeList :
                 for sysTomerge in systKeys :
-                    if re.search(s, sysTomerge) :
+                    if re.search(s + systematicDetail[syst]["decorrelate"].keys()[0], sysTomerge) :
                 #if sysTomerge in systKeys : 
                         if systematicDetail[syst]["type"] == "lnN" and  systematicDetail[sysTomerge]["type"] == "lnN" : 
                             mergedSystematic.append(sysTomerge)
