@@ -276,8 +276,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     sy_base = sy.replace("Up", "").replace("Down", "")
     envelope = model.systematicDetail[sy_base]["envelope"]
     envelopeFunction = model.systematicDetail[sy_base]["envelopeFunction"]
-    envelopeFunctionParameter = model.systematicDetail[sy_base]["envelopeFunctionParameter"]
-    envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
+#    envelopeFunctionParameter = model.systematicDetail[sy_base]["envelopeFunctionParameter"]
+#    envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
     envelopeNBins = model.systematicDetail[sy_base]["envelopeNBins"]
     if not "envelopeBinning" in model.systematicDetail[sy_base]:  model.systematicDetail[sy_base]["envelopeBinning"]={}
     if not (hn, d) in model.systematicDetail[sy_base]["envelopeBinning"]:

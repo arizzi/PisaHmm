@@ -97,19 +97,29 @@ def systematicGrouping (background, signal) :
                 ##},
         ##},
 
-
-
-        "PDFX1":{
-                "type": "shapeOnly",
+        "PDFX0":{
+                "type": "shape",
                 "decorrelate":{
                     "ggH":["ggHmm"],
+                    "vbfHmm":["vbfHmm"],
                     "DY" :["DY105VBF","DY105"],
+                    "EWKZ" :["EWKZ","EWKZ105"],
                 },
                 "envelope": "LHEPdf",
                 "envelopeNBins": 6,
-                "envelopeFunction": "[0] + [1]*x",
-                "envelopeFunctionParameter": 1,
-                "envelopeFunctionParameterValues": (1, 0),
+                "envelopeFunction": "1.+{up}*{rms}",
+        },
+        "PDFX1":{
+                "type": "shape",
+                "decorrelate":{
+                    "ggH":["ggHmm"],
+                    "vbfHmm":["vbfHmm"],
+                    "DY" :["DY105VBF","DY105"],
+                    "EWKZ" :["EWKZ","EWKZ105"],
+                },
+                "envelope": "LHEPdf",
+                "envelopeNBins": 6,
+                "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
         },
     }
     from jesnames import jes2016
