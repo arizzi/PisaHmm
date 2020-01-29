@@ -343,6 +343,28 @@ def mergeToSys(systematicDetail, listAllSample_noYear) :
     for s in set(mergedSystematic) : systematicDetail.pop(s, None)
 
 
+def modifyRegionName(region) :
+    k = regionName.keys()
+    for r in k : 
+        fitOneRegion2Times = False
+        count = 0
+        for x in region :
+            print "AAAA",r,x,re.search(r+"$", x)
+            if re.search(r+"$", x) : count+=1
+        if count > 1 : fitOneRegion2Times = True
+        count = 0
+        for x in region :
+            if re.search(r+"$", x) : 
+                count+=1
+                if fitOneRegion2Times :
+                    regionName[x] = regionName[r]+str(count)
+                else :
+                    regionName[x] = regionName[r]
+            
+            
+            
+
+    
 
 
 def createWorkSpace(model, all_histo_all_syst, year) :
@@ -358,7 +380,10 @@ def createWorkSpace(model, all_histo_all_syst, year) :
         nBins[x] = all_histo_all_syst[x]["data"+year]["nom"].GetNbinsX()-1
         varName[x] = all_histo_all_syst[x]["data"+year]["nom"].GetName().split("___")[0]
         plotName[x] = x
-        region[x] = x.split("___")[-1]  # keys are plot names, values are region names
+        #region[x] = x.split("___")[-1]  # keys are plot names, values are region names
+        region[x] = x  # keys are plot names, values are region names
+
+    modifyRegionName(region)        
     
     region = collections.OrderedDict(sorted(region.items()))
     
