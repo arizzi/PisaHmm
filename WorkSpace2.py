@@ -193,7 +193,7 @@ def decorrelateNormOnly (systematicDetail, availableSamples) :
     
 
 
-def modifySystematicDetail(systematicDetail, listAllSample_noYear) :
+def modifySystematicDetail(systematicDetail, listAllSample_noYear, all_histo_all_syst) :
     
     systKeys = systematicDetail.keys()
     for syst in systKeys :
@@ -213,6 +213,23 @@ def modifySystematicDetail(systematicDetail, listAllSample_noYear) :
         elif len(systematicDetail[syst]["decorrelate"].keys()) > 1:
             for g in systematicDetail[syst]["decorrelate"] :
                 systematicDetail[syst+g] =copy.deepcopy(systematicDetail[syst])
+                if systematicDetail[syst]["type"] != "lnN" and systematicDetail[syst]["type"] != "normalizationOnly" :
+                    for x in all_histo_all_syst.keys() :
+                        for sampName in systematicDetail[syst]["decorrelate"][g] :
+                            print "qui"
+                            for samp in all_histo_all_syst[x].keys() :
+                                if re.search(sampName, samp) :
+                                    
+                                    if set([syst+"Up", syst+"Down"]).issubset(set(all_histo_all_syst[x][samp].keys()) ) :
+                                        #print "--AA--AA--AA--AA ",g, " \t ",samp, " \t ",sampName, " \t ", all_histo_all_syst[x].keys()#, " \t ", 
+                                        all_histo_all_syst[x][samp][syst+g+"Up"] = copy.deepcopy(all_histo_all_syst[x][samp][syst+"Up"])
+                                        all_histo_all_syst[x][samp][syst+g+"Down"] = copy.deepcopy(all_histo_all_syst[x][samp][syst+"Down"])
+                                        #all_histo_all_syst[x][samp].pop(syst+"Up", None)
+                                        #all_histo_all_syst[x][samp].pop(syst+"Down", None)
+                                        
+                                        
+                            #all_histo_all_syst[x][""]
+                            
                 systematicDetail[syst+g].pop("decorrelate", None)
                 systematicDetail[syst+g]["decorrelate"] = {g : systematicDetail[syst]["decorrelate"][g]}
             systematicDetail.pop(syst, None)
@@ -270,6 +287,7 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
                         for samp in all_histo_all_syst[x] :
                             if re.search(s+"_", samp) :
                                 systName = syst[:-len(sKey)]
+                                #print "CCCCC", samp, "  \t ",  systName, "  \t ",s
                                 if re.search("__", syst) : systName = re.match("^.*__(.*)$",syst).group(1)[:-len(sKey)]
                                 Nbins = all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1
                                 variationUp   = 1. if all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)<=0           else all_histo_all_syst[x][samp][systName+"Up"].Integral(0,Nbins) / all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)
@@ -462,7 +480,7 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     #decorrelateNormOnly (model.systematicDetail, availableSamples)
     #printSystematicGrouping (model.systematicDetail, "grouping1.py")
 
-    modifySystematicDetail(model.systematicDetail, listAllSample_noYear) 
+    modifySystematicDetail(model.systematicDetail, listAllSample_noYear, all_histo_all_syst) 
     #printSystematicGrouping (model.systematicDetail, "grouping2.py") 
     
     
