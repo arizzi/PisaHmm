@@ -25,8 +25,8 @@ from math import *
 from array import array
 ROOT.gROOT.ProcessLine(".x setTDRStyle.C")
 import re
-#import WorkSpace
-import WorkSpace2 as WorkSpace
+import WorkSpace
+#import WorkSpace2 as WorkSpace
 
 ROOT.gROOT.SetBatch(True)
 
@@ -244,7 +244,7 @@ def powerHisto(histo1, power):
         for i in range(len(histo1)+2):
                 val = histo1.GetBinContent(i)
                 if val !=0:
-                        histo1.SetBinContent( i, pow(val, power) )
+                        histo1.SetBinContent( i, (pow(val, power) if val > 0 else -pow(-val, power)) )
                 else:
                         histo1.SetBinContent( i, 0. )
         return histo1

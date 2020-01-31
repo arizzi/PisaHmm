@@ -1,4 +1,4 @@
-CRASHA
+
 
 #TODO: separate systematics as
 #shape only (remove normalization effects)
@@ -34,69 +34,22 @@ def systematicGrouping (background, signal) :
         "puWeight" : {
                 "type": "shape" #NormOnly, ShapeNorm
                 },
-        "lumi":{
+        #"lumi":{
+                #"type": "lnN",
+                #"value":1.0025
+            #},
+   	"XSecAndNorm" :{
                 "type": "lnN",
-                "value":1.025
-            },
-        "VVxsec":{
-                "type": "lnN",
-                "decorrelate":{"ZZ":ZZ,"WZ":WZ,"WW":WW},
-                "value":1.10,
-                #"groupvalue":{"ZZ":2.,"WZ":3.,"WW":4.},
-                #"samplevalue":{}
+                "decorrelate": {"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+                "additionalNormalizations": ["LHERen","LHEFac"],#,"PDFX0"],
+                "groupValues":  {"Hmm":1.01, "DY":1.010, "EWK":1.005,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
-        "WJetsxsec":{
-                "type": "lnN",
-                "decorrelate":{"WJets":WJets},
-                "value":1.10,
-                #"groupvalue":{},
-                #"samplevalue":{"W2J":2.,"W1J":3.,"W0J":4.}
-        },
-        "EWKZJJxsec":{
-                "type": "lnN",
-                "decorrelate":{"EWK":EWK},
-                "value":1.10,
-        },
-        "DYxsec":{
-                "type": "lnN",
-                "decorrelate":{"DY":DY},
-                "value":1.10,
-        },
-        "TTxsec":{
-                "type": "lnN",
-                "decorrelate":{"TT":TT},
-                "value":1.05,
-        },
-        "STxsec":{
-                "type": "lnN",
-                "decorrelate":{"ST":ST},
-                "value":1.05,
-        },
-#        "JER":{
-#                "type": "shape",
-#                "value":1.0,
-#        },
-#        "JES":{
-#                "type": "shape",
-#                "value":1.0,
-#       },
         "QGLweight":{
-                "normalizationType": "shapeOnly",
-                "type": "shape",
+                "type": "shapeOnly",
                 "value":1.0,
-        },
-        "LHEPdf":{
-                "decorrelate":allSamples, #{x:allSamples[x] for x in allSamples if "EWK" not in x},
-                #"decorrelate":{"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
-                "normalizationType": "normalizationOnly",
-                "type": "lnN",
-                "value":1.1, #AR: Giulio questo non ha senso... 
-                "groupvalue":{},
-                "sysToMerge":{"TTxsec", "lumi", "STxsec"},
         },
         "MuScale":{
                 "type": "shape",
-                "normalizationType": "shapeOnly",
                 "value":1.0,
         },
         "PrefiringWeight":{
@@ -104,59 +57,69 @@ def systematicGrouping (background, signal) :
                 "value":1.0,
         },
         "LHERen":{
-                "type": "shape",
-                "normalizationType": "shapeOnly",
+                "type": "shapeOnly",
+                #"type": "shape",
                 "decorrelate":{"Hmm":Hmm, "DY":DY, 
 "EWK":EWK,
  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
+                #"mergeToSys": ["TTxsec", "STxsec", "DYxsec","LHEPdf"]
         },
         "LHEFac":{
-                "type": "shape",
-                "normalizationType": "shapeOnly",
+                #"type": "shapeAndNorm",
+                "type": "shapeOnly",
                 "decorrelate":{"Hmm":Hmm, "DY":DY, 
 "EWK":EWK, 
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
-        #"Alternative":{
-                #"type": "shape",
-                #"value": 1.0,
-                #"powerDown": -1., ## down = nom * (up/nom)^powerDown 
-                #"decorrelate":{
-                   #"vbfHmm" :["vbfHmm"],
-                #},
-                #"alternativeSample": {
-                    #"vbfHmm_2016POWPY":"vbfHmm_2016POWHERWIG",
-                #},
-        #},
-        #"Alternative":{
-                #"type": "shape",
-                #"value":1.0,
-                #"powerDown": -1., ## down = nom * (up/nom)^powerDown 
-                #"decorrelate":{
-                   #"DY" :["DY105","DY105VBF"],
-                #},
-                #"alternativeSample": {
-                    #"DY105_2018AMCPY":"DY105_2018MGPY",
-                    #"DY105VBF_2018AMCPY":"DY105VBF_2018MGPY",
-                #},
-        #},
-
-
-
-        "PDFX1":{
+        "Alternative":{
                 "type": "shape",
-                "value":1.0,
+                "value": 1.0,
+                "powerDown": -0.2, ## down = nom * (up/nom)^powerDown 
                 "decorrelate":{
-                    "ggH":["ggHmm"],
-                    "DY" :["DY105VBF","DY105"],
+                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ"],#"EWKZ":["EWKZ"],
                 },
-                "envelope": "LHEPdf",
-                "envelopeFunction": "[0] + [1]*x",
-                "envelopeFunctionParameter": 1,
-                "envelopeFunctionParameterValues": (1, 0),
+                "alternativeSample": {
+                    "vbfHmm_2016AMCPY":"vbfHmm_2016AMCHERWIG",
+                    "EWKZ105_2016MGHERWIG":"EWKZ105_2016MGPY",
+                    "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY"
+                },
         },
+        ##"Alternative":{
+                ##"type": "shape",
+                ##"value":1.0,
+                ##"powerDown": -1., ## down = nom * (up/nom)^powerDown 
+                ##"decorrelate":{
+                   ##"DY" :["DY105","DY105VBF"],
+                ##},
+                ##"alternativeSample": {
+                    ##"DY105_2018AMCPY":"DY105_2018MGPY",
+                    ##"DY105VBF_2018AMCPY":"DY105VBF_2018MGPY",
+                ##},
+        ##},
+
+#        "PDFX0":{
+ #               "type": "shapeOnly",
+  #              "decorrelate":{
+   #                 "pippo":[],
+    #            },
+     #           "envelope": "LHEPdf",
+      #          "envelopeNBins": 6,
+       #         "envelopeFunction": "1.+{up}*{rms}",
+       # },
+#        "PDFX1":{
+ #               "type": "shapeOnly",
+  #              "decorrelate":{
+   #                 "ggH":["ggHmm"],
+    #                "vbfHmm":["vbfHmm"],
+     #               "DY" :["DY105VBF","DY105"],
+      #              "EWKZ" :["EWKZ","EWKZ105"],
+       #         },
+        #        "envelope": "LHEPdf",
+         #       "envelopeNBins": 6,
+          #      "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
+        #},
     }
     from jesnames import jes2016
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}

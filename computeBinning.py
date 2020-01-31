@@ -38,7 +38,7 @@ if year == "2018" :
    samples=samples2018
    
    
-signalSample = "vbfHmm_"+year+"POWPY"
+signalSample = "vbfHmm_"+year+"AMCPY"
 
 
 fSignal     =ROOT.TFile.Open("out/"+signalSample+"Histos.root")
@@ -50,7 +50,7 @@ hBackground = fBackground.Get(variable+"___SignalRegion").Clone()
 
 
 
-minNumberOfEventPerBin = 0.3
+minNumberOfEventPerBin = 0.6
 xMax=5.
 binning_BDT=[xMax]
 

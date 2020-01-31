@@ -5,9 +5,9 @@
 #path2016data = "/scratchssd/arizzi/Hmumu/fileSkimFromNanoAOD/fileSkim2016_nanoV5/"
 #path2016data = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 
-#path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
-path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
-path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
+path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/" 
+#path2016 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
+#path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
 #path2016data = path2016
 path2016data = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_00/"
 
@@ -29,6 +29,7 @@ samples={
 
 "EWKZ105NEW_2016MGHERWIG"   : {"xsec": 0.07486, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_03/EWKZ105_2016MGHERWIG.root"]},
 "EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896, "training":False},
+"EWKZ105_2016MGPY"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2016MGHERWIG" : {"xsec":1.664},
 "EWKZ_2016MGPY"     : {"xsec":1.664},
 "EWKZint_2016MGPY"  : {"xsec":0.128},
