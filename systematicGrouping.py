@@ -41,8 +41,8 @@ def systematicGrouping (background, signal) :
    	"XSecAndNorm" :{
                 "type": "lnN",
                 "decorrelate": {"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
-                "additionalNormalizations": ["LHERen","LHEFac","PDFX1"],
-                "groupValues":  {"Hmm":1.01, "DY":1.10, "EWK":1.05,"ZZ":1.1,"WZ":1.1,"WW":1.1,"WJets":1.1,"TT":1.05,"ST":1.05},
+                "additionalNormalizations": ["LHERen","LHEFac"],#,"PDFX0"],
+                "groupValues":  {"Hmm":1.01, "DY":1.010, "EWK":1.005,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
                 "type": "shapeOnly",
@@ -73,17 +73,19 @@ def systematicGrouping (background, signal) :
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
-        #"Alternative":{
-                #"type": "shape",
-                #"value": 1.0,
-                #"powerDown": -1., ## down = nom * (up/nom)^powerDown 
-                #"decorrelate":{
-                   #"vbfHmm" :["vbfHmm"],
-                #},
-                #"alternativeSample": {
-                    #"vbfHmm_2016POWPY":"vbfHmm_2016POWHERWIG",
-                #},
-        #},
+        "Alternative":{
+                "type": "shape",
+                "value": 1.0,
+                "powerDown": -0.2, ## down = nom * (up/nom)^powerDown 
+                "decorrelate":{
+                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ"],#"EWKZ":["EWKZ"],
+                },
+                "alternativeSample": {
+                    "vbfHmm_2016AMCPY":"vbfHmm_2016AMCHERWIG",
+                    "EWKZ105_2016MGHERWIG":"EWKZ105_2016MGPY",
+                    "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY"
+                },
+        },
         ##"Alternative":{
                 ##"type": "shape",
                 ##"value":1.0,
@@ -97,30 +99,27 @@ def systematicGrouping (background, signal) :
                 ##},
         ##},
 
-        "PDFX0":{
-                "type": "shape",
-                "decorrelate":{
-                    "ggH":["ggHmm"],
-                    "vbfHmm":["vbfHmm"],
-                    "DY" :["DY105VBF","DY105"],
-                    "EWKZ" :["EWKZ","EWKZ105"],
-                },
-                "envelope": "LHEPdf",
-                "envelopeNBins": 6,
-                "envelopeFunction": "1.+{up}*{rms}",
-        },
-        "PDFX1":{
-                "type": "shape",
-                "decorrelate":{
-                    "ggH":["ggHmm"],
-                    "vbfHmm":["vbfHmm"],
-                    "DY" :["DY105VBF","DY105"],
-                    "EWKZ" :["EWKZ","EWKZ105"],
-                },
-                "envelope": "LHEPdf",
-                "envelopeNBins": 6,
-                "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
-        },
+#        "PDFX0":{
+ #               "type": "shapeOnly",
+  #              "decorrelate":{
+   #                 "pippo":[],
+    #            },
+     #           "envelope": "LHEPdf",
+      #          "envelopeNBins": 6,
+       #         "envelopeFunction": "1.+{up}*{rms}",
+       # },
+#        "PDFX1":{
+ #               "type": "shapeOnly",
+  #              "decorrelate":{
+   #                 "ggH":["ggHmm"],
+    #                "vbfHmm":["vbfHmm"],
+     #               "DY" :["DY105VBF","DY105"],
+      #              "EWKZ" :["EWKZ","EWKZ105"],
+       #         },
+        #        "envelope": "LHEPdf",
+         #       "envelopeNBins": 6,
+          #      "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
+        #},
     }
     from jesnames import jes2016
     jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
