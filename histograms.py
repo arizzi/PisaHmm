@@ -3,7 +3,7 @@ genericHistos=["Higgs_m","pTbalanceAll","LeadMuon_pt","LeadMuon_eta","SubMuon_pt
 bdtInputHistos=["Mqq_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zstar","Higgs_pt","theta2","mmjj_pz","MaxJetAbsEta","Higgs_m_uncalib","NSoft5New","ll_zstar_log", "Higgs_mReso","QJet0_qgl","QJet1_qgl","Jet_jetId","Jet_puId"]
 #signalHistosVariations=["SBClassifierNoMass","BDTAtanNoMass","SBClassifierNoMassNoNSJ","BDTAtanNoMassNoNSJ","DNNClassifierNoMass", "DNNAtanNoMass","DNN18AtanNoMass"]
 #signalHistos=["SBClassifier","BDTAtan","LHE_NpNLO","DNNClassifier", "DNNAtan", "DNN18Atan"]#,"DNN18AtanNoQGL"]
-signalHistosVariations=["DNN18AtanNoMass"]
+signalHistosVariations=["DNN18AtanNoMass","QJet0_eta","QJet1_eta","QJet0_pt_touse","QJet1_pt_touse"]
 signalHistos=["DNN18Atan"]
 
 snapregion="SignalRegion"
@@ -21,7 +21,7 @@ histosPerSelection={
 histosPerSelectionFullJecs={
 "SignalRegion":signalHistos,
 "SideBand":signalHistosVariations,
-"ZRegion":signalHistosVariations,
+"ZRegion":signalHistosVariations+["pTbalanceAll"],
 #"ZRegionSMP":["pTbalanceAll","DNN18AtanNoMass"],
 #"SignalRegion":["BDTAtan","DNNAtan","DNN18Atan"],#,"DNN18AtanNoQGL"],
 #"SideBand":["BDTAtanNoMass","DNNAtanNoMass","DNN18AtanNoMass"],

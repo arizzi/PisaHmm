@@ -8,7 +8,9 @@
 
 path2017     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
 path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-path2017data = path2017
+path2017 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
+
+#path2017data = path2017
 
 
 samples={
@@ -30,6 +32,8 @@ samples={
 "EWKZ_2017MGHERWIG" : {"xsec":1.664}, #it does not exist yet
 "EWKZ_2017MGPY"     : {"xsec":1.664},
 "EWKZint_2017MGPY"  : {"xsec":0.128},
+"EWKZ105FIX_2017MGHERWIG"   : {"xsec": 0.0789 },
+
 
 "STs_2017AMCPY"             : {"xsec":3.36},
 "STwtbar_2017POWPY"         : {"xsec":35.85},

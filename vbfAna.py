@@ -9,10 +9,12 @@ ROOT.gROOT.ProcessLine(".x softactivity.h")
 ROOT.gInterpreter.AddIncludePath("/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn") 
 ROOT.gSystem.Load("/scratch/lgiannini/HmmPisa/lwtnn/build/lib/liblwtnn.so")
 
-from eventprocessing import flow
+from eventprocessing import getFlow
+year=sys.argv[1]
+flow=getFlow(year)
+
 from histograms import histosPerSelection,histosPerSelectionFullJecs
 
-year=sys.argv[1]
 
 def sumwsents(files):
    sumws=1e-9
@@ -20,17 +22,18 @@ def sumwsents(files):
    for fn in files:
 	  f=ROOT.TFile.Open(fn)
 	  run=f.Get("Runs")
+	  hasUnderscore = ("genEventSumw_" in [x.GetName() for x in run.GetListOfBranches()])
 	  if run :
 		 hw=ROOT.TH1F("hw","", 5,0,5)
-		 if year == "2018": run.Project("hw","1","genEventSumw_")
+		 if hasUnderscore: run.Project("hw","1","genEventSumw_")
 		 else : run.Project("hw","1","genEventSumw")
                  sumws+=hw.GetSumOfWeights()
                  run.GetEvent()
                  nLHEScaleSumw = 0
-                 if year == "2018": nLHEScaleSumw = run.nLHEPdfSumw_
+                 if hasUnderscore: nLHEScaleSumw = run.nLHEPdfSumw_
                  else : nLHEScaleSumw = run.nLHEPdfSumw
                  for i in range(nLHEScaleSumw):
-                        if year == "2018": run.Project("hw","1","LHEPdfSumw_[%d]"%i)
+                        if hasUnderscore: run.Project("hw","1","LHEPdfSumw_[%d]"%i)
                         else : run.Project("hw","1","LHEPdfSumw[%d]"%i)
                         if i<len(LHEPdfSumw):
                                 LHEPdfSumw[i] = LHEPdfSumw[i] + hw.GetSumOfWeights()
@@ -70,7 +73,7 @@ from histobinning import binningrules
 flow.binningRules = binningrules
 
 flowData=copy.deepcopy(flow)
-procData=flowData.CreateProcessor("eventProcessorData",snaplist+["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
+procData=flowData.CreateProcessor("eventProcessorData"+year,snaplist+["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
 
 print "Data processor created"
 
@@ -102,7 +105,7 @@ histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelecti
 
 addLhePdf(flow)
 addDecorrelatedJER(flow)
-addCompleteJecs(flow)
+addCompleteJecs(flow,year)
 print "######### full systematics #######"
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
@@ -118,7 +121,7 @@ for sel in  histosWithSystematics:
 print >> sys.stderr, "Number of known columns", len(flow.validCols)
 
 #pproc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"SignalRegion",nthreads)
-proc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"",nthreads)
+proc=flow.CreateProcessor("eventProcessor"+year,snaplist,histosWithSystematics,snap,"",nthreads)
 
 
 
@@ -190,6 +193,8 @@ def f(ar):
        try:
 	 rdf=rdf.Define("year",year)
 	 rdf=rdf.Define("TriggerSel",trigger)
+	 if  year!="2017" and ("Jet_puId17" not in list(rdf.GetColumnNames())):
+		rdf=rdf.Define("Jet_puId17","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 if "lumi" in samples[s].keys()  :
 	   rdf=rdf.Filter("passJson(run,luminosityBlock)","jsonFilter")
 	   rdf=rdf.Define("isMC","false")
@@ -199,9 +204,7 @@ def f(ar):
 		rdf=rdf.Define("Jet_pt_nom","Jet_pt") 
 	   rdf=rdf.Define("LHE_NpNLO","0")
 	   rdf=rdf.Define("Jet_partonFlavour","ROOT::VecOps::RVec<int>(nJet, 0)")
-	   if  year == "2018": rdf=rdf.Define("Jet_puId17","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 else :
-	   if  year == "2018": rdf=rdf.Define("Jet_puId17","ROOT::VecOps::RVec<int>(nJet, 0)")
 	   if year == "2018" :
 		  rdf=rdf.Define("PrefiringWeight","1.f")
 		  rdf=rdf.Define("PrefiringWeightUp","1.f")

@@ -5,8 +5,10 @@
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
-#path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-path2018data = path2018
+path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
+path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
+
+#path2018data = path2018
 
 samples={
 #"DY105Inclusuve_2018AMCPY"     : {"xsec": 41.81},
@@ -14,7 +16,7 @@ samples={
 
 "DY105_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
 "DY105_2018MGPY"      : {"xsec": 47.17, "filter": "VBFFilterAntiFlag"},
-"DY105VBF_2018AMCPY"  : {"xsec": 2.03, "filter": "VBFFilterFlag", "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_7_2/DY105VBF_2018AMCPY.root"], "training":False}, #this name has to change
+"DY105VBF_2018AMCPY"  : {"xsec": 2.03, "filter": "VBFFilterFlag" },# "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_7_2/DY105VBF_2018AMCPY.root"], "training":False}, #this name has to change
 "DY105VBF_2018MGPY"   : {"xsec": 2.03, "filter": "VBFFilterFlag"},
 
 "DY0J_2018AMCPY"  : {"xsec": 4620.52},
@@ -27,7 +29,9 @@ samples={
 "EWKZ_2018MGPY"     : {"xsec":1.664},
 "EWKZ105_2018MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZint_2018MGPY"  : {"xsec":0.128},
-#"EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896},
+"EWKZ105_2018MGPY"     : {"xsec":0.0508896},
+"EWKZ105FIX_2018MGHERWIG"   : {"xsec": 0.0789 },
+
 
 "STs_2018AMCPY"             : {"xsec":3.36},
 "STwtbar_2018POWPY"         : {"xsec":35.85},

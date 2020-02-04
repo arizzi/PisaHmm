@@ -105,11 +105,11 @@ fillcolor={
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down"]
 
 
-from jesnames import jes2016
-from jernames import jernames
-systematicsForDC=systematicsToPlot+[x[10:] for x in jes2016 ]+jernames
 systematicsToPlot+=["JESUp","JESDown"]
-
+from jesnames import jesnames2017
+from jernames import jernames
+jesList=jesnames2017
+systematicsForDC=systematicsToPlot+[x[7:] for x in jesList ]+jernames
 
 linecolor=fillcolor
 markercolor=fillcolor
@@ -118,6 +118,6 @@ from rebinning import *
 
 
 from systematicGrouping import *
-systematicDetail = systematicGrouping(background, signal)
+systematicDetail = systematicGrouping(background, signal,jesList)
 
 

@@ -11,7 +11,7 @@
 
 
 
-def systematicGrouping (background, signal) :
+def systematicGrouping (background, signal,jesList) :
     
     legendGrouping = {}
     legendGrouping.update(background)
@@ -34,10 +34,10 @@ def systematicGrouping (background, signal) :
         "puWeight" : {
                 "type": "shape" #NormOnly, ShapeNorm
                 },
-        #"lumi":{
-                #"type": "lnN",
-                #"value":1.0025
-            #},
+        "lumi":{
+                "type": "lnN",
+                "value":1.025
+            },
    	"XSecAndNorm" :{
                 "type": "lnN",
                 "decorrelate": {"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
@@ -83,6 +83,7 @@ def systematicGrouping (background, signal) :
                 "alternativeSample": {
                     "vbfHmm_2016AMCPY":"vbfHmm_2016AMCHERWIG",
                     "EWKZ105_2016MGHERWIG":"EWKZ105_2016MGPY",
+                    "EWKZ105_2018MGHERWIG":"EWKZ105_2018MGPY",
                     "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY"
                 },
         },
@@ -121,8 +122,7 @@ def systematicGrouping (background, signal) :
           #      "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
         #},
     }
-    from jesnames import jes2016
-    jes={x[10:-4]:{"type": "shape", "value":1.0} for x in jes2016 if "Down" in x}
+    jes={x[7:-4]:{"type": "shape", "value":1.0} for x in jesList if "Down" in x}
 
     jesfew={    "JES":{
                 "type": "shape",

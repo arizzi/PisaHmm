@@ -116,12 +116,12 @@ def addDecorrelatedJER(flow):
             #flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerUp_touse,Jet_pt_touse)"%cutstring) #name, target, replacement
             flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_nom,Jet_pt_touse)"%cutstring) #name, target, replacement
 	  
-from jesnames import jes2016
-def addCompleteJecs(flow):
-    for j in jes2016:
-       print "jes2016:",j
+import jesnames
+def addCompleteJecs(flow,year):
+    for j in getattr(jesnames,"jesnames"+year):
+       print "jes:",year, j
        flow.Define("%s_touse"%j,"Jet_pt_touse*%s/Jet_pt_nom"%j)
-       flow.Systematic(j[10:],"Jet_pt_touse","%s_touse"%j)
+       flow.Systematic(j[7:],"Jet_pt_touse","%s_touse"%j)
 
 
 

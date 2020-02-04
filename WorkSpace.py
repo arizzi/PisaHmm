@@ -438,7 +438,9 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     for x in region : 
         emptySamples[x] = []
         for s in listAllSample :
-            if not all(all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) > 0. for sy in all_histo_all_syst[x][s].keys()) : emptySamples[x].append(s)
+            if not all(all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) > 0. for sy in all_histo_all_syst[x][s].keys()) :
+		 print "WARNING",s," IS EMPTY", [(sy,all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) ) for sy in all_histo_all_syst[x][s].keys()]
+		 emptySamples[x].append(s)
         availableSamples[x] = [ s for s in listAllSample if s not in emptySamples[x]]
 
     listAllSample_noYear = [s.split("_")[0] for s in listAllSample]

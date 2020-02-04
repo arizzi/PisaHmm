@@ -257,6 +257,13 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample, alphaDown = 
             histoUp = (histoUp.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     ## up = alternative sample
     if "Up" in sy: 
+        histoNom = f[nominalSample].Get(hn)
+        if hn.split("___")[0] in model.rebin.keys():
+            histoNom = (histoNom.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+        histoUp.Divide( histoNom )
+        histoUp = powerHisto( histoUp, abs(alphaDown) )
+        histoUp.Multiply( histoNom )
+
         return copy.copy(histoUp)
     ## down = ( up / nom)^alpha  * nom = ( nom/up)^-alpha  * nom   with alpha = -1
     elif "Down" in sy:

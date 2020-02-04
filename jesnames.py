@@ -87,3 +87,20 @@ jes2016=[
 
 
 ]
+
+names=[
+        'pt_jesAbsoluteUp', 'pt_jesBBEC1Up', 'pt_jesEC2Up', 'pt_jesFlavorQCDUp', 'pt_jesHFUp', 'pt_jesRelativeBalUp', 
+        'pt_jesAbsoluteDown', 'pt_jesBBEC1Down', 'pt_jesEC2Down', 'pt_jesFlavorQCDDown', 'pt_jesHFDown', 'pt_jesRelativeBalDown',  ]
+names2016=names+['pt_jesAbsolute_2016Up', 'pt_jesBBEC1_2016Up', 'pt_jesEC2_2016Up', 'pt_jesHF_2016Up', 'pt_jesRelativeSample_2016Up',
+        'pt_jesAbsolute_2016Down', 'pt_jesBBEC1_2016Down', 'pt_jesEC2_2016Down', 'pt_jesHF_2016Down', 'pt_jesRelativeSample_2016Down'
+        ]
+names2017=names+['pt_jesAbsolute_2017Up', 'pt_jesBBEC1_2017Up', 'pt_jesEC2_2017Up', 'pt_jesHF_2017Up', 'pt_jesRelativeSample_2017Up',
+        'pt_jesAbsolute_2017Down', 'pt_jesBBEC1_2017Down', 'pt_jesEC2_2017Down', 'pt_jesHF_2017Down', 'pt_jesRelativeSample_2017Down'
+        ]
+names2018=names+['pt_jesAbsolute_2018Up', 'pt_jesBBEC1_2018Up', 'pt_jesEC2_2018Up', 'pt_jesHF_2018Up', 'pt_jesRelativeSample_2018Up',
+        'pt_jesAbsolute_2018Down', 'pt_jesBBEC1_2018Down', 'pt_jesEC2_2018Down', 'pt_jesHF_2018Down', 'pt_jesRelativeSample_2018Down'
+        ]
+
+jesnames2016=["Jet_"+x for x in names2016]
+jesnames2017=["Jet_"+x for x in names2017]
+jesnames2018=["Jet_"+x for x in names2018]
