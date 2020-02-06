@@ -58,16 +58,17 @@ def getFlow(year):
 	  else :
 	    flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
 	  flow.Define("Muon_FSR_pt","TakeDef(FsrPhoton_pt,Muon_fsrPhotonIdx,0)")
+          flow.Define("Muon_FSR_eta","TakeDef(FsrPhoton_pt,Muon_fsrPhotonIdx,0)")
 	  flow.Define("Muon_FSR_iso","TakeDef(FsrPhoton_relIso03,Muon_fsrPhotonIdx,99.)")
 	  flow.Define("Muon_FSR_drEt2","TakeDef(FsrPhoton_dROverEt2,Muon_fsrPhotonIdx,99.)")
 
 	  #flow.Define("Muon_wFSR_p4","Where(Muon_iso_FSR < 0.8,Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
 	##  flow.Define("Muon_wFSR_p4","Muon_FSR_p4*(Muon_iso_FSR < 0.8)+Muon_p4_orig")
 	  if FSRnew:
-	    flow.Define("Muon_wFSR_p4","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 0.8 && Muon_FSR_drEt2 < 0.019 ),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
-	    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
-	    flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_pt-Muon_FSR_pt)/Muon_correctedFSR_pt")
-	  else:
+            flow.Define("Muon_wFSR_p4","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 1.8 && Muon_FSR_drEt2 < 0.012 && Muon_FSR_pt/Muon_pt<0.4 && abs(Muon_FSR_eta)<2.4 ),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
+            flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
+            flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_pt-Muon_FSR_pt)/Muon_correctedFSR_pt")
+          else:
 	    flow.Define("Muon_wFSR_p4","Where((Muon_iso_FSR < 0.8),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
 	    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
 	    flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
