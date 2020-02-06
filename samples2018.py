@@ -30,7 +30,7 @@ samples={
 "EWKZ105_2018MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZint_2018MGPY"  : {"xsec":0.128},
 "EWKZ105_2018MGPY"     : {"xsec":0.0508896},
-"EWKZ105FIX_2018MGHERWIG"   : {"xsec": 0.0789 },
+"EWKZ105FIX2_2018MGHERWIG"   : {"xsec": 0.0789 },
 
 
 "STs_2018AMCPY"             : {"xsec":3.36},

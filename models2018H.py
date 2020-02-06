@@ -4,7 +4,7 @@ background={
 "DY":["DY105_2018AMCPY"], ## Alternative: "DY105_2018MGPY"
 "DYVBF":[ "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
 "EWKZ":[
-   "EWKZ105_2018MGHERWIG", ## Alternative "EWKZ_2018MGPY"
+   "EWKZ105FIX2_2018MGHERWIG", ## Alternative "EWKZ_2018MGPY"
    # interference with DY
  "EWKZint_2018MGPY" 
 ],
@@ -112,7 +112,10 @@ fillcolor={
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down"]
 
 systematicsToPlot+=["JESUp","JESDown"]
-systematicsToPlot+=["JESUp","JESDown"]
+from btagvariations import btagsys
+systematicsToPlot+=btagsys
+
+
 from jesnames import jesnames2018
 from jernames import jernames
 jesList=jesnames2018

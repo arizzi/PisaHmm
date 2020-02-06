@@ -27,7 +27,7 @@ samples={
 #"DYTau_2016AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 "DYM50_2016AMCPY" : {"xsec":5765.40},
 
-"EWKZ105FIX_2016MGHERWIG"   : {"xsec": 0.07486 },
+"EWKZ105FIX2_2016MGHERWIG"   : {"xsec": 0.07486 },
 "EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ105_2016MGPY"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2016MGHERWIG" : {"xsec":1.664},

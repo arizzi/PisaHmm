@@ -40,6 +40,10 @@ fillcolor={
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down"]
 
 systematicsToPlot+=["JESUp","JESDown"]
+from btagvariations import btagsys
+systematicsToPlot+=btagsys
+
+
 from jesnames import jesnames2018
 from jernames import jernames
 jesList=jesnames2018

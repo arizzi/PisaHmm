@@ -18,7 +18,7 @@ def systematicGrouping (background, signal,jesList) :
     legendGrouping.update(signal)
 
     DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J"]
-    EWK= ["EWKZ", "EWKZint", "EWKZ105"] 
+    EWK= ["EWKZ", "EWKZint", "EWKZ105FIX","EWKZ105","EWKZ105FIX2"] 
     TT = ["TTlep","TTsemi","TThad", "TT"]
     ST = ["STs","STwtbar","STwt","STtbar","STt"]
     WW = ["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]
@@ -40,9 +40,9 @@ def systematicGrouping (background, signal,jesList) :
             },
    	"XSecAndNorm" :{
                 "type": "lnN",
-                "decorrelate": {"Hmm":Hmm, "DY":DY, "EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+                "decorrelate": {"Hmm":Hmm, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "additionalNormalizations": ["LHERen","LHEFac"],#,"PDFX0"],
-                "groupValues":  {"Hmm":1.01, "DY":1.010, "EWK":1.005,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+                "groupValues":  {"Hmm":1.01,"EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
                 "type": "shapeOnly",
@@ -78,13 +78,22 @@ def systematicGrouping (background, signal,jesList) :
                 "value": 1.0,
                 "powerDown": -0.2, ## down = nom * (up/nom)^powerDown 
                 "decorrelate":{
-                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ"],#"EWKZ":["EWKZ"],
+                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],#"EWKZ":["EWKZ"],
                 },
                 "alternativeSample": {
                     "vbfHmm_2016AMCPY":"vbfHmm_2016AMCHERWIG",
+                    "EWKZ105FIX_2016MGHERWIG":"EWKZ105_2016MGPY",
+                    "EWKZ105FIX_2017MGHERWIG":"EWKZ105_2017MGPY",
+                    "EWKZ105FIX_2018MGHERWIG":"EWKZ105_2018MGPY",
+                    "EWKZ105FIX2_2016MGHERWIG":"EWKZ105_2016MGPY",
+                    "EWKZ105FIX2_2017MGHERWIG":"EWKZ105_2017MGPY",
+                    "EWKZ105FIX2_2018MGHERWIG":"EWKZ105_2018MGPY",
                     "EWKZ105_2016MGHERWIG":"EWKZ105_2016MGPY",
+                    "EWKZ105_2017MGHERWIG":"EWKZ105_2017MGPY",
                     "EWKZ105_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY"
+                    "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY",
+                    "EWKZ_2017MGHERWIG":"EWKZ_2017MGPY",
+                    "EWKZ_2018MGHERWIG":"EWKZ_2018MGPY"
                 },
         },
         ##"Alternative":{
@@ -120,7 +129,7 @@ def systematicGrouping (background, signal,jesList) :
         #        "envelope": "LHEPdf",
          #       "envelopeNBins": 6,
           #      "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
-        #},
+       # },
     }
     jes={x[7:-4]:{"type": "shape", "value":1.0} for x in jesList if "Down" in x}
 
@@ -142,6 +151,11 @@ def systematicGrouping (background, signal,jesList) :
 #    systematicDetail.update(jesfew)
     systematicDetail.update(jer)
 #    systematicDetail.update(jerfew)
+
+    from btagvariations import btagsys
+    btag={x[0:-4]:{"type": "shape", "value":1.0} for x in btagsys if "Down" in x}
+    systematicDetail.update(btag)
+
     return systematicDetail
 
 

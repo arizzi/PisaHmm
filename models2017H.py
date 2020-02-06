@@ -4,7 +4,7 @@ background={
 "DY":["DY105_2017AMCPY"], ## Alternative: "DY105_2017MGPY"
 "DYVBF":[ "DY105VBF_2017AMCPY"], ## Alternative: "DY105VBF_2017MGPY"
 "EWKZ":[
-   "EWKZ105_2017MGHERWIG",
+   "EWKZ105FIX2_2017MGHERWIG",
    # interference with DY
    "EWKZint_2017MGPY" 
 ],
@@ -106,6 +106,10 @@ systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfD
 
 
 systematicsToPlot+=["JESUp","JESDown"]
+from btagvariations import btagsys
+systematicsToPlot+=btagsys
+
+
 from jesnames import jesnames2017
 from jernames import jernames
 jesList=jesnames2017

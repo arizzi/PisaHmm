@@ -95,8 +95,8 @@ def writeLine (uncName, systematicDetailElement, allSamples, region) :
     
     if len(position)==0 : return ""
 
-    line += uncName + "\t"*(3 - len(uncName)/8)
-    line += uncType + "\t"*(2 - len(uncType)/8)
+    line += uncName + "\t"*(4 - len(uncName)/8)
+    line += uncType + "\t"*(3 - len(uncType)/8)
     line += writeUncertainities (orderedUncertainties, len(orderedUncertainties), position)
 
     return line + "\n";

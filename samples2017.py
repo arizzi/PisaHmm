@@ -29,10 +29,11 @@ samples={
 "DYTau_2017AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 #"DYM50_2017AMCPY" : {"xsec":5765.40},
 "EWKZ105_2017MGHERWIG"     : {"xsec":0.0508896, "training":False},
+"EWKZ105_2017MGPY"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2017MGHERWIG" : {"xsec":1.664}, #it does not exist yet
 "EWKZ_2017MGPY"     : {"xsec":1.664},
 "EWKZint_2017MGPY"  : {"xsec":0.128},
-"EWKZ105FIX_2017MGHERWIG"   : {"xsec": 0.0789 },
+"EWKZ105FIX2_2017MGHERWIG"   : {"xsec": 0.0789 },
 
 
 "STs_2017AMCPY"             : {"xsec":3.36},

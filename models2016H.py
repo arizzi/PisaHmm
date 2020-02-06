@@ -4,7 +4,7 @@ background={
 "DY":["DY105_2016AMCPY"], ## Alternative: "DY105_2016MGPY"
 "DYVBF":["DY105VBF_2016AMCPY"], ## Alternative: "DY105VBF_2016MGPY"
 "EWKZ":[
-   "EWKZ105_2016MGHERWIG",
+   "EWKZ105FIX2_2016MGHERWIG",
    # interference with DY
    "EWKZint_2016MGPY"
 ],
@@ -105,6 +105,9 @@ fillcolor={
 systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down"]
 
 systematicsToPlot+=["JESUp","JESDown"]
+
+from btagvariations import btagsys
+systematicsToPlot+=btagsys 
 
 from jesnames import jesnames2016
 from jernames import jernames

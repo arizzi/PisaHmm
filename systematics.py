@@ -48,6 +48,20 @@ def addPSWeights(flow):
 #create btag systematics
 #this should be simplified
 def addBtag(flow):
+    btagsys=["Jet_btagSF_shape_up_jes","Jet_btagSF_shape_down_jes","Jet_btagSF_shape_up_lf","Jet_btagSF_shape_down_lf","Jet_btagSF_shape_up_hf","Jet_btagSF_shape_down_hf","Jet_btagSF_shape_up_hfstats1","Jet_btagSF_shape_down_hfstats1","Jet_btagSF_shape_up_hfstats2","Jet_btagSF_shape_down_hfstats2","Jet_btagSF_shape_up_lfstats1","Jet_btagSF_shape_down_lfstats1","Jet_btagSF_shape_up_lfstats2","Jet_btagSF_shape_down_lfstats2","Jet_btagSF_shape_up_cferr1","Jet_btagSF_shape_down_cferr1","Jet_btagSF_shape_up_cferr2","Jet_btagSF_shape_down_cferr2"]
+    names=[x[17:] for x in btagsys]
+    print "Adding btag systematics",names
+    for i in  names :
+       flow.Define("SelectedJet_weight_%s"%i,"Where(abs(SelectedJet_eta) < 2.4 && isMC,SelectedJet_btagSF_shape_%s,SelectedJet_btagSF_shape*0.f+1.f)"%i)
+       name=i
+       if "up_" in i : 
+	  name=i.replace("up_","")+"Up"
+       if "down_" in i : 
+	  name=i.replace("down_","")+"Down"
+       
+       flow.Define("btagEventWeight_%s"%name,"isMC?(std::accumulate(SelectedJet_weight_%s.begin(),SelectedJet_weight_%s.end(),1.f, std::multiplies<double>())):1.f"%(i,i))
+       flow.VariationWeight("btagEventWeight_%s"%name,"btagEventWeight")
+
     pass
 #    flow.Define("SelectedJet_btagWeight_up","vector_map(btagWeightUp,SelectedJet_btagCSVV2,SelectedJet_pt,SelectedJet_eta)")
     #flow.Define("btagEventWeightUp","std::accumulate(SelectedJet_btagWeight.begin(),SelectedJet_btagWeight.end(),1, std::multiplies<double>())")
