@@ -58,7 +58,7 @@ def getFlow(year):
 	  else :
 	    flow.Define("Muon_FSR_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(Muon_pt_FSR , Muon_eta_FSR, Muon_phi_FSR , Muon_mass_FSR)")
 	  flow.Define("Muon_FSR_pt","TakeDef(FsrPhoton_pt,Muon_fsrPhotonIdx,0)")
-          flow.Define("Muon_FSR_eta","TakeDef(FsrPhoton_pt,Muon_fsrPhotonIdx,0)")
+          flow.Define("Muon_FSR_eta","TakeDef(FsrPhoton_eta,Muon_fsrPhotonIdx,0)")
 	  flow.Define("Muon_FSR_iso","TakeDef(FsrPhoton_relIso03,Muon_fsrPhotonIdx,99.)")
 	  flow.Define("Muon_FSR_drEt2","TakeDef(FsrPhoton_dROverEt2,Muon_fsrPhotonIdx,99.)")
 
@@ -107,7 +107,7 @@ def getFlow(year):
 	flow.Define("Higgs_noGF","Mu0_p4+Mu1_p4")
 	flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
-	#low.Define("Higgs_m_GF","Higgs_GF.M()")
+	flow.Define("Higgs_m_GF","Higgs.M()")
 
 
 
