@@ -73,27 +73,29 @@ def systematicGrouping (background, signal,jesList) :
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
+
         "Alternative":{
                 "type": "shape",
                 "value": 1.0,
-                "powerDown": -0.2, ## down = nom * (up/nom)^powerDown 
+                "powerUp":  +1.,   ## up   = ratio^alpha_up   * nom
+                "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
                    "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],#"EWKZ":["EWKZ"],
                 },
                 "alternativeSample": {
-                    "vbfHmm_2016AMCPY":"vbfHmm_2016AMCHERWIG",
-                    "EWKZ105FIX_2016MGHERWIG":"EWKZ105_2016MGPY",
-                    "EWKZ105FIX_2017MGHERWIG":"EWKZ105_2017MGPY",
-                    "EWKZ105FIX_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ105FIX2_2016MGHERWIG":"EWKZ105_2016MGPY",
-                    "EWKZ105FIX2_2017MGHERWIG":"EWKZ105_2017MGPY",
-                    "EWKZ105FIX2_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ105_2016MGHERWIG":"EWKZ105_2016MGPY",
-                    "EWKZ105_2017MGHERWIG":"EWKZ105_2017MGPY",
-                    "EWKZ105_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY",
-                    "EWKZ_2017MGHERWIG":"EWKZ_2017MGPY",
-                    "EWKZ_2018MGHERWIG":"EWKZ_2018MGPY"
+                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
+                    "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105FIX_2016MGHERWIG"),
+                    "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105FIX_2017MGHERWIG"),
+                    "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105FIX_2018MGHERWIG"),
+                    "EWKZ105FIX2_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105FIX2_2016MGHERWIG"),
+                    "EWKZ105FIX2_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105FIX2_2017MGHERWIG"),
+                    "EWKZ105FIX2_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105FIX2_2018MGHERWIG"),
+                    "EWKZ105_2016MGHERWIG":     ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105_2017MGHERWIG":     ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105_2018MGHERWIG":     ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
+                    "EWKZ_2016MGHERWIG":        ("EWKZ_2016MGPY",    "EWKZ_2016MGHERWIG"),
+                    "EWKZ_2017MGHERWIG":        ("EWKZ_2017MGPY",    "EWKZ_2017MGHERWIG"),
+                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG")
                 },
         },
         ##"Alternative":{

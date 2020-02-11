@@ -241,41 +241,47 @@ def addFitVariation(h, variationToAdd) :
 '''
 
 def powerHisto(histo1, power):
+#        print histo1.GetName()
         for i in range(len(histo1)+2):
                 val = histo1.GetBinContent(i)
                 if val !=0:
                         histo1.SetBinContent( i, (pow(val, power) if val > 0 else -pow(-val, power)) )
                 else:
                         histo1.SetBinContent( i, 0. )
+                histo1.SetBinError( i, 0. )
+#                print histo1.GetBinContent(i)
         return histo1
 
-def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSample, alphaDown = 0):
-    if not alternativeSample in f: f[alternativeSample] = ROOT.TFile.Open(folder+"/%sHistos.root"%alternativeSample)
-    histoNameUp   = hn.replace("___","__syst__AlternativeUp___")+"__syst__AlternativeUp"
-    histoUp =  f[alternativeSample].Get(hn).Clone(histoNameUp)
+def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSamples, alphaUp = +1, alphaDown = -1):
+    (altSampleUp, altSampleDown) = alternativeSamples
+    if not altSampleUp   in f: f[altSampleUp]   = ROOT.TFile.Open(folder+"/%sHistos.root"%altSampleUp)
+    if not altSampleDown in f: f[altSampleDown] = ROOT.TFile.Open(folder+"/%sHistos.root"%altSampleDown)
+    histoNameNom  = hn+"rebin"
+    histoNameUp   = hn+"rebinAltSampleUp"
+    histoNameDown = hn+"rebinAltSampleDown"
+    histoNom  =  f[nominalSample].Get(hn).Clone(histoNameNom)
+    histoUp   =  f[altSampleUp].  Get(hn).Clone(histoNameUp)
+    histoDown =  f[altSampleDown].Get(hn).Clone(histoNameDown)
     if hn.split("___")[0] in model.rebin.keys(): 
-            histoUp = (histoUp.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
-    ## up = alternative sample
+            histoNom  = (histoNom.Rebin( len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]])))
+            histoUp   = (histoUp.Rebin(  len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]])))
+            histoDown = (histoDown.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]])))
+    histoUp.Scale  (samples[altSampleUp  ]["xsec"])
+    histoDown.Scale(samples[altSampleDown]["xsec"])
+    ratio = histoUp.Clone(histoNameUp.replace("altSampleUp", "altSampleRatio"))
+    ratio.Divide(histoDown)
+    ## up   = ratio^alpha_up   * nom
     if "Up" in sy: 
-        histoNom = f[nominalSample].Get(hn)
-        if hn.split("___")[0] in model.rebin.keys():
-            histoNom = (histoNom.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
-        histoUp.Divide( histoNom )
-        histoUp = powerHisto( histoUp, abs(alphaDown) )
-        histoUp.Multiply( histoNom )
-
-        return copy.copy(histoUp)
-    ## down = ( up / nom)^alpha  * nom = ( nom/up)^-alpha  * nom   with alpha = -1
+        histoNameSyst = hn.replace("___","__syst__AlternativeUp___"  )   + "__syst__AlternativeUp"
+        histoSyst     = histoNom.Clone(histoNameSyst)
+        histoSyst.Multiply( powerHisto( ratio, alphaUp ) )
+        return copy.copy(histoSyst)
+    ## down = ratio^alpha_down * nom
     elif "Down" in sy:
-        histoNom = f[nominalSample].Get(hn)
-        if hn.split("___")[0] in model.rebin.keys(): 
-            histoNom = (histoNom.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
-        histoNameDown = hn.replace("___","__syst__AlternativeDown___")+"__syst__AlternativeDown"
-        histoDown = histoNom.Clone(histoNameDown)
-        histoDown.Divide( histoUp )
-        histoDown = powerHisto( histoDown, -alphaDown )
-        histoDown.Multiply( histoNom )
-        return copy.copy(histoDown)
+        histoNameSyst = hn.replace("___","__syst__AlternativeDown___"  ) + "__syst__AlternativeDown"
+        histoSyst     = histoNom.Clone(histoNameSyst)
+        histoSyst.Multiply( powerHisto( ratio, alphaDown ) )
+        return copy.copy(histoSyst)
     else:
         print "No alternative sample for %s"%d
 
@@ -486,9 +492,9 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 for sy in systematicsSetToUse :
                     sy_base = sy.replace("Up", "").replace("Down", "")
                     if not data :
-                        if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base]:
-                            if d in model.systematicDetail[sy_base]["alternativeSample"]:
-                                hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d], model.systematicDetail[sy_base]["powerDown"] if model.systematicDetail[sy_base] else -1)
+                        if sy_base in model.systematicDetail and "alternativeSamples" in model.systematicDetail[sy_base]:
+                            if d in model.systematicDetail[sy_base]["alternativeSamples"]:
+                                hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSamples"][d], model.systematicDetail[sy_base]["powerUp"], model.systematicDetail[sy_base]["powerDown"])
                             else: 
                                 hs = f[d].Get(hn).Clone(hn+sy)
                                 if hs and hn.split("___")[0] in model.rebin.keys() : 
@@ -515,9 +521,9 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 SumTH1[hn].Add(h)	
                 for sy in systematicsSetToUse :
                     sy_base = sy.replace("Up", "").replace("Down", "")
-                    if sy_base in model.systematicDetail and "alternativeSample" in model.systematicDetail[sy_base]:
-                        if d in model.systematicDetail[sy_base]["alternativeSample"]:
-                            hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSample"][d], model.systematicDetail[sy_base]["powerDown"] if model.systematicDetail[sy_base] else -1)
+                    if sy_base in model.systematicDetail and "alternativeSamples" in model.systematicDetail[sy_base]:
+                        if d in model.systematicDetail[sy_base]["alternativeSamples"]:
+                            hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSamples"][d], model.systematicDetail[sy_base]["powerUp"], model.systematicDetail[sy_base]["powerDown"])
                         else:
                             hs = f[d].Get(hn).Clone(hn+sy)
                             if hs and hn.split("___")[0] in model.rebin.keys() : 
