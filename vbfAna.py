@@ -65,7 +65,7 @@ snaplist=[ "event","Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","Mu0_pt_Geo
     "QJet1_pt_touse", "QJet1_phi", "QJet1_eta", "QJet1_pt_nom", "QJet1_puId", "QJet1_qgl",
     "qqDeltaEta", "qqDeltaPhi", "qq_pt", "Mqq", "Mqq_log", "MaxJetAbsEta", "mmjj_pt", "mmjj_pt_log", "mmjj_pz", "mmjj_pz_logabs", "CS_theta", "CS_phi","NSoft5NewNoRapClean", "SAHT2","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt", "nLHEPart", "LHEPart_pt", "LHEPart_eta", "LHEPart_phi",  "LHEPart_pdgId", 
     "DeltaRelQQ", "DeltaEtaQQSum", "PhiHQ1", "PhiHQ2", "EtaHQ1", "EtaHQ2", "minEtaHQ", "Rpt", "theta2", "NSoft5", "NSoft5New", "SAHT",
-    "SBClassifier", "DNN18Atan","DNN18Classifier","DNNwithZAtan","DNNZAtan","DNNnovAtan","year",
+    "SBClassifier", "DNN18Atan","DNN18Classifier","year",
      #"genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "QGLweight"
 ]
 

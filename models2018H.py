@@ -126,7 +126,7 @@ linecolor=fillcolor
 markercolor=fillcolor
 
 from rebinning import *
-
+rebin["DNN18Atan"]=dnnnewfew18
 
 from systematicGrouping import *
 systematicDetail = systematicGrouping(background, signal,jesList)
