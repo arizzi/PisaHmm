@@ -108,7 +108,7 @@ def getFlow(year):
 	flow.Define("Higgs_noGF","Mu0_p4+Mu1_p4")
 	flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
-	#low.Define("Higgs_m_GF","Higgs_GF.M()")
+	flow.Define("Higgs_m_GF","Higgs.M()")
 
 
 
