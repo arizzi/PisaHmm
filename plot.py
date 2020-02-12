@@ -373,7 +373,16 @@ def makeEnvelopeShape(hn,sy,f, d, model):
 #    print "funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax())
     nhisto = f[d].Get(hn).Clone(hn+sy)
     if hn.split("___")[0] in model.rebin.keys(): nhisto = (nhisto.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
-    nhisto.Multiply(funct)
+    copyhisto = nhisto.Clone("copya")
+    for bin_ in range(len(nhisto)-1):
+        x = nhisto.GetBinCenter(bin_)
+        rms = ratio.GetBinError(ratio.FindBin(x))
+        f = funct.Eval(x)
+#        if "DY105_2018AMCPY" in d: ##DEBUG
+#            print "DEBUG3", bin_, f, copyhisto.GetBinContent(bin_), rms, (1. + f * rms), copyhisto.GetBinContent(bin_) * (1. + f * rms), copyhisto.GetBinContent(bin_) * (f * rms)
+        nhisto.SetBinContent(bin_, copyhisto.GetBinContent(bin_) * (1. + f * rms) )
+        nhisto.SetBinError(bin_, 0)
+#    nhisto.Multiply(funct)
 #   nhisto.Add(nomHistoRebinned)
 #    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral()
     ### DEBUG: Save ratio plots
