@@ -85,7 +85,7 @@ addQGLweight(flow)
 addPreFiring(flow)
 
 from systematics import *
-
+addSTXS(flow)
 addLheScale(flow)
 addPSWeights(flow)
 addBtag(flow)
@@ -215,6 +215,10 @@ def f(ar):
 		  rdf=rdf.Define("PrefiringWeightDown","L1PreFiringWeight_Dn")
 	   print "Is herwig?",("true" if "HERWIG" in s else "false"), s
 	   rdf=rdf.Define("isHerwig",("true" if "HERWIG" in s else "false"))
+	   if  "HTXS_stage1_1_fine_cat_pTjet30GeV" not in list(rdf.GetColumnNames()) :
+	       print "Add fake STXS category"
+               rdf=rdf.Define("HTXS_stage1_1_fine_cat_pTjet30GeV","0l")
+	       print "Added"
 	   if  "ggH" in s :
                print "Adding ggH weights"
                rdf=rdf.Define("nnlopsWeight","evalNnlopsWeight(HTXS_njets30,HTXS_Higgs_pt)")

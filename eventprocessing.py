@@ -376,4 +376,6 @@ def getFlow(year):
 	flow.Define("QQ_p4","QQ0_p4+QQ1_p4",requires=["twoQ"])
 	flow.Define("QQ_mass","MemberMap(QQ_p4,M())")
 	flow.Define("HighestGenQQMass","At(QQ_mass,Argmax(QQ_mass),-99)")
+        flow.AddExternalCode(header="qq2Hqq_uncert_scheme.h",cppfiles=["qq2Hqq_uncert_scheme.cpp"],ipaths=["."])
+
         return flow
