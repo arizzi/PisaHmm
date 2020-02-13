@@ -293,6 +293,9 @@ def makeEnvelopeShape(hn,sy,f, d, model):
 #    envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
     envelopeNBins = model.systematicDetail[sy_base]["envelopeNBins"]
     if not "envelopeBinning" in model.systematicDetail[sy_base]:  model.systematicDetail[sy_base]["envelopeBinning"]={}
+#uncomment if you want to use the standard binning (ie. ignore "envelopeNBins")
+#    if hn.split("___")[0] in model.rebin.keys(): 
+#        model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = model.rebin[hn.split("___")[0]]
     if not (hn, d) in model.systematicDetail[sy_base]["envelopeBinning"]:
         binning = [0]
         nomHisto = f[d].Get(hn).Clone()
@@ -311,6 +314,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
     
+    LHApdf_min = f[d].Get("LHApdf_down").GetVal()
+    LHApdf_max = f[d].Get("LHApdf_up").GetVal()
     pdfReplica = "LHEPdfHessian"
     pdfHessian = "LHEPdfReplica"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
@@ -341,7 +346,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     for bin_ in range(len(ratio)-1):
         if sumSquares[bin_]>0:
             rms = (sumSquares[bin_]/i - (sums[bin_]/i)**2)**0.5 
-            if  pdf == pdfHessian: ##if hessian
+            ##If hessian (numbers from checkLHAPdf.py and https://lhapdf.hepforge.org/pdfsets)
+            if LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]: 
                 rms = rms*(i**0.5)
       	    meanrms+=rms	
 	    ngood+=1
