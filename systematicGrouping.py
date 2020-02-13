@@ -26,6 +26,7 @@ def systematicGrouping (background, signal,jesList) :
     ZZ = ["ZZ2l2q","ZZ2l2n","ZZ4l"]
     WJets = ["W2J","W1J","W0J"]
     Hmm = ["vbfHmm","ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
+    HmmNoVBF = ["ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
 
     allSamples = {}
     for x in DY+EWK+TT+ST+WW+WZ+ZZ+WJets+Hmm : allSamples[x] = [x]
@@ -40,9 +41,9 @@ def systematicGrouping (background, signal,jesList) :
             },
    	"XSecAndNorm" :{
                 "type": "lnN",
-                "decorrelate": {"Hmm":Hmm, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "additionalNormalizations": ["LHERen","LHEFac"],#,"PDFX0"],
-                "groupValues":  {"Hmm":1.01,"EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
                 "type": "shapeOnly",
@@ -59,7 +60,7 @@ def systematicGrouping (background, signal,jesList) :
         "LHERen":{
                 "type": "shapeOnly",
                 #"type": "shape",
-                "decorrelate":{"Hmm":Hmm, "DY":DY, 
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,
 "EWK":EWK,
  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
@@ -68,7 +69,7 @@ def systematicGrouping (background, signal,jesList) :
         "LHEFac":{
                 #"type": "shapeAndNorm",
                 "type": "shapeOnly",
-                "decorrelate":{"Hmm":Hmm, "DY":DY, 
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,
 "EWK":EWK, 
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
@@ -157,6 +158,12 @@ def systematicGrouping (background, signal,jesList) :
     from btagvariations import btagsys
     btag={x[0:-4]:{"type": "shape", "value":1.0} for x in btagsys if "Down" in x}
     systematicDetail.update(btag)
+
+    sthsNames=["Yield","PTH200","Mjj60","Mjj120","Mjj350","Mjj700","Mjj1000","Mjj1500","PTH25","JET01"]
+    THUs={"THU_VBF_"+x:{"type": "shape", "decorrelate": {  "vbfHmm" :["vbfHmm"] }, "value":1.0} for x in sthsNames }
+    print THUs
+    systematicDetail.update(THUs)
+
 
     return systematicDetail
 

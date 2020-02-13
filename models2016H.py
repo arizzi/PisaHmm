@@ -106,6 +106,11 @@ systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfD
 
 systematicsToPlot+=["JESUp","JESDown"]
 
+sthsNames=["Yield","PTH200","Mjj60","Mjj120","Mjj350","Mjj700","Mjj1000","Mjj1500","PTH25","JET01"]
+THUs=["THU_VBF_"+x+"Up" for x in sthsNames]
+THUs+=["THU_VBF_"+x+"Down" for x in sthsNames]
+systematicsToPlot+=THUs
+
 from btagvariations import btagsys
 systematicsToPlot+=btagsys 
 

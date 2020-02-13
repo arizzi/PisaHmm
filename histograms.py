@@ -35,7 +35,7 @@ if False:
   histosPerSelectionFullJecs={
 }
   histosPerSelection={
-    "SignalRegion":      ["Higgs_m"],#ericHistos+bdtInputHistos,
+    "SignalRegion":      ["Higgs_m","DNN18Atan"],#ericHistos+bdtInputHistos,
 }
 
 
