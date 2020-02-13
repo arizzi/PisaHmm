@@ -42,8 +42,8 @@ def sumwsents(files):
    if sumws < 1: sumws = 1
    return sumws, LHEPdfSumw
 
-def isHessianPdf(LHAdown): ##See https://lhapdf.hepforge.org/pdfsets
-    for i in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400]:
+def isHessianPdf(LHAdown): ##Run checkLHAPdf.py and see https://lhapdf.hepforge.org/pdfsets 
+    for i in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]:
             if LHAdown==i or LHAdown==i+1: return True
     return False
 
