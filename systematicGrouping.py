@@ -133,6 +133,33 @@ def systematicGrouping (background, signal,jesList) :
   #              "envelopeNBins": 6,
   #              "envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
   #      },
+       ### Old PDF ###
+        #"PDFX1":{
+                #"type": "shapeOnly",
+                #"decorrelate":{
+                    #"ggH":["ggHmm"],
+                    #"vbfHmm":["vbfHmm"],
+                    #"DY" :["DY105VBF","DY105"],
+                    #"EWKZ" :["EWKZ","EWKZ105"],
+                #},
+                #"envelope": "LHEPdf",
+                #"envelopeNBins": 6,
+                #"envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
+        #},
+        "PDFX1":{
+                "type": "shapeOnly",
+                "decorrelate":{
+                    "ggH":["ggHmm"],
+                    "vbfHmm":["vbfHmm"],
+                    "DY" :["DY105VBF","DY105"],
+                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2"],
+                },
+                "envelope": "LHEPdf",
+                "envelopeFunction": "[0] + [1]*x",
+                "envelopeFunctionParameter": 1,
+                "envelopeFunctionParameterValues": (1, 0),
+                "envelopeFunctionRange": (0. , 4.5)
+        },
     }
     jes={x[7:-4]:{"type": "shape", "value":1.0} for x in jesList if "Down" in x}
 

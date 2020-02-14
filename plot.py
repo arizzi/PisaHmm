@@ -285,14 +285,94 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSamples, alphaUp = +
     else:
         print "No alternative sample for %s"%d
 
+''' #REBINNING using envelopeNBins
+    envelopeNBins = model.systematicDetail[sy_base]["envelopeNBins"]
+    if not (hn, d) in model.systematicDetail[sy_base]["envelopeBinning"]:
+        binning = [0]
+        nomHisto = f[d].Get(hn).Clone()
+        binWeight = nomHisto.Integral()/envelopeNBins
+        tmp = 0
+        for i in range(len(nomHisto)):
+            tmp += nomHisto.GetBinContent(i)
+            if tmp>binWeight:
+                tmp = 0
+                binning.append(nomHisto.GetBinLowEdge(i))
+        binning.append(nomHisto.GetBinLowEdge(i))
+        model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = binning
+'''
+
 def makeEnvelopeShape(hn,sy,f, d, model):
     sy_base = sy.replace("Up", "").replace("Down", "")
     envelope = model.systematicDetail[sy_base]["envelope"]
     envelopeFunction = model.systematicDetail[sy_base]["envelopeFunction"]
-#    envelopeFunctionParameter = model.systematicDetail[sy_base]["envelopeFunctionParameter"]
-#    envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
+    envelopeFunctionParameter = model.systematicDetail[sy_base]["envelopeFunctionParameter"]
+    envelopeFunctionParameterValues = model.systematicDetail[sy_base]["envelopeFunctionParameterValues"]
+    envelopeFunctionRange = model.systematicDetail[sy_base]["envelopeFunctionRange"]
+    if not "envelopeBinning" in model.systematicDetail[sy_base]:  model.systematicDetail[sy_base]["envelopeBinning"]={}
+#uncomment if you want to use the standard binning (ie. ignore "envelopeNBins")
+    if hn.split("___")[0] in model.rebin.keys(): 
+        model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = model.rebin[hn.split("___")[0]]
+    
+    envelopeBinning = model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)]
+    nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
+    nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
+    
+    LHApdf_min = f[d].Get("LHApdf_down").GetVal()
+    LHApdf_max = f[d].Get("LHApdf_up").GetVal()
+    pdfReplica = "LHEPdfHessian"
+    pdfHessian = "LHEPdfReplica"
+    if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
+    elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
+    else:
+        print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn) 
+        return
+    
+    ratio = nomHistoRebinned.Clone("ratio")
+    ratio.Reset()
+
+#    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
+    funct = ROOT.TF1("funct",envelopeFunction,envelopeFunctionRange[0],envelopeFunctionRange[1])
+    funct.SetParameters(*envelopeFunctionParameterValues)
+    par2 = 0
+    i = 0
+    hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+    badFit = 0
+    while hs and hs.GetMaximum()>0:
+        hs = hs.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning)).Clone(hs.GetName())
+        ratio.Divide(hs, nomHistoRebinned)
+        ratio.Fit(funct,"QN0R")
+        if abs(funct.GetParameter(0)-1)<0.2: 
+            par2 += funct.GetParameter(envelopeFunctionParameter)**2
+        else:
+            badFit += 1
+            print "BAD Fit", hn,sy,f, d, model, funct.GetParameter(0), funct.GetParameter(1), 
+        i = i + 1
+        hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+    
+    if not LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]: ##if hessian
+        par2 = (par2/(i-badFit))
+    
+    funct.SetParameters(*envelopeFunctionParameterValues)
+    if "Up" in sy:
+        funct.SetParameter(envelopeFunctionParameter, par2**0.5)
+    elif "Down" in sy:
+        funct.SetParameter(envelopeFunctionParameter, -par2**0.5)
+    else: raise Exception("Error in makeEnvelopeShape")
+
+    nhisto = nomHistoRebinned.Clone(hn+sy)
+    nhisto.Multiply(funct)
+    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+    return copy.copy(nhisto)
+
+def makeEnvelopeShapeOld(hn,sy,f, d, model):
+    sy_base = sy.replace("Up", "").replace("Down", "")
+    envelope = model.systematicDetail[sy_base]["envelope"]
+    envelopeFunction = model.systematicDetail[sy_base]["envelopeFunction"]
     envelopeNBins = model.systematicDetail[sy_base]["envelopeNBins"]
     if not "envelopeBinning" in model.systematicDetail[sy_base]:  model.systematicDetail[sy_base]["envelopeBinning"]={}
+#uncomment if you want to use the standard binning (ie. ignore "envelopeNBins")
+#    if hn.split("___")[0] in model.rebin.keys(): 
+#        model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = model.rebin[hn.split("___")[0]]
     if not (hn, d) in model.systematicDetail[sy_base]["envelopeBinning"]:
         binning = [0]
         nomHisto = f[d].Get(hn).Clone()
@@ -311,6 +391,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
     
+    LHApdf_min = f[d].Get("LHApdf_down").GetVal()
+    LHApdf_max = f[d].Get("LHApdf_up").GetVal()
     pdfReplica = "LHEPdfHessian"
     pdfHessian = "LHEPdfReplica"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
@@ -341,7 +423,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     for bin_ in range(len(ratio)-1):
         if sumSquares[bin_]>0:
             rms = (sumSquares[bin_]/i - (sums[bin_]/i)**2)**0.5 
-            if  pdf == pdfHessian: ##if hessian
+            ##If hessian (numbers from checkLHAPdf.py and https://lhapdf.hepforge.org/pdfsets)
+            if LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]: 
                 rms = rms*(i**0.5)
       	    meanrms+=rms	
 	    ngood+=1
@@ -351,26 +434,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         ratio.SetBinError(bin_, rms)
 
     meanrms/=ngood if ngood !=0 else 1 
-#    print 'mean rms',meanrms
-    #        print bin_, i, sum_, sumSquare, rms
-        
-    
-#   funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
- #  funct.SetParameters(*envelopeFunctionParameterValues)
-    
-  # ratio.Fit(funct,"QN0")
-   #parError = funct.GetParError(envelopeFunctionParameter)
-    
-#    funct.SetParameters(*envelopeFunctionParameterValues)
- #   if "Up" in sy:
-  #      funct.FixParameter(envelopeFunctionParameter, +parError)
-   # elif "Down" in sy:
-    #    funct.FixParameter(envelopeFunctionParameter, -parError)
-   # else: raise Exception("Error in makeEnvelopeShape")
-
-    #ratio.Fit(funct,"QN0")
     funct = ROOT.TF1("funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax()),nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
-#    print "funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax())
     nhisto = f[d].Get(hn).Clone(hn+sy)
     if hn.split("___")[0] in model.rebin.keys(): nhisto = (nhisto.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     copyhisto = nhisto.Clone("copya")
@@ -378,19 +442,15 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         x = nhisto.GetBinCenter(bin_)
         rms = ratio.GetBinError(ratio.FindBin(x))
         f = funct.Eval(x)
-#        if "DY105_2018AMCPY" in d: ##DEBUG
-#            print "DEBUG3", bin_, f, copyhisto.GetBinContent(bin_), rms, (1. + f * rms), copyhisto.GetBinContent(bin_) * (1. + f * rms), copyhisto.GetBinContent(bin_) * (f * rms)
         nhisto.SetBinContent(bin_, copyhisto.GetBinContent(bin_) * (1. + f * rms) )
         nhisto.SetBinError(bin_, 0)
-#    nhisto.Multiply(funct)
-#   nhisto.Add(nomHistoRebinned)
-#    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral()
     ### DEBUG: Save ratio plots
 #    testFile = ROOT.TFile("debug/%s_%s_%s.root"%(hn,sy, d),"recreate")
 #    funct.Write()
 #    ratio.Write()
 #    testFile.Close()
     return copy.copy(nhisto)
+
 
 f={}
 folder=args.folder
