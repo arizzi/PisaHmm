@@ -78,19 +78,19 @@ def systematicGrouping (background, signal,jesList) :
         "Alternative":{
                 "type": "shape",
                 "value": 1.0,
-                "powerUp":  +1.,   ## up   = ratio^alpha_up   * nom
+                "powerUp":  +0.2,   ## up   = ratio^alpha_up   * nom
                 "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
                    "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],#"EWKZ":["EWKZ"],
                 },
-                "alternativeSample": {
+                "alternativeSamples": {
                     "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
-                    "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105FIX_2016MGHERWIG"),
-                    "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105FIX_2017MGHERWIG"),
-                    "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105FIX_2018MGHERWIG"),
-                    "EWKZ105FIX2_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105FIX2_2016MGHERWIG"),
-                    "EWKZ105FIX2_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105FIX2_2017MGHERWIG"),
-                    "EWKZ105FIX2_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105FIX2_2018MGHERWIG"),
+                    "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
+                    "EWKZ105FIX2_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105FIX2_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105FIX2_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
                     "EWKZ105_2016MGHERWIG":     ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
                     "EWKZ105_2017MGHERWIG":     ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
                     "EWKZ105_2018MGHERWIG":     ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
@@ -121,18 +121,18 @@ def systematicGrouping (background, signal,jesList) :
       #          "envelopeNBins": 6,
        #         "envelopeFunction": "1.+{up}*{rms}",
        # },
-        "PDFX1":{
-                "type": "shapeOnly",
-                "decorrelate":{
-                    "ggH":["ggHmm"],
-                    "vbfHmm":["vbfHmm"],
-                    "DY" :["DY105VBF","DY105"],
-                    "EWKZ" :["EWKZ","EWKZ105"],
-                },
-                "envelope": "LHEPdf",
-                "envelopeNBins": 6,
-                "envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
-        },
+#        "PDFX1":{
+#                "type": "shapeOnly",
+ #               "decorrelate":{
+  #                  "ggH":["ggHmm"],
+  #                  "vbfHmm":["vbfHmm"],
+  #                  "DY" :["DY105VBF","DY105"],
+  #                  "EWKZ" :["EWKZ","EWKZ105FIX2","EWKZ105"],
+  #              },
+  #              "envelope": "LHEPdf",
+  #              "envelopeNBins": 6,
+  #              "envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
+  #      },
     }
     jes={x[7:-4]:{"type": "shape", "value":1.0} for x in jesList if "Down" in x}
 

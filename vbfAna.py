@@ -85,7 +85,6 @@ addQGLweight(flow)
 addPreFiring(flow)
 
 from systematics import *
-addSTXS(flow)
 addLheScale(flow)
 addPSWeights(flow)
 addBtag(flow)
@@ -103,6 +102,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
+addSTXS(flow)
 addLhePdf(flow)
 addDecorrelatedJER(flow)
 addCompleteJecs(flow,year)

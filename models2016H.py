@@ -4,6 +4,7 @@ background={
 "DY":["DY105_2016AMCPY"], ## Alternative: "DY105_2016MGPY"
 "DYVBF":["DY105VBF_2016AMCPY"], ## Alternative: "DY105VBF_2016MGPY"
 "EWKZ":[
+   #"EWKZ105FIX2_2016MGHERWIG",
    "EWKZ105FIX2_2016MGHERWIG",
    # interference with DY
    "EWKZint_2016MGPY"
