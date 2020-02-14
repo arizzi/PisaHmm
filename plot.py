@@ -313,9 +313,12 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     if hn.split("___")[0] in model.rebin.keys(): 
         model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = model.rebin[hn.split("___")[0]]
     
-    envelopeBinning = model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)]
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
-    nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
+    if (hn, d) in model.systematicDetail[sy_base]["envelopeBinning"]:
+        envelopeBinning = model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)]
+        nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
+    else:
+        envelopeBinning = None
     
     pdfReplica = "LHEPdfReplica"
     pdfHessian = "LHEPdfHessian"
@@ -345,7 +348,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     badFit = 0
     while hs and hs.GetMaximum()>0:
-        hs = hs.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning)).Clone(hs.GetName())
+        if envelopeBinning: hs = hs.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning)).Clone(hs.GetName())
         ratio.Divide(hs, nomHistoRebinned)
         ratio.Fit(funct,"QN0R")
         if abs(funct.GetParameter(0)-1)<0.2: 
@@ -356,7 +359,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         i = i + 1
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     
-    if not ((LHApdf_min < 0 and pdf == pdfHessian ) or LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]): ##if not hessian
+    if not ((LHApdf_min < 0 and pdf == pdfHessian ) or LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]) and (i-badFit)>0: ##if not hessian
         par2 = (par2/(i-badFit))
     
     funct.SetParameters(*envelopeFunctionParameterValues)
