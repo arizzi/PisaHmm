@@ -317,15 +317,22 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
     
-    LHApdf_min = f[d].Get("LHApdf_down").GetVal()
-    LHApdf_max = f[d].Get("LHApdf_up").GetVal()
-    pdfReplica = "LHEPdfHessian"
-    pdfHessian = "LHEPdfReplica"
+    pdfReplica = "LHEPdfReplica"
+    pdfHessian = "LHEPdfHessian"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
         print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn) 
         return
+    
+    try:
+        LHApdf_min = f[d].Get("LHApdf_down").GetVal()
+        LHApdf_max = f[d].Get("LHApdf_up").GetVal()
+    except:
+        print "WARNING makeEnvelopeShape: LHApdf_down not found", hn,sy,f, d, model
+        print "I will consider ", pdf
+        LHApdf_min = -1
+        LHApdf_max = -1
     
     ratio = nomHistoRebinned.Clone("ratio")
     ratio.Reset()
@@ -349,7 +356,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         i = i + 1
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     
-    if not LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]: ##if hessian
+    if not ((LHApdf_min < 0 and pdf == pdfHessian ) or LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]): ##if not hessian
         par2 = (par2/(i-badFit))
     
     funct.SetParameters(*envelopeFunctionParameterValues)
@@ -391,15 +398,22 @@ def makeEnvelopeShapeOld(hn,sy,f, d, model):
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
     nomHistoRebinned = nomHistoRebinned.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning))
     
-    LHApdf_min = f[d].Get("LHApdf_down").GetVal()
-    LHApdf_max = f[d].Get("LHApdf_up").GetVal()
-    pdfReplica = "LHEPdfHessian"
-    pdfHessian = "LHEPdfReplica"
+    pdfReplica = "LHEPdfReplica"
+    pdfHessian = "LHEPdfHessian"
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
         print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn) 
         return
+    
+    try:
+        LHApdf_min = f[d].Get("LHApdf_down").GetVal()
+        LHApdf_max = f[d].Get("LHApdf_up").GetVal()
+    except:
+        print "WARNING makeEnvelopeShape: LHApdf_down not found", hn,sy,f, d, model
+        print "I will consider ", pdf
+        LHApdf_min = -1
+        LHApdf_max = -1
     
     ratio = nomHistoRebinned.Clone("ratio")
     ratio.Reset()
@@ -424,7 +438,7 @@ def makeEnvelopeShapeOld(hn,sy,f, d, model):
         if sumSquares[bin_]>0:
             rms = (sumSquares[bin_]/i - (sums[bin_]/i)**2)**0.5 
             ##If hessian (numbers from checkLHAPdf.py and https://lhapdf.hepforge.org/pdfsets)
-            if LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]: 
+            if not ((LHApdf_min < 0 and pdf == pdfHessian ) or LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]): ##if not hessian
                 rms = rms*(i**0.5)
       	    meanrms+=rms	
 	    ngood+=1
@@ -859,6 +873,7 @@ if makeWorkspace:
                             all_histo_all_syst[hn]["data"+year][syst] = all_histo_all_syst[hn][d][syst].Clone()
                         else: 
                             all_histo_all_syst[hn]["data"+year][syst].Add(all_histo_all_syst[hn][d][syst])
+#    print("DEBUG", model, all_histo_all_syst, year)
     WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
 else :
    from multiprocessing import Pool
