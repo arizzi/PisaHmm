@@ -347,9 +347,20 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     i = 0
     hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     badFit = 0
+    hs0=None
     while hs and hs.GetMaximum()>0:
         if envelopeBinning: hs = hs.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning)).Clone(hs.GetName())
-        ratio.Divide(hs, nomHistoRebinned)
+        if i==0:
+ 	    if LHApdf_min == 91400 :
+ 	        hs0 = hs.Clone("hs0")
+		i+=1 
+		badFit+=1
+                hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
+		continue
+  	    else :
+	        hs0=nomHistoRebinned
+	
+        ratio.Divide(hs, hs0)
         ratio.Fit(funct,"QN0R")
         if abs(funct.GetParameter(0)-1)<0.2: 
             par2 += funct.GetParameter(envelopeFunctionParameter)**2
@@ -360,6 +371,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     
     if not ((LHApdf_min < 0 and pdf == pdfHessian ) or LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]) and (i-badFit)>0: ##if not hessian
+	print "REPLICAS, not HESSIAN for" , hn,sy, f, d,model
         par2 = (par2/(i-badFit))
     
     funct.SetParameters(*envelopeFunctionParameterValues)

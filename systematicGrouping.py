@@ -42,7 +42,7 @@ def systematicGrouping (background, signal,jesList) :
    	"XSecAndNorm" :{
                 "type": "lnN",
                 "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
-                "additionalNormalizations": ["LHERen","LHEFac"],#,"PDFX0"],
+                "additionalNormalizations": ["LHERen","LHEFac"], #"PDFX0"],
                 "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
@@ -146,12 +146,26 @@ def systematicGrouping (background, signal,jesList) :
                 #"envelopeNBins": 6,
                 #"envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
         #},
+   "PDFX0":{
+                "type": "shape",
+                "decorrelate":{
+                    "ggH":["ggHmm"],
+                    "vbfHmm":["vbfHmm"],
+                    "DY" :["DY105VBF","DY105"],
+                    "EWKZ" :["EWKZ","EWKZ105"],
+                },
+                "envelope": "LHEPdf",
+                "envelopeFunction": "[0] + [1]*x",
+                "envelopeFunctionParameter": 0,
+                "envelopeFunctionParameterValues": (1, 0),
+                "envelopeFunctionRange": (0. , 4.5)
+        },
         "PDFX1":{
                 "type": "shapeOnly",
                 "decorrelate":{
                     "ggH":["ggHmm"],
                     "vbfHmm":["vbfHmm"],
-                    "DY" :["DY105VBF","DY105"],
+                    "DY" : DY,
                     "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2"],
                 },
                 "envelope": "LHEPdf",
