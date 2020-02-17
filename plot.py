@@ -363,7 +363,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
         ratio.Divide(hs, hs0)
         ratio.Fit(funct,"QN0R")
         if abs(funct.GetParameter(0)-1)<0.2: 
-            par2 += funct.GetParameter(envelopeFunctionParameter)**2
+            par2 += (funct.GetParameter(envelopeFunctionParameter) - envelopeFunctionParameterValues[envelopeFunctionParameter])**2
         else:
             badFit += 1
             print "BAD Fit", hn,sy,f, d, model, funct.GetParameter(0), funct.GetParameter(1), 
@@ -376,9 +376,9 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     
     funct.SetParameters(*envelopeFunctionParameterValues)
     if "Up" in sy:
-        funct.SetParameter(envelopeFunctionParameter, par2**0.5)
+        funct.SetParameter(envelopeFunctionParameter, envelopeFunctionParameterValues[envelopeFunctionParameter] + par2**0.5)
     elif "Down" in sy:
-        funct.SetParameter(envelopeFunctionParameter, -par2**0.5)
+        funct.SetParameter(envelopeFunctionParameter, envelopeFunctionParameterValues[envelopeFunctionParameter] - par2**0.5)
     else: raise Exception("Error in makeEnvelopeShape")
 
     nhisto = nomHistoRebinned.Clone(hn+sy)
