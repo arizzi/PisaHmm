@@ -49,28 +49,35 @@ hSignal     = fSignal.Get(variable+"___SignalRegion").Clone()
 hBackground = fBackground.Get(variable+"___SignalRegion").Clone()
 
 
-
-minNumberOfEventPerBin = 0.6
 xMax=5.
-binning_BDT=[xMax]
-
 binMinWidth = 0.01
 Nbins_binning = hSignal.GetNbinsX()
 MinNumberOfBin_inBinning = int(binMinWidth/xMax*Nbins_binning)
 binLimitDown = Nbins_binning
 
+minNumberOfEventPerBin = 0.3
 hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"])
-print "Total number of events:  ", hSignal.Integral(0, Nbins_binning+1)
+tot=hSignal.Integral(0, Nbins_binning+1)
+N=tot*2.5
+print "Total number of events:  ", tot
+delta=2.*(tot-minNumberOfEventPerBin*N)/N**2
+print "min size",minNumberOfEventPerBin, "step",delta, "N",N,"tot",tot
+
+
+binning_BDT=[xMax]
+
+
         
 while binLimitDown>0 :
             binning_BDT.append((1.*binLimitDown*xMax)/Nbins_binning)
             binLimitUp = binLimitDown
             binLimitDown        = FindBinDown(hBackground, hSignal, binLimitUp, minNumberOfEventPerBin, MinNumberOfBin_inBinning)
-
+	    minNumberOfEventPerBin+=delta
 
 print "    \'"+variable+"\' : [0",
 for n in range(len(binning_BDT)-1, 0, -1) : 
     print  ",", binning_BDT[n],
         
-print "]"      
+print "]"     
+print len(binning_BDT) 
 

@@ -18,7 +18,9 @@ samples={
 #"DY105Inclusive_2017MGPY"      : {"xsec": 41.25, "filter": "MqqGen < 350"},
 
 "DY105_2017AMCPY"     : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag"},
+"DY105NEW_2017AMCPY"     : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag"},
 "DY105_2017MGPY"      : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag", "training":False},
+
 "DY105VBF_2017AMCPY"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
 #"DY105VBF_2017AMCPYnew"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
 "DY105VBF_2017MGPY"   : {"xsec": 2.04, "filter":  "VBFFilterFlag", "training":False},

@@ -15,6 +15,7 @@ samples={
 #"DY105Inclusuve_2018MGPY"      : {"xsec": 41.25},
 
 "DY105_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
+"DY105NEW_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
 "DY105_2018MGPY"      : {"xsec": 47.17, "filter": "VBFFilterAntiFlag"},
 "DY105VBF_2018AMCPY"  : {"xsec": 2.03, "filter": "VBFFilterFlag" },# "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_7_2/DY105VBF_2018AMCPY.root"], "training":False}, #this name has to change
 "DY105VBF_2018MGPY"   : {"xsec": 2.03, "filter": "VBFFilterFlag"},

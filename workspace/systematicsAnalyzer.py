@@ -341,7 +341,7 @@ function toggleChann(id) {
 		     rU.SetStats(0);
 		     rU.Draw("hist")
 		     rU.SetTitle("")
-		     rU.GetYaxis().SetRangeUser(0.75,1.25)
+		     rU.GetYaxis().SetRangeUser(0.9,1.10)
                      rU.GetYaxis().SetNdivisions(505);
                      rU.GetYaxis().SetTitleSize(20);
                      rU.GetYaxis().SetTitleFont(43);

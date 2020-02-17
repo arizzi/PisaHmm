@@ -18,16 +18,16 @@ combineCards.py run2016=datacard2016.txt run2017=datacard2017.txt run2018=dataca
 
 #TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE $SIGNALBDT"
 #TOFIT="$SIDEBDT $ZREGIONBDT"
-TOMASK="$ZCONTROL $SIGNAL $ZREGION"
-TOFIT="$SIDE"
+TOMASK="$ZCONTROL $SIGNAL" # $ZREGION"
+TOFIT="$SIDE $ZREGION"
 PREFITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 PREFITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 PREFIT="--setParameters $PREFITMASK$PREFITNOMASK"
 
 #TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE"
 #TOFIT="$SIDEBDT $ZREGIONBDT $SIGNALBDT"
-TOMASK="$ZCONTROL $ZREGION"
-TOFIT="$SIDE $SIGNAL" # $ZREGION"
+TOMASK="$ZCONTROL" # $ZREGION"
+TOFIT="$SIDE $SIGNAL $ZREGION"
 FITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 FITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 FIT="--setParameters $FITMASK$FITNOMASK"
@@ -41,6 +41,7 @@ NAME=cmb
 if /bin/true ; then
 text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel    --channel-masks ${DCTXT}   --PO  'map=.*Hmm.*:r[1.,-10,10]'  >>${NAME}.log
 
+combine -M Significance -t -1  combined.root ${FIT}r=1  --toysFrequentist  >>${NAME}.log
 combine  -M MultiDimFit -n$NAME --saveWorkspace $PREFIT combined.root --verbose 9   >>${NAME}.log
 
 combine -M Significance --snapshotName MultiDimFit -t -1  higgsCombine${NAME}.MultiDimFit.mH120.root ${FIT}r=1   >>${NAME}.log
