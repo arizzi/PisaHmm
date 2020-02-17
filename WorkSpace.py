@@ -210,7 +210,7 @@ def modifySystematicDetail(systematicDetail, listAllSample_noYear, all_histo_all
                 systematicDetail[syst]["decorrelate"].pop(g, None)
           
         if len(systematicDetail[syst]["decorrelate"])==0 : systematicDetail.pop(syst, None)
-        elif len(systematicDetail[syst]["decorrelate"].keys()) > 1:
+        elif not re.search("Norm$", syst):
             for g in systematicDetail[syst]["decorrelate"] :
                 systematicDetail[syst+g] =copy.deepcopy(systematicDetail[syst])
                 if systematicDetail[syst]["type"] != "lnN" and systematicDetail[syst]["type"] != "normalizationOnly" :
@@ -224,11 +224,7 @@ def modifySystematicDetail(systematicDetail, listAllSample_noYear, all_histo_all
                                         #print "--AA--AA--AA--AA ",g, " \t ",samp, " \t ",sampName, " \t ", all_histo_all_syst[x].keys()#, " \t ", 
                                         all_histo_all_syst[x][samp][syst+g+"Up"] = copy.deepcopy(all_histo_all_syst[x][samp][syst+"Up"])
                                         all_histo_all_syst[x][samp][syst+g+"Down"] = copy.deepcopy(all_histo_all_syst[x][samp][syst+"Down"])
-                                        #all_histo_all_syst[x][samp].pop(syst+"Up", None)
-                                        #all_histo_all_syst[x][samp].pop(syst+"Down", None)
-                                        
-                                        
-                            #all_histo_all_syst[x][""]
+
                             
                 systematicDetail[syst+g].pop("decorrelate", None)
                 systematicDetail[syst+g]["decorrelate"] = {g : systematicDetail[syst]["decorrelate"][g]}
@@ -286,10 +282,12 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
                         value = 0.
                         for samp in all_histo_all_syst[x] :
                             if re.search(s+"_", samp) :
+                                
                                 systName = syst[:-len(sKey)]
                                 #print "CCCCC", samp, "  \t ",  systName, "  \t ",s
                                 if re.search("__", syst) : systName = re.match("^.*__(.*)$",syst).group(1)[:-len(sKey)]
                                 Nbins = all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1
+                                
                                 variationUp   = 1. if all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)<=0           else all_histo_all_syst[x][samp][systName+"Up"].Integral(0,Nbins) / all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)
                                 variationDown = 1. if all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)<=0 else all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)         / all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)
                                 value = (variationUp + variationDown)/2.
