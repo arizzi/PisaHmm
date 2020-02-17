@@ -26,6 +26,7 @@ def systematicGrouping (background, signal,jesList) :
     ZZ = ["ZZ2l2q","ZZ2l2n","ZZ4l"]
     WJets = ["W2J","W1J","W0J"]
     Hmm = ["vbfHmm","ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
+    HmmNoVBF = ["ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
 
     allSamples = {}
     for x in DY+EWK+TT+ST+WW+WZ+ZZ+WJets+Hmm : allSamples[x] = [x]
@@ -40,9 +41,9 @@ def systematicGrouping (background, signal,jesList) :
             },
    	"XSecAndNorm" :{
                 "type": "lnN",
-                "decorrelate": {"Hmm":Hmm, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
-                "additionalNormalizations": ["LHERen","LHEFac"],#,"PDFX0"],
-                "groupValues":  {"Hmm":1.01,"EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+                "additionalNormalizations": ["LHERen","LHEFac"], #"PDFX0"],
+                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
                 "type": "shapeOnly",
@@ -59,7 +60,7 @@ def systematicGrouping (background, signal,jesList) :
         "LHERen":{
                 "type": "shapeOnly",
                 #"type": "shape",
-                "decorrelate":{"Hmm":Hmm, "DY":DY, 
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,
 "EWK":EWK,
  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
@@ -68,32 +69,34 @@ def systematicGrouping (background, signal,jesList) :
         "LHEFac":{
                 #"type": "shapeAndNorm",
                 "type": "shapeOnly",
-                "decorrelate":{"Hmm":Hmm, "DY":DY, 
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,
 "EWK":EWK, 
 "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
+
         "Alternative":{
                 "type": "shape",
                 "value": 1.0,
-                "powerDown": -0.2, ## down = nom * (up/nom)^powerDown 
+                "powerUp":  +0.2,   ## up   = ratio^alpha_up   * nom
+                "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
                    "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],#"EWKZ":["EWKZ"],
                 },
-                "alternativeSample": {
-                    "vbfHmm_2016AMCPY":"vbfHmm_2016AMCHERWIG",
-                    "EWKZ105FIX_2016MGHERWIG":"EWKZ105_2016MGPY",
-                    "EWKZ105FIX_2017MGHERWIG":"EWKZ105_2017MGPY",
-                    "EWKZ105FIX_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ105FIX2_2016MGHERWIG":"EWKZ105_2016MGPY",
-                    "EWKZ105FIX2_2017MGHERWIG":"EWKZ105_2017MGPY",
-                    "EWKZ105FIX2_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ105_2016MGHERWIG":"EWKZ105_2016MGPY",
-                    "EWKZ105_2017MGHERWIG":"EWKZ105_2017MGPY",
-                    "EWKZ105_2018MGHERWIG":"EWKZ105_2018MGPY",
-                    "EWKZ_2016MGHERWIG":"EWKZ_2016MGPY",
-                    "EWKZ_2017MGHERWIG":"EWKZ_2017MGPY",
-                    "EWKZ_2018MGHERWIG":"EWKZ_2018MGPY"
+                "alternativeSamples": {
+                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
+                    "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
+                    "EWKZ105FIX2_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105FIX2_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105FIX2_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
+                    "EWKZ105_2016MGHERWIG":     ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105_2017MGHERWIG":     ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105_2018MGHERWIG":     ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
+                    "EWKZ_2016MGHERWIG":        ("EWKZ_2016MGPY",    "EWKZ_2016MGHERWIG"),
+                    "EWKZ_2017MGHERWIG":        ("EWKZ_2017MGPY",    "EWKZ_2017MGHERWIG"),
+                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG")
                 },
         },
         ##"Alternative":{
@@ -119,17 +122,58 @@ def systematicGrouping (background, signal,jesList) :
        #         "envelopeFunction": "1.+{up}*{rms}",
        # },
 #        "PDFX1":{
- #               "type": "shapeOnly",
-  #              "decorrelate":{
-   #                 "ggH":["ggHmm"],
-    #                "vbfHmm":["vbfHmm"],
-     #               "DY" :["DY105VBF","DY105"],
-      #              "EWKZ" :["EWKZ","EWKZ105"],
-       #         },
-        #        "envelope": "LHEPdf",
-         #       "envelopeNBins": 6,
-          #      "envelopeFunction": "1.+{up}*2*{rms}*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
-       # },
+#                "type": "shapeOnly",
+ #               "decorrelate":{
+  #                  "ggH":["ggHmm"],
+  #                  "vbfHmm":["vbfHmm"],
+  #                  "DY" :["DY105VBF","DY105"],
+  #                  "EWKZ" :["EWKZ","EWKZ105FIX2","EWKZ105"],
+  #              },
+  #              "envelope": "LHEPdf",
+  #              "envelopeNBins": 6,
+  #              "envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
+  #      },
+       ### Old PDF ###
+        #"PDFX1":{
+                #"type": "shapeOnly",
+                #"decorrelate":{
+                    #"ggH":["ggHmm"],
+                    #"vbfHmm":["vbfHmm"],
+                    #"DY" :["DY105VBF","DY105"],
+                    #"EWKZ" :["EWKZ","EWKZ105"],
+                #},
+                #"envelope": "LHEPdf",
+                #"envelopeNBins": 6,
+                #"envelopeFunction": "{up}*2*(x-0.5*({xmax}+{xmin}))/({xmax}-{xmin})",
+        #},
+   "PDFX0":{
+                "type": "shape",
+                "decorrelate":{
+                    "ggH":["ggHmm"],
+                    "vbfHmm":["vbfHmm"],
+                    "DY" :["DY105VBF","DY105"],
+                    "EWKZ" :["EWKZ","EWKZ105"],
+                },
+                "envelope": "LHEPdf",
+                "envelopeFunction": "[0] + [1]*x",
+                "envelopeFunctionParameter": 0,
+                "envelopeFunctionParameterValues": (1, 0),
+                "envelopeFunctionRange": (0. , 4.5)
+        },
+        "PDFX1":{
+                "type": "shapeOnly",
+                "decorrelate":{
+                    "ggH":["ggHmm"],
+                    "vbfHmm":["vbfHmm"],
+                    "DY" : DY,
+                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2"],
+                },
+                "envelope": "LHEPdf",
+                "envelopeFunction": "[0] + [1]*x",
+                "envelopeFunctionParameter": 1,
+                "envelopeFunctionParameterValues": (1, 0),
+                "envelopeFunctionRange": (0. , 4.5)
+        },
     }
     jes={x[7:-4]:{"type": "shape", "value":1.0} for x in jesList if "Down" in x}
 
@@ -155,6 +199,12 @@ def systematicGrouping (background, signal,jesList) :
     from btagvariations import btagsys
     btag={x[0:-4]:{"type": "shape", "value":1.0} for x in btagsys if "Down" in x}
     systematicDetail.update(btag)
+
+    sthsNames=["Yield","PTH200","Mjj60","Mjj120","Mjj350","Mjj700","Mjj1000","Mjj1500","PTH25","JET01"]
+    THUs={"THU_VBF_"+x:{"type": "shape", "decorrelate": {  "vbfHmm" :["vbfHmm"] }, "value":1.0} for x in sthsNames }
+    print THUs
+    systematicDetail.update(THUs)
+
 
     return systematicDetail
 

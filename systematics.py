@@ -39,14 +39,17 @@ def addPSWeights(flow):
      flow.VariationWeight("PSWeightFSRUp")
      flow.VariationWeight("PSWeightFSRDown")
 
-    #we really need only 0,1,3
-    #flow.VariationWeightArray("LHEScaleWeightSafe",4,filt=lambda sname,hname,wname : "__syst__" not in hname and "__syst__" not in sname ) #systematic variations are 1D, let's avoid systematics of systematic
-    #this is not obvious as N replicas can change... think about it
-    #flow.AddVariationWeightArray("LHEPdfWeight",30,filt=lambda hname,wname : "__syst__" not in hname ) #systematic variations are 1D, let's avoid systematics of systematic
+def addSTXS(flow):
+    sthsNames=["Yield","PTH200","Mjj60","Mjj120","Mjj350","Mjj700","Mjj1000","Mjj1500","PTH25","JET01"]
+#    flow.AddExternalCode(header="qq2Hqq_uncert_scheme.h",cppfiles=["qq2Hqq_uncert_scheme.cpp"],ipaths=["."])
+    #double vbf_uncert_stage_1_1(int source, int event_STXS, double Nsigma=1.0);
+    for i in range(10):
+	flow.Define("THU_VBF_"+sthsNames[i]+"Up","vbf_uncert_stage_1_1(%d,HTXS_stage1_1_fine_cat_pTjet30GeV,1.)"%i)
+	flow.Define("THU_VBF_"+sthsNames[i]+"Down","vbf_uncert_stage_1_1(%d,HTXS_stage1_1_fine_cat_pTjet30GeV,-1.)"%i)
+        flow.VariationWeight("THU_VBF_"+sthsNames[i]+"Up")
+        flow.VariationWeight("THU_VBF_"+sthsNames[i]+"Down")
 
 
-#create btag systematics
-#this should be simplified
 def addBtag(flow):
     btagsys=["Jet_btagSF_shape_up_jes","Jet_btagSF_shape_down_jes","Jet_btagSF_shape_up_lf","Jet_btagSF_shape_down_lf","Jet_btagSF_shape_up_hf","Jet_btagSF_shape_down_hf","Jet_btagSF_shape_up_hfstats1","Jet_btagSF_shape_down_hfstats1","Jet_btagSF_shape_up_hfstats2","Jet_btagSF_shape_down_hfstats2","Jet_btagSF_shape_up_lfstats1","Jet_btagSF_shape_down_lfstats1","Jet_btagSF_shape_up_lfstats2","Jet_btagSF_shape_down_lfstats2","Jet_btagSF_shape_up_cferr1","Jet_btagSF_shape_down_cferr1","Jet_btagSF_shape_up_cferr2","Jet_btagSF_shape_down_cferr2"]
     names=[x[17:] for x in btagsys]

@@ -42,8 +42,8 @@ def sumwsents(files):
    if sumws < 1: sumws = 1
    return sumws, LHEPdfSumw
 
-def isHessianPdf(LHAdown): ##See https://lhapdf.hepforge.org/pdfsets
-    for i in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400]:
+def isHessianPdf(LHAdown): ##Run checkLHAPdf.py and see https://lhapdf.hepforge.org/pdfsets 
+    for i in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]:
             if LHAdown==i or LHAdown==i+1: return True
     return False
 
@@ -85,7 +85,6 @@ addQGLweight(flow)
 addPreFiring(flow)
 
 from systematics import *
-
 addLheScale(flow)
 addPSWeights(flow)
 addBtag(flow)
@@ -103,6 +102,7 @@ print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
+addSTXS(flow)
 addLhePdf(flow)
 addDecorrelatedJER(flow)
 addCompleteJecs(flow,year)
@@ -215,6 +215,10 @@ def f(ar):
 		  rdf=rdf.Define("PrefiringWeightDown","L1PreFiringWeight_Dn")
 	   print "Is herwig?",("true" if "HERWIG" in s else "false"), s
 	   rdf=rdf.Define("isHerwig",("true" if "HERWIG" in s else "false"))
+	   if  "HTXS_stage1_1_fine_cat_pTjet30GeV" not in list(rdf.GetColumnNames()) :
+	       print "Add fake STXS category"
+               rdf=rdf.Define("HTXS_stage1_1_fine_cat_pTjet30GeV","0l")
+	       print "Added"
 	   if  "ggH" in s :
                print "Adding ggH weights"
                rdf=rdf.Define("nnlopsWeight","evalNnlopsWeight(HTXS_njets30,HTXS_Higgs_pt)")
