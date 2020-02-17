@@ -282,7 +282,6 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
                         value = 0.
                         for samp in all_histo_all_syst[x] :
                             if re.search(s+"_", samp) :
-                                
                                 systName = syst[:-len(sKey)]
                                 #print "CCCCC", samp, "  \t ",  systName, "  \t ",s
                                 if re.search("__", syst) : systName = re.match("^.*__(.*)$",syst).group(1)[:-len(sKey)]
