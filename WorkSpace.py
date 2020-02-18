@@ -385,7 +385,7 @@ def modifyRegionName(region) :
     
 
 
-def createWorkSpace(model, all_histo_all_syst, year) :
+def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     print "WorkSpace creation"
     nBins = {}
     varName = {}
@@ -405,8 +405,8 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     
     region = collections.OrderedDict(sorted(region.items()))
     
-    os.system("mkdir -p workspace")
-    datacard=open("workspace/datacard"+year+model.name+".txt","w")
+    os.system("mkdir -p "+outdir)
+    datacard=open(outdir+"/datacard"+year+model.name+".txt","w")
     
     datacard.write("imax "+str(len(all_histo_all_syst.keys()))+"  number of channels\n")
     datacard.write("jmax *  number of backgrounds\n")
@@ -499,12 +499,12 @@ def createWorkSpace(model, all_histo_all_syst, year) :
     
     
     mergeToSys(model.systematicDetail, listAllSample_noYear) 
-    #printSystematicGrouping (model.systematicDetail, "grouping6.py") 
+    printSystematicGrouping (model.systematicDetail, "grouping6.py") 
 
 
 
         
-    writeSystematic ("workspace/fileCombine"+year+model.name+".root", region, varName, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
+    writeSystematic (outdir+"/fileCombine"+year+model.name+".root", region, varName, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
 
 
 
