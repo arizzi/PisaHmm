@@ -891,7 +891,7 @@ if makeWorkspace:
                         else: 
                             all_histo_all_syst[hn]["data"+year][syst].Add(all_histo_all_syst[hn][d][syst])
 #    print("DEBUG", model, all_histo_all_syst, year)
-    WorkSpace.createWorkSpace(model, all_histo_all_syst, year) #,outdir)
+    WorkSpace.createWorkSpace(model, all_histo_all_syst, year,outdir)
 else :
    from multiprocessing import Pool
    runpool = Pool(20)
