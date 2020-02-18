@@ -11,10 +11,12 @@ parser.add_argument("model", help="model to plot")
 parser.add_argument("-p", "--postfit", help="plot postfit plot", action="store_true")
 parser.add_argument("-v", "--variablesToFit", nargs="*")
 parser.add_argument("-f", "--folder",default="out/",help="input folder")
-parser.add_argument("-o", "--outfolder",default="figure/",help="input folder")
+parser.add_argument("-o", "--outfolder",default="figure/",help="fgure output folder folder")
+parser.add_argument("-w", "--workspace",default="workspace/",help="workspace output folder")
 parser.print_help()
 args = parser.parse_args()
 
+outdir=args.workspace
 
 model=importlib.import_module(args.model)
 samples=model.samples
@@ -889,7 +891,7 @@ if makeWorkspace:
                         else: 
                             all_histo_all_syst[hn]["data"+year][syst].Add(all_histo_all_syst[hn][d][syst])
 #    print("DEBUG", model, all_histo_all_syst, year)
-    WorkSpace.createWorkSpace(model, all_histo_all_syst, year)
+    WorkSpace.createWorkSpace(model, all_histo_all_syst, year) #,outdir)
 else :
    from multiprocessing import Pool
    runpool = Pool(20)
