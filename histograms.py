@@ -3,9 +3,9 @@ genericHistos=["Higgs_m","pTbalanceAll","LeadMuon_pt","LeadMuon_eta","SubMuon_pt
 bdtInputHistos=["Mqq_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zstar","Higgs_pt","theta2","mmjj_pz","MaxJetAbsEta","Higgs_m_uncalib","NSoft5New","ll_zstar_log", "Higgs_mReso","QJet0_qgl","QJet1_qgl","Jet_jetId","Jet_puId"]
 #signalHistosVariations=["SBClassifierNoMass","BDTAtanNoMass","SBClassifierNoMassNoNSJ","BDTAtanNoMassNoNSJ","DNNClassifierNoMass", "DNNAtanNoMass","DNN18AtanNoMass"]
 #signalHistos=["SBClassifier","BDTAtan","LHE_NpNLO","DNNClassifier", "DNNAtan", "DNN18Atan"]#,"DNN18AtanNoQGL"]
-signalHistosVariations=["DNN18AtanNoMass"]
-signalHistos=["DNN18Atan"]
-signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(1,20)]
+signalHistosVariations=["DNN18AtanNoMass","DNN18AtanNoMass2"]
+signalHistos=["DNN18Atan","DNN18Atan2"]
+signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,21)]
 
 snapregion="SignalRegion"
 #signalHistos=["SBClassifier"]
@@ -13,9 +13,9 @@ snapregion="SignalRegion"
 histosPerSelection={
 #"PreSel" : ["Higgs_m"],
 "SignalRegion": signalHistos+signalHistosVariations+signalHistosMassScan, #+bdtInputHistos+ genericHistos,
-"ZRegion": signalHistosVariations+["pTbalanceAll"]+genericHistos +bdtInputHistos,
+"ZRegion": signalHistosVariations+["pTbalanceAll"],#+genericHistos +bdtInputHistos,
 #"ZRegionSMP": signalHistosVariations+["pTbalanceAll"]+bdtInputHistos,
-"SideBand" : signalHistosVariations+genericHistos+bdtInputHistos,
+"SideBand" : signalHistosVariations,#+genericHistos+bdtInputHistos,
 #"BDT1p1" : bdtInputHistos+genericHistos,
 #"BDT1p2" : bdtInputHistos+genericHistos,
 }

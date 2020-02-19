@@ -64,6 +64,7 @@ extern LwtnnWrapper lwtnn_Z ;
 extern LwtnnWrapper lwtnn_withZ ;
 extern LwtnnWrapper lwtnn_nov ;
 extern LwtnnWrapper lwtnn_feb ;
+extern LwtnnWrapper lwtnn_feb2 ;
 /*
 std::vector<std::string> v = {"/scratch/lgiannini/HmmPisa/model_for_lwtnn/output_fix_finalepoch.json"} ;
 LwtnnWrapper lwtnn = LwtnnWrapper(v);

@@ -81,6 +81,8 @@ rebin = {
     "BDTAtanNoMass" : bdtbinning16,
     "BDTAtanNoMassNoNSJ" : bdtbinning,
     "DNN18Atan": dnnnewfew16,#dnn032016,
+    'DNN18Atan2' : [0 , 0.608333333333 , 0.98 , 1.26833333333 , 1.49333333333 , 1.675 , 1.86 , 2.03 , 2.17 , 2.30166666667 , 2.425 , 2.55666666667 , 2.70333333333 , 2.865 , 3.06833333333 , 5.0 ],
+
     "DNN18AtanNoQGL": qgl,
     "DNN18AtanNoMass": dnnnewfew16,
     "DNNZAtan": dnnnewfew16,

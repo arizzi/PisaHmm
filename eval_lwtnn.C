@@ -61,6 +61,14 @@ std::vector<std::string> vFeb = {
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_feb.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_feb.json"
 };
+
+std::vector<std::string> vFeb2 = {
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt0_febNLO20.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt1_febNLO20.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_febNLO20.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_febNLO20.json"};
+
+LwtnnWrapper lwtnn_feb2 = LwtnnWrapper(vFeb2);
 LwtnnWrapper lwtnn_feb = LwtnnWrapper(vFeb);
 
 

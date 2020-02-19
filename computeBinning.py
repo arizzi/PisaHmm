@@ -58,11 +58,14 @@ binLimitDown = Nbins_binning
 minNumberOfEventPerBin = 0.3
 hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"])
 tot=hSignal.Integral(0, Nbins_binning+1)
-N=tot*2.5
+N=tot*2
 print "Total number of events:  ", tot
 delta=2.*(tot-minNumberOfEventPerBin*N)/N**2
 print "min size",minNumberOfEventPerBin, "step",delta, "N",N,"tot",tot
 
+
+#delta=0
+#minNumberOfEventPerBin=0.6
 
 binning_BDT=[xMax]
 
