@@ -88,6 +88,10 @@ samples={
 #"WZ_2018AMCPY": {"xsec":47.13}, 
 #"WW_2018AMCPY": {"xsec":118.7}, 
 
+"ggH120mm_2018AMCPY"       : {"xsec":5.222E+1*2.423E-04}, 
+"vbfH120mm_2018AMCPY"      : {"xsec":3.935*2.423E-04}, 
+"ggH130mm_2018AMCPY"       : {"xsec":45.31*1.877E-04}, 
+"vbfH130mm_2018AMCPY"      : {"xsec":3.637*1.877E-04},
 
 
 "ggHmm_2018AMCPY"       : {"xsec":0.01057}, #xsec["VBF_HToMuMu"] = 0.0008210722; xsec["GluGlu_HToMuMu"] = 0.009582794;

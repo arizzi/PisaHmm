@@ -128,7 +128,7 @@ from histograms import signalHistosMassScan
 
 for i in  signalHistosMassScan :
  rebin[i]=rebin["DNN18Atan"]
-#rebin["DNN18Atan2"]=rebin["DNN18Atan"]
+#ebin["DNN18Atan2"]=rebin["DNN18Atan"]
 
 
 from systematicGrouping import *
