@@ -10,6 +10,8 @@ import models2018H
 import models2018Z
 
 import pprint
+import ROOT
+
 
 def removeYear( string ):
      string = string.replace("2016","")
@@ -34,6 +36,8 @@ for sampleGroups in [
 pprint.pprint(groups)
 
 labels = ['2016Z','2017Z','2018Z','2016H','2017H','2018H']
+
+###################################################
 
 table = ''
 
@@ -69,5 +73,136 @@ if len(allGroups)==0:
 else:
     raise Exception(allGroups)
 
+ 
+################ x-section #################################    
 
+years = ["2016", "2017", "2018"]
+tableXsec = ''
+
+tableXsec += 'Group\tSample\t'
+for year in years: tableXsec += year+'\t'
+tableXsec += '  \n'
+
+allGroups = groups.keys()
+
+for group in groupsOrder:
+    if group in groups:
+        for sample in groups[group]:
+            tableXsec += group+'\t'+sample+'\t'
+            for year in years: 
+                sampleWithYear = sample.replace("_","_"+year)
+#                print sample,sampleWithYear, models.background , models.signal
+                if sampleWithYear in globals()['samples%s'%year].samples:
+#                    tableXsec += sampleWithYear+'\t'
+                    tableXsec += ' {:e} \t'.format(globals()['samples%s'%year].samples[sampleWithYear]['xsec'])
+                else:
+                    tableXsec += '  \t'
+            tableXsec += '  \n'
+        allGroups.remove(group)
+
+if len(allGroups)==0:
+    print tableXsec
+    fil = open('sampleXsec.txt','w')
+    fil.write(tableXsec)
+    fil.close()
+else:
+    raise Exception(allGroups)
+
+#########################################################
+
+def getRange(sample, threshold):
+    f = ROOT.TFile.Open(histoPath + sample + "Histos.root")
+    histo = f.Get(histoName)
+    lastBin  = histo.GetNbinsX()+1
+    firstBin = histo.FindBin(threshold)
+    return firstBin, lastBin
+
+def getAcceptance(sample, firstBin, lastBin):
+    f = ROOT.TFile.Open(histoPath + sample + "Histos.root")
+    if f:
+        histo = f.Get(histoName)
+        return histo.Integral(firstBin, lastBin)
+    else:
+        return -1
     
+################ acceptance #################################    
+
+histoPath = "/scratch/arizzi/hmmNail/nail/PisaHmm/outReferenceFeb12/"
+histoName = "DNN18Atan___SignalRegion"
+minDNN = -1.
+
+
+years = ["2016", "2017", "2018"]
+tableAccept = ''
+
+tableAccept += 'Group\tSample\t'
+for year in years: tableAccept += year+'\t'
+tableAccept += '  \n'
+
+allGroups = groups.keys()
+
+firstBin, lastBin = getRange("vbfHmm_2018POWPY", minDNN)
+
+for group in groupsOrder:
+    if group in groups:
+        for sample in groups[group]:
+            tableAccept += group+'\t'+sample+'\t'
+            for year in years: 
+                sampleWithYear = sample.replace("_","_"+year)
+#                print sample,sampleWithYear, models.background , models.signal
+                if sampleWithYear in globals()['samples%s'%year].samples:
+#                    tableAccept += sampleWithYear+'\t'
+                    tableAccept += ' {:e} \t'.format(getAcceptance(sampleWithYear, firstBin, lastBin))
+                else:
+                    tableAccept += '  \t'
+            tableAccept += '  \n'
+        allGroups.remove(group)
+
+if len(allGroups)==0:
+    print tableAccept
+    fil = open('sampleAcceptance.txt','w')
+    fil.write(tableAccept)
+    fil.close()
+else:
+    raise Exception(allGroups)
+
+################ acceptance 2.5 #################################    
+
+histoPath = "/scratch/arizzi/hmmNail/nail/PisaHmm/outReferenceFeb12/"
+histoName = "DNN18Atan___SignalRegion"
+minDNN = 2.5
+
+
+years = ["2016", "2017", "2018"]
+tableAcceptDNNcut = ''
+
+tableAcceptDNNcut += 'Group\tSample\t'
+for year in years: tableAcceptDNNcut += year+'\t'
+tableAcceptDNNcut += '  \n'
+
+allGroups = groups.keys()
+
+firstBin, lastBin = getRange("vbfHmm_2018POWPY", minDNN)
+
+for group in groupsOrder:
+    if group in groups:
+        for sample in groups[group]:
+            tableAcceptDNNcut += group+'\t'+sample+'\t'
+            for year in years: 
+                sampleWithYear = sample.replace("_","_"+year)
+#                print sample,sampleWithYear, models.background , models.signal
+                if sampleWithYear in globals()['samples%s'%year].samples:
+#                    tableAcceptDNNcut += sampleWithYear+'\t'
+                    tableAcceptDNNcut += ' {:e} \t'.format(getAcceptance(sampleWithYear, firstBin, lastBin))
+                else:
+                    tableAcceptDNNcut += '  \t'
+            tableAcceptDNNcut += '  \n'
+        allGroups.remove(group)
+
+if len(allGroups)==0:
+    print tableAcceptDNNcut
+    fil = open('sampleAcceptanceDNNcut.txt','w')
+    fil.write(tableAcceptDNNcut)
+    fil.close()
+else:
+    raise Exception(allGroups)
