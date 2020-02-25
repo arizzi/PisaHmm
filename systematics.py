@@ -80,6 +80,7 @@ def addMuScale(flow):
 
 
 def addBasicJecs(flow):
+   if True:
       # flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown") #name, target, replacement
       # flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp") #name, target, replacement
       # flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
@@ -104,6 +105,17 @@ def addBasicJecs(flow):
        flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown_touse") #name, target, replacement 
        flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp_touse") #name, target, replacement 
        #flow.Systematic("WithJER","Jet_pt_touse","Jet_pt_nom") #name, target, replacement
+   else:
+       flow.Define("Jet_pt_jerDown_touse","Where(Jet_genJetIdx>=0,Jet_pt_jerDown,Jet_pt_touse)") #protectd against crazy values
+       flow.Systematic("JERDown","Jet_pt_touse","Jet_pt_jerDown_touse") #name, target, replacement
+       flow.Systematic("JERUp","Jet_pt_touse","Jet_pt_jerUp") #name, target, replacement
+       flow.Systematic("JESDown","Jet_pt_touse","Jet_pt_jesTotalDown") #name, target, replacement
+       flow.Systematic("JESUp","Jet_pt_touse","Jet_pt_jesTotalUp") #name, target, replacement
+
+       flow.Define("Jet_pt_jerUp_touse","Jet_pt_jerUp")
+
+
+
 
 def addDecorrelatedJER(flow):
        etabins=[0,1.93,2.5,3.139]

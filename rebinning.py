@@ -86,6 +86,7 @@ rebin = {
 
     "DNN18AtanNoQGL": qgl,
     "DNN18AtanNoMass": dnnnewfew16,
+    "DNN18AtanMassSpread": dnnnewfew16,
     "DNNZAtan": dnnnewfew16,
     #"DNNwithZAtan": dnnnewfew16,
     #"DNNwithZAtanNoMass": dnnnewfew16,

@@ -7,17 +7,17 @@ background={
    #"EWKZ105FIX2_2016MGHERWIG",
    "EWKZ105FIX2_2016MGHERWIG",
    # interference with DY
-   "EWKZint_2016MGPY"
+#   "EWKZint_2016MGPY"
 ],
 "Top":[
    ### Single Top (s, t, tW channels) ###
-   "STs_2016AMCPY",
-   "STt_2016POW_MADSPIN_PY",
+ #  "STs_2016AMCPY",
+ #  "STt_2016POW_MADSPIN_PY",
    "STwt_2016POWPY", 
    
    ### Single Anti-Top (s, t, tW channels) ###
    #"STsbar_2016AMCPY",
-   "STtbar_2016POW_MADSPIN_PY",
+#   "STtbar_2016POW_MADSPIN_PY",
    "STwtbar_2016POWPY",
    
    ### TTbar (leptonic, semileptonic, hadronic)
@@ -42,25 +42,25 @@ background={
          
          ### WZ ###
          #--- 3 lept ---
-         "WZ3l1n_2016AMCPY", ## Alternative: #"WZ3l1n_2016POWPY"
+#         "WZ3l1n_2016AMCPY", ## Alternative: #"WZ3l1n_2016POWPY"
          #--- 2 lept ---
          "WZ2l2q_2016AMC_MADSPIN_PY",
          #--- 1 lept ---
 ### MISSING ### "WZ1l1n2q_2016AMCPY",
-         "WZ1l3n_2016AMCPY", 
+ #        "WZ1l3n_2016AMCPY", 
          
          ### ZZ ###
          #--- 4 lept ---
 ### MISSING ### "ZZ4l_2016POWPY",
          #--- 2 lept ---
-         "ZZ2l2q_2016POWPY",
+  #       "ZZ2l2q_2016POWPY",
 ### MISSING ### "ZZ2l2n_2016POWPY",
          #--- 0 lept ---
 ### MISSING ### "ZZ2q2n_2016POWPY",
 
          ### Vector boson scattering ###
 ### LHE Weights broken "WWJJlnln_2016MGPY",          ## VBS W(lv)W(ln) + 2jets 
-         "WLLJJln_2016MG_MADSPIN_PY",  ## VBS W(lv)Z(ll) + 2jets 
+   #      "WLLJJln_2016MG_MADSPIN_PY",  ## VBS W(lv)Z(ll) + 2jets 
 
          ### Double scattering ###
 ### MISSING ### "WWdps_2016MGPY",            ## WW double scattering
@@ -76,9 +76,9 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 signal={
 "VBF H":["vbfHmm_2016AMCPY"], ## Alternative: "vbfHmm_2016POWPY"
 "gg H":["ggHmm_2016AMCPY"],   ## Alternative: "ggHmm_2016POWPY"
-"ZH":["zHmm_2016POWPY"],
-"WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
-"ttH":["ttHmm_2016POWPY"]
+#ZH":["zHmm_2016POWPY"],
+#WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
+#ttH":["ttHmm_2016POWPY"]
 }
 
 data={

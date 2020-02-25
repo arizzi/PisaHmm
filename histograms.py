@@ -15,13 +15,13 @@ histosPerSelection={
 "SignalRegion": signalHistos+signalHistosVariations+signalHistosMassScan, #+bdtInputHistos+ genericHistos,
 "ZRegion": signalHistosVariations+["pTbalanceAll"],#+genericHistos +bdtInputHistos,
 #"ZRegionSMP": signalHistosVariations+["pTbalanceAll"]+bdtInputHistos,
-"SideBand" : signalHistosVariations,#+genericHistos+bdtInputHistos,
+"SideBand" : signalHistosVariations+ ["DNN18AtanMassSpread","DNN18AtanMassSpread2"],#+genericHistos+bdtInputHistos,
 #"BDT1p1" : bdtInputHistos+genericHistos,
 #"BDT1p2" : bdtInputHistos+genericHistos,
 }
 histosPerSelectionFullJecs={
 "SignalRegion":signalHistos+signalHistosMassScan,
-"SideBand":signalHistosVariations,
+"SideBand":signalHistosVariations+["DNN18AtanMassSpread","DNN18AtanMassSpread2"],
 "ZRegion":signalHistosVariations+["pTbalanceAll"],
 #"ZRegionSMP":["pTbalanceAll","DNN18AtanNoMass"],
 #"SignalRegion":["BDTAtan","DNNAtan","DNN18Atan"],#,"DNN18AtanNoQGL"],
@@ -37,6 +37,7 @@ if False:
 }
   histosPerSelection={
     "SignalRegion":      ["Higgs_m","DNN18Atan"],#ericHistos+bdtInputHistos,
+    "PreSel":      ["Higgs_m","DNN18Atan"],#ericHistos+bdtInputHistos,
 }
 
 

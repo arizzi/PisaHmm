@@ -44,7 +44,8 @@ samples={
 "STtbar_2017POWPY"          : {"xsec":80.95}, ##or 26.38!??  80.95 is for inclusive decays (used), 26.38 is for lepton decays (not used)
 "STt_2017POWPY"             : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
-"data2017": {"lumi":41530.,"data":True, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2017.root"]},
+"data2017": {"lumi":41530.,"data":True, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_04/data2017.root"]},
+#"data2017": {"lumi":41530.,"data":True, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/SingleMuonRun2017.root"]},
 
 "TT_2017AMCPY"      : {"xsec":809., "training":False},    #generator is different from 2016
 "TT_2017MGPY"       : {"xsec":809.},
@@ -101,10 +102,10 @@ samples={
 
 #xsec in 16 and 18 os :0.01057
 
-"ggHmm_2017AMCPY"       : {"xsec":0.009582794}, #This name is different from 2016
-"ggHmm_2017POWPY"       : {"xsec":0.009582794},
-"ggHmm_2017POWPY2"      : {"xsec":0.009582794},
-"ggHmm_2017AMCPY2"      : {"xsec":0.009582794},
+"ggHmm_2017AMCPY"       : {"xsec":0.01057}, #This name is different from 2016
+"ggHmm_2017POWPY"       : {"xsec":0.01057},
+"ggHmm_2017POWPY2"      : {"xsec":0.01057},
+"ggHmm_2017AMCPY2"      : {"xsec":0.01057},
 
 "vbfHmm_2017POWPY"      : {"xsec":0.0008210722, "training":False},
 "vbfHmm_2017AMCPY"      : {"xsec":0.0008210722},

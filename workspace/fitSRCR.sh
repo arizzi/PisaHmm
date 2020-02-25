@@ -1,6 +1,6 @@
 #!/bin/bash
-SIGNAL=DNN18Atan2___SignalRegion
-SIDE=DNN18AtanNoMass___SideBand
+SIGNAL=DNN18Atan___SignalRegion
+SIDE=DNN18AtanSpread___SideBand
 
 YEAR=$1
 text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel    --channel-masks datacard${YEAR}H.txt   --PO  'map=.*Hmm.*:r[1.,-10,10]'  >${YEAR}.log

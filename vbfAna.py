@@ -59,7 +59,7 @@ ftxt.write(flow.Describe(used))
 snap=[] 
 snaplist=["Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","event","Higgs_m_uncalib","nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
-snaplist=[ "event"]
+#snaplist=[ "event"]
 fullsnaplist=["Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","Mu0_pt_GeoFitCorrection","Mu1_pt_GeoFitCorrection","Mu0_eta","Mu0_pt","Mu1_eta","Mu1_pt",
     "Higgs_pt", "Higgs_eta", "Higgs_mRelReso", "Higgs_mReso", "Higgs_m", "ll_zstar_log", "ll_zstar",
     "QJet0_pt_touse", "QJet0_phi", "QJet0_eta", "QJet0_pt_nom", "QJet0_puId", "QJet0_qgl",
@@ -197,6 +197,9 @@ def f(ar):
 	 if  year!="2017" and ("Jet_puId17" not in list(rdf.GetColumnNames())):
 		rdf=rdf.Define("Jet_puId17","ROOT::VecOps::RVec<int>(nJet, 0)")
 	 if "lumi" in samples[s].keys()  :
+#	   if "Muon_dxybs" not  in  list(rdf.GetColumnNames()) :
+#               rdf=rdf.Define("Muon_dxybs","Muon_pt*10000.f")
+#	       print "WWWWWWWWWWAAAAAAAAAAAAAARRRRRRRNINGGGGGGGGGG"
 	   rdf=rdf.Filter("passJson(run,luminosityBlock)","jsonFilter")
 	   rdf=rdf.Define("isMC","false")
 #	   rdf=rdf.Define("PrefireWeight","1.0f")
@@ -295,6 +298,7 @@ def f(ar):
 #"QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
 
  #        snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2","LHEPdfUp","LHEPdfDown","LHEPdfSquaredSum","LHEPdfRMS","nLHEPdfWeight","LHEPdfWeight","PrefiringWeight","DNN18Atan__syst__MuScaleDown","Higgs_eta__syst__MuScaleUp","Higgs_mRelReso__syst__MuScaleUp","Higgs_mReso__syst__MuScaleUp","Higgs_m__syst__MuScaleUp","Higgs_pt__syst__MuScaleUp","Mqq","Mqq_log","NSoft5__syst__MuScaleUp","QJet0_eta","QJet0_phi","QJet0_pt_touse","QJet0_qgl","QJet1_eta","QJet1_phi","QJet1_pt_touse","QJet1_qgl","Rpt__syst__MuScaleUp","event","ll_zstar__syst__MuScaleUp","minEtaHQ__syst__MuScaleUp","qqDeltaEta"]
+	 snaplist=["run","event","Higgs_m","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_GFpt","Mu1_GFpt","nbtaggedL","nbtagged","LeadMuon_pt","SubMuon_pt","SubMuon_eta","LeadMuon_eta","qqDeltaEta"]
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
@@ -302,11 +306,15 @@ def f(ar):
 	 rep.Print()
 	 print "Above the cutflow for",s
 #         ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-        
+          
          if "training" in samples[s].keys() and samples[s]["training"] : 
              #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
            #ou.rdf["ZRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-           ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+           ou.rdf["PreSel"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+         if "lumi" in samples[s].keys()  :
+               #u.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+               ou.rdf["SignalRegion"].Define("Mu0_GFpt","Mu0_GFp4.pt()").Define("Mu1_GFpt","Mu1_GFp4.pt()").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+
 
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
