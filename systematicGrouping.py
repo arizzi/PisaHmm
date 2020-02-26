@@ -59,19 +59,12 @@ def systematicGrouping (background, signal,jesList) :
         },
         "LHERen":{
                 "type": "shapeOnly",
-                #"type": "shape",
-                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,
-"EWK":EWK,
- "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,"EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
-                #"mergeToSys": ["TTxsec", "STxsec", "DYxsec","LHEPdf"]
         },
         "LHEFac":{
-                #"type": "shapeAndNorm",
                 "type": "shapeOnly",
-                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,
-"EWK":EWK, 
-"TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,"EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
                 "value":1.0,
         },
 

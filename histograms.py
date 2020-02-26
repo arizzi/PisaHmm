@@ -37,7 +37,7 @@ if False:
 }
   histosPerSelection={
     "SignalRegion":      ["Higgs_m","DNN18Atan"],#ericHistos+bdtInputHistos,
-    "PreSel":      ["Higgs_m","DNN18Atan"],#ericHistos+bdtInputHistos,
+    "SideBand":      ["Higgs_m","DNN18Atan"],#ericHistos+bdtInputHistos,
 }
 
 

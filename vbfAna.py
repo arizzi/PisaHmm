@@ -59,7 +59,7 @@ ftxt.write(flow.Describe(used))
 snap=[] 
 snaplist=["Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","event","Higgs_m_uncalib","nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
-#snaplist=[ "event"]
+snaplist=[ "event"]
 fullsnaplist=["Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","Mu0_pt_GeoFitCorrection","Mu1_pt_GeoFitCorrection","Mu0_eta","Mu0_pt","Mu1_eta","Mu1_pt",
     "Higgs_pt", "Higgs_eta", "Higgs_mRelReso", "Higgs_mReso", "Higgs_m", "ll_zstar_log", "ll_zstar",
     "QJet0_pt_touse", "QJet0_phi", "QJet0_eta", "QJet0_pt_nom", "QJet0_puId", "QJet0_qgl",
@@ -311,9 +311,9 @@ def f(ar):
              #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
            #ou.rdf["ZRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
            ou.rdf["PreSel"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-         if "lumi" in samples[s].keys()  :
+#         if "lumi" in samples[s].keys()  :
                #u.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
-               ou.rdf["SignalRegion"].Define("Mu0_GFpt","Mu0_GFp4.pt()").Define("Mu1_GFpt","Mu1_GFp4.pt()").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+#               ou.rdf["SignalRegion"].Define("Mu0_GFpt","Mu0_GFp4.pt()").Define("Mu1_GFpt","Mu1_GFp4.pt()").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
 
 
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
@@ -396,7 +396,11 @@ print toproc
 if len(sys.argv[2:]) :
    if sys.argv[2] == "fix" :
        toproc=[]
-       for s in sams :
+       sss=sams
+       if(len(sys.argv[3:])) :
+          sss=[s for s in sams if s in sys.argv[3:]]
+	  print "fixing",sss
+       for s in sss :
 	if os.path.exists(samples[s]["files"][0]) :
 	 try:
 	   ff=ROOT.TFile.Open("out/%sHistos.root"%s)
