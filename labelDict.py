@@ -30,6 +30,7 @@ labelVariable={
 "nFootprintSAJet"   : "nFootprintSAJet",
 "FootHT"            : "FootHT",
 "Mqq_log"           : "log( M(jj) )",
+"Mqq_over400_log"   : "log( M(jj)/400 )",
 "mmjj_pt"           : "p_{T}(#mu#mujj)",
 "qqDeltaEta"        : "#Delta#eta(j,j)",
 "NSoft5"            : "# soft jet p_{T}>5 old version",
