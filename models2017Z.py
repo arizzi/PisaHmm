@@ -2,10 +2,11 @@ import models2017H
 from samples2017 import *
 name="Z"
 background={
-"DY0J":["DY0J_2017AMCPY"],
-"DY1J":["DY1J_2017AMCPY"],
-"DY2J":["DY2J_2017AMCPY"],
-"EWKZ":[
+#"DY0J":["DY0J_2017AMCPY"],
+#"DY1J":["DY1J_2017AMCPY"],
+#"DY2J":["DY2J_2017AMCPY"],
+"DY":["DY0J_2017AMCPY", "DY1J_2017AMCPY", "DY2J_2017AMCPY"],
+"VBF Z":[
    "EWKZ_2017MGHERWIG",  ## Alternative: "EWKZ_2017MGPY"
    "EWKZint_2017MGPY", # interference with DY
 ],
@@ -17,23 +18,23 @@ signal = models2017H.signal
 data = models2017H.data
 
 #sorting
-backgroundSorted=["Other","Top","DY0J","DY1J","DY2J","EWKZ"]
+backgroundSorted=["Other","Top","DY","VBF Z"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
+
+#legend sorting
+backgroundSortedForLegend=["DY","VBF Z","Top", "Other"]
+backgroundSortedForLegend+=[x for x in background if x not in backgroundSortedForLegend]
+signalSortedForLegend=["VBF H","gg H"]
+signalSortedForLegend+=[x for x in signal if x not in signalSortedForLegend]
+
 
 import ROOT
 fillcolor={
 "DY0J": ROOT.kOrange+2,
 "DY1J": ROOT.kOrange+1,
 "DY2J": ROOT.kOrange,
-"EWKZ": ROOT.kViolet,
-"Top": ROOT.kGreen,
-"Other" : ROOT.kGreen+1,
-"VBF H":ROOT.kRed,
-"gg H":ROOT.kRed+4,
-"ZH":ROOT.kPink+4,
-"WH":ROOT.kPink+9,
-"ttH":ROOT.kRed-4,
 }
+fillcolor.update(models2017H.fillcolor)
 
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","puWeightUp","puWeightDown"]
 #systematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]

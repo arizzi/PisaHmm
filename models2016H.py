@@ -1,37 +1,38 @@
 from samples2016 import *
 name="H"
 background={
-"DY":["DY105_2016AMCPY"], ## Alternative: "DY105_2016MGPY"
-"DYVBF":["DY105VBF_2016AMCPY"], ## Alternative: "DY105VBF_2016MGPY"
-"EWKZ":[
+#"DY":["DY105_2016AMCPY"], ## Alternative: "DY105_2016MGPY"
+#"DYVBF":["DY105VBF_2016AMCPY"], ## Alternative: "DY105VBF_2016MGPY"
+"DY":["DY105_2016AMCPY", "DY105VBF_2016AMCPY"], 
+"VBF Z":[
    #"EWKZ105FIX2_2016MGHERWIG",
    "EWKZ105FIX2_2016MGHERWIG",
    # interference with DY
-#   "EWKZint_2016MGPY"
+  "EWKZint_2016MGPY"
 ],
 "Top":[
    ### Single Top (s, t, tW channels) ###
- #  "STs_2016AMCPY",
- #  "STt_2016POW_MADSPIN_PY",
+  "STs_2016AMCPY",
+  "STt_2016POW_MADSPIN_PY",
    "STwt_2016POWPY", 
    
    ### Single Anti-Top (s, t, tW channels) ###
    #"STsbar_2016AMCPY",
-#   "STtbar_2016POW_MADSPIN_PY",
+  "STtbar_2016POW_MADSPIN_PY",
    "STwtbar_2016POWPY",
    
    ### TTbar (leptonic, semileptonic, hadronic)
    "TTlep_2016POWPY",   # 2 lept
-### MISSING ### "TTsemi_2016POWPY", # 1 lept
+   "TTsemi_2016POWPY", # 1 lept
 ### MISSING ### "TThad_2016POWPY",  # 0 lept
    ### TTbar alternatives (inclusive): "TT_2016POWPY", "TT_2016AMCPY",
 ],
 "Other":[
          ### W+jets ###
          #--- inclusive ---
-  #       "W2J_2016AMCPY",
-   #      "W1J_2016AMCPY",
-    #     "W0J_2016AMCPY", 
+        "W2J_2016AMCPY",
+        "W1J_2016AMCPY",
+        "W0J_2016AMCPY", 
          
          ### WW ###
          #--- 2 lept ---
@@ -42,21 +43,21 @@ background={
          
          ### WZ ###
          #--- 3 lept ---
-#         "WZ3l1n_2016AMCPY", ## Alternative: #"WZ3l1n_2016POWPY"
+        "WZ3l1n_2016AMCPY", ## Alternative: #"WZ3l1n_2016POWPY"
          #--- 2 lept ---
          "WZ2l2q_2016AMC_MADSPIN_PY",
          #--- 1 lept ---
 ### MISSING ### "WZ1l1n2q_2016AMCPY",
- #        "WZ1l3n_2016AMCPY", 
+        "WZ1l3n_2016AMCPY", 
          
          ### ZZ ###
          #--- 4 lept ---
 ### MISSING ### "ZZ4l_2016POWPY",
          #--- 2 lept ---
-  #       "ZZ2l2q_2016POWPY",
+        "ZZ2l2q_2016POWPY",
 ### MISSING ### "ZZ2l2n_2016POWPY",
          #--- 0 lept ---
-### MISSING ### "ZZ2q2n_2016POWPY",
+## MISSING ### "ZZ2q2n_2016POWPY",
 
          ### Vector boson scattering ###
 ### LHE Weights broken "WWJJlnln_2016MGPY",          ## VBS W(lv)W(ln) + 2jets 
@@ -69,17 +70,25 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+backgroundSorted=["Other","Top","DY","VBF Z"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
 signal={
 "VBF H":["vbfHmm_2016AMCPY"], ## Alternative: "vbfHmm_2016POWPY"
 "gg H":["ggHmm_2016AMCPY"],   ## Alternative: "ggHmm_2016POWPY"
-#ZH":["zHmm_2016POWPY"],
-#WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
-#ttH":["ttHmm_2016POWPY"]
+#"ZH":["zHmm_2016POWPY"],
+#"WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
+"VH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY", "zHmm_2016POWPY"],
+"ttH":["ttHmm_2016POWPY"]
 }
+
+#legend sorting
+backgroundSortedForLegend=["DY","VBF Z","Top", "Other"]
+backgroundSortedForLegend+=[x for x in background if x not in backgroundSortedForLegend]
+signalSortedForLegend=["VBF H","gg H"]
+signalSortedForLegend+=[x for x in signal if x not in signalSortedForLegend]
+
 
 data={
 "2016":["data2016"]
@@ -89,15 +98,18 @@ import ROOT
 fillcolor={
 "DY": ROOT.kOrange,
 "DYVBF": ROOT.kOrange-3,
-"EWKZ": ROOT.kViolet,
-"Top": ROOT.kGreen,
-"Other" : ROOT.kGreen+1,
+"VBF Z": ROOT.kMagenta+2,
+"Top": ROOT.kGreen+1,
+"Other" : ROOT.kGreen+3,
 "VBF H":ROOT.kRed,
 "gg H":ROOT.kRed+4,
 "ZH":ROOT.kPink+4,
 "WH":ROOT.kPink+9,
+"VH":ROOT.kPink+5,
 "ttH":ROOT.kRed-4,
 }
+
+
 
 #systematicsToPlot=["MuScaleUp"]
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]

@@ -661,15 +661,17 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
     #if not data : 
         #ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr]["nom"], error[gr],integral[gr]["nom"]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
         #for sy in integral[gr].keys() : ftxt.write("%s\t%s +- %s\t%s \n"%(gr,integral[gr]["nom"], error[gr],integral[gr]["nom"]/datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1)))
-    if (data) : myLegend.AddEntry(h,"data","P")
-    else : myLegend.AddEntry(h,gr,"f")
-
+    #if (data) : myLegend.AddEntry(h,"data","P")
+    #else : myLegend.AddEntry(h,gr,"f")
+    return h
 
 
 
 
 def makeplot(hn,saveintegrals=True):
  if "__syst__" not in hn :
+   dictLegendBackground = dict()
+   dictLegendSignal = dict()
    myLegend = makeLegend (0.4, 0.9)
    myLegend_sy = makeLegend (0.1, 0.15 + 0.015*len(systematicsSetToUse))
    outpath=args.outfolder+"/%s/%s"%(year,model.name)
@@ -715,7 +717,9 @@ def makeplot(hn,saveintegrals=True):
    histoSingleSyst[hn] = {}
    histosSignal[hn]={} 
    for gr in model.data:
-     fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
+     h = fill_datasum (f, gr, model.data, SumTH1=datasum, stack=datastack, stackSys=datasumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, data = True) 
+     myLegend.AddEntry(h,"data","PL")
+   
    DataYieldLine = "sample,yield,uncert,fraction"
    for sy in systematicsSetToUse : 
        DataYieldLine = DataYieldLine + "," + sy + ""
@@ -725,15 +729,21 @@ def makeplot(hn,saveintegrals=True):
 
    
    for gr in model.backgroundSorted:
-     fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumis=lumis) 
-
+     h = fill_datasum (f, gr, model.background, SumTH1=histosum, stack=histos, stackSys=histosumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumis=lumis) 
+     dictLegendBackground[gr] = h
 
    
    for gr in model.signal:
-     fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumis=lumis)
+     h = fill_datasum (f, gr, model.signal, SumTH1=histoSigsum, stack=histosSig, stackSys=histoSigsumSyst, hn=hn, myLegend=myLegend, ftxt=ftxt, lumis=lumis)
+     dictLegendSignal[gr] = h
 
-
-     
+   myLegend.AddEntry(None,"","")
+   for gr in model.backgroundSortedForLegend :
+       myLegend.AddEntry(dictLegendBackground[gr],gr,"f")
+   myLegend.AddEntry(None,"","")
+   for gr in model.signalSortedForLegend :
+       myLegend.AddEntry(dictLegendSignal[gr],gr,"f")
+   myLegend.AddEntry(None,"","")
    #superImposedPlot (histos[hn], histosSig[hn], outpath) 
    #if makeWorkspace : return 
    
@@ -742,7 +752,7 @@ def makeplot(hn,saveintegrals=True):
    ftxt.write("d_value = "+d_value(histosum[hn], histoSigsum[hn]))
    
    
-   for gr in model.signal:
+   for gr in model.signalSortedForLegend:
         h=histosSignal[hn][gr]     
         histos[hn].Add(h.Clone())
         h.SetLineColor(model.linecolor[gr])       
