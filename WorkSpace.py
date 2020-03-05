@@ -8,7 +8,7 @@ import re
 ##############################################################################################################
 #########################  region[x] : keys are plot names, values are region names  #########################
 ##############################################################################################################
-regionName = {"SignalRegion" : "SR", "SideBand" : "SB", "ZRegion" : "ZR", "PreSel" : "PS", }
+regionName = {"SignalRegion" : "SR", "SideBand" : "SB", "ZRegion" : "ZR", "PreSel" : "PS", "ZRegionSLJeta0pt0" : "ZRegionSLJeta0pt0","ZRegionSLJeta1pt0" : "ZRegionSLJeta1pt0","ZRegionSLJeta2pt0" : "ZRegionSLJeta2pt0","ZRegionSLJeta2pt1" : "ZRegionSLJeta2pt1","ZRegionSLJeta3pt0" : "ZRegionSLJeta3pt0","ZRegionSLJeta3pt1" : "ZRegionSLJeta3pt1",}
 
 
 
@@ -278,6 +278,9 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
             systematicDetail[syst]["valueFromPlots"] = {}
                 
             for x in all_histo_all_syst.keys() :
+	        print x,region
+		print region[x],regionName,syst
+		print systematicDetail
                 systematicDetail[syst+"_"+regionName[region[x]]] = copy.deepcopy(systematicDetail[syst])
                 
                 

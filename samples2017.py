@@ -30,6 +30,17 @@ samples={
 "DY2J_2017AMCPY"  : {"xsec":338.26},
 "DYTau_2017AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 #"DYM50_2017AMCPY" : {"xsec":5765.40},
+
+"DY_2016AMCHERWIG" : {"xsec":5765.40},
+"DY_2016AMCPYCUETP8M1Down" : {"xsec":5765.40},
+"DY_2016AMCPYCUETP8M1Up" : {"xsec":5765.40},
+"DY_2016AMCPYDownPS" : {"xsec":5765.40},
+"DY_2016AMCPY" : {"xsec":5765.40},
+"DY_2016AMCPYUpPS" : {"xsec":5765.40},
+"DY_2016MGHERWIG" : {"xsec":5765.40},
+"DY_2016MGPY" : {"xsec":5765.40},
+
+
 "EWKZ105_2017MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ105_2017MGPY"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2017MGHERWIG" : {"xsec":1.664}, #it does not exist yet
