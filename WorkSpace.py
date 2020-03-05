@@ -420,7 +420,7 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     datacard.write("bin \t\t")
     for x in region : datacard.write(region[x] + " \t" )
     datacard.write("\nobservation \t")
-    for x in region : datacard.write(str(all_histo_all_syst[x]["data"+year]["nom"].Integral(0, nBins[x]+1)) + " \t\t" )
+    for x in region : datacard.write(str(all_histo_all_syst[x]["data"+year]["nom"].Integral(1, nBins[x]+1)) + " \t\t" )
     datacard.write("\n------------\n")
 
     listSig  = []
@@ -441,8 +441,8 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     for x in region : 
         emptySamples[x] = []
         for s in listAllSample :
-            if not all(all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) > 0. for sy in all_histo_all_syst[x][s].keys()) :
-		 print "WARNING",s," IS EMPTY", [(sy,all_histo_all_syst[x][s][sy].Integral(0, nBins[x]+1) ) for sy in all_histo_all_syst[x][s].keys()]
+            if not all(all_histo_all_syst[x][s][sy].Integral(1, nBins[x]+1) > 0. for sy in all_histo_all_syst[x][s].keys()) :
+		 print "WARNING",s," IS EMPTY", [(sy,all_histo_all_syst[x][s][sy].Integral(1, nBins[x]+1) ) for sy in all_histo_all_syst[x][s].keys()]
 		 emptySamples[x].append(s)
         availableSamples[x] = [ s for s in listAllSample if s not in emptySamples[x]]
 
@@ -467,7 +467,7 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     datacard.write("\nrate \t \t \t \t \t")
     for x in region : 
         for s in availableSamples[x] :
-            datacard.write(str(all_histo_all_syst[x][s]["nom"].Integral(0, nBins[x]+1))+"\t\t")
+            datacard.write(str(all_histo_all_syst[x][s]["nom"].Integral(1, nBins[x]+1))+"\t\t")
     datacard.write("\n------------\n")
 
 

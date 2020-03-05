@@ -27,6 +27,7 @@ binningrules=[
 (".*DNNwithZAtan.*" , "%s , 0,5"%(nbins*100)),
 (".*Soft.*" , "10 , -0.5,9.5"),
 (".*Mqq_log.*" , "%s , 5,10"%nbins),
+(".*Mqq_over400_log.*" , "%s , 0,5"%nbins),
 (".*zstar.*" , "%s , -2,2"%nbins),
 (".*mmjj_pz.*" , "%s , 0,5000"%nbins),
 (".*mmjj_pz_logabs.*" , "%s , 0,10"%nbins),

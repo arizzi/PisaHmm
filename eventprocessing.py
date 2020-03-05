@@ -109,7 +109,7 @@ def getFlow(year):
 	flow.Define("HiggsUncalib","Mu0_p4uncalib+Mu1_p4uncalib")
 
 	flow.Define("Higgs_m_GF","Higgs.M()")
-#	flow.Define("Higgs_m_noGF","Higgs_noGF.M()")
+	flow.Define("Higgs_m_noGF","Higgs_noGF.M()")
 
 
 
@@ -265,6 +265,7 @@ def getFlow(year):
 	flow.Define("Higgs_eta","Higgs.Eta()")
 	flow.Define("Higgs_m_uncalib","HiggsUncalib.M()")
 	flow.Define("Mqq_log","log(Mqq)")
+	flow.Define("Mqq_over400_log","log(Mqq/400)")
 	flow.Define("mmjj_pt","mmjj.Pt()")
 	flow.Define("mmjj_pt_log","log(mmjj_pt)")
 	flow.Define("mmjj_pz","mmjj.Pz()")
@@ -342,7 +343,8 @@ def getFlow(year):
 	flow.AddExternalCode(header= "eval_lwtnn.h",cppfiles=["eval_lwtnn.C"],libs=["lwtnn"],ipaths=["/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn/"],lpaths=["/scratch/lgiannini/HmmPisa/lwtnn/build/lib/"])
 	#flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")
 	#flow.Define("DNN18Classifier","lwtnn_all.eval(event, {Mqq_log,Rpt,qqDeltaEta,log(ll_zstar),float(NSoft5New),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {19,3})")
-	flow.Define("DNN18Atan","atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
+	flow.Define("DNN18Classifier","lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {22,3})")
+	flow.Define("DNN18Atan","atanh(DNN18Classifier)")
 	flow.Define("DNN18Atan2","atanh(lwtnn_feb2.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
 	for x in range(0,21) :
 	   name="DNN18AtanM%4.0f"%((x*0.5+120)*10)
