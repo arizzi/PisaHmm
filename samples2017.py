@@ -9,6 +9,7 @@
 path2017     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
 path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
 path2017 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
+path2017 = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_08/" #fix skim JER
 
 #path2017data = path2017
 
