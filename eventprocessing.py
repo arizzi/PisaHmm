@@ -258,6 +258,9 @@ def getFlow(year):
 	flow.Define("pTbalanceLead","QJet0_pt/Higgs_pt")
 	flow.Define("pTbalance","qq.Pt()/Higgs_pt")
 	flow.Define("pTbalanceAll","SumDef(SelectedJet_p4).pt()/Higgs_pt")
+	flow.Define("pTbalanceAllLog","log(pTbalanceAll)")
+	flow.Define("pTbalanceLog","log(pTbalance)")
+	flow.Define("pTbalanceLeadLog","log(pTbalanceLead)")
 	flow.Define("Higgs_m","Higgs.M()")
 	flow.Define("Higgs_eta","Higgs.Eta()")
 	flow.Define("Higgs_m_uncalib","HiggsUncalib.M()")
@@ -329,6 +332,13 @@ def getFlow(year):
 	flow.Selection("BDT1p2","BDTAtanNoMass>1.2")
 	flow.Selection("BDTNoMN1p0","BDTAtanNoMassNoNSJ>1.0")
 	flow.Selection("BDTNoMN1p2","BDTAtanNoMassNoNSJ>1.2")
+        flow.Selection("ZRegionSLJeta0pt0","(abs(QJet1_eta)>0&&abs(QJet1_eta)<=1.93) && ZRegion",requires=["ZRegion"])
+        flow.Selection("ZRegionSLJeta1pt0","(abs(QJet1_eta)>1.93&&abs(QJet1_eta)<=2.5) && ZRegion",requires=["ZRegion"])
+        flow.Selection("ZRegionSLJeta2pt0","(abs(QJet1_eta)>2.5&&abs(QJet1_eta)<=3.139)&&(QJet1_pt>0&&QJet1_pt<=50) && ZRegion",requires=["ZRegion"])
+        flow.Selection("ZRegionSLJeta2pt1","(abs(QJet1_eta)>2.5&&abs(QJet1_eta)<=3.139)&&(QJet1_pt>50) && ZRegion",requires=["ZRegion"])
+        flow.Selection("ZRegionSLJeta3pt0","(abs(QJet1_eta)>3.139)&&(QJet1_pt>0&&QJet1_pt<=50) && ZRegion",requires=["ZRegion"])
+        flow.Selection("ZRegionSLJeta3pt1","(abs(QJet1_eta)>3.139)&&(QJet1_pt>50) && ZRegion",requires=["ZRegion"])
+
 
 	flow.AddExternalCode(header= "eval_lwtnn.h",cppfiles=["eval_lwtnn.C"],libs=["lwtnn"],ipaths=["/scratch/lgiannini/HmmPisa/lwtnn/include/lwtnn/"],lpaths=["/scratch/lgiannini/HmmPisa/lwtnn/build/lib/"])
 	#flow.Define("DNNClassifier","lwtnn.eval(__slot, {Mqq_log,Rpt,qqDeltaEta,ll_zstar,float(NSoft5),minEtaHQ,1,1,Higgs_pt,log(Higgs_pt),Higgs.Eta(),Mqq,QJet1_pt,QJet0_pt,QJet1_eta,QJet0_eta,QJet1_phi,QJet0_phi,Higgs_m,Higgs_mRelReso,Higgs_mReso}, {18,3})")

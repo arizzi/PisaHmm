@@ -55,29 +55,33 @@ def systematicGrouping (background, signal,jesList) :
         },
         "PrefiringWeight":{
                 "type": "shape",
+		"decorrelate": {"":DY+EWK+TT+Hmm},
                 "value":1.0,
         },
         "LHERen":{
                 "type": "shapeOnly",
-                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,"EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,"EWK":EWK, "TT":TT },
                 "value":1.0,
         },
         "LHEFac":{
                 "type": "shapeOnly",
-                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,"EWK":EWK, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},
+                "decorrelate":{ "DY":DY, "Hmm": HmmNoVBF,"EWK":EWK, "TT":TT },
                 "value":1.0,
         },
 
         "Alternative":{
-                "type": "shape",
+                "type": "shapeOnly",
                 "value": 1.0,
                 "powerUp":  +0.2,   ## up   = ratio^alpha_up   * nom
                 "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
-                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],#"EWKZ":["EWKZ"],
+                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
                 },
                 "alternativeSamples": {
 #                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
+		    "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+		    "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+		    "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
                     "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
                     "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
                     "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
@@ -184,17 +188,20 @@ def systematicGrouping (background, signal,jesList) :
 
 
     }
-    jes={x[7:-4]:{"type": "shape", "value":1.0} for x in jesList if "Down" in x}
+    jes={x[7:-4]:{"type": "shape", "value":1.0,   "decorrelate": {"":DY+EWK+TT+Hmm}, } for x in jesList if "Down" in x}
 
     jesfew={    "JES":{
                 "type": "shape",
+	        "decorrelate": {"":DY+EWK+TT+Hmm},
+
                 "value":1.0,
        }}
 
     from jernames import jernames
-    jer={x[0:-4]:{"type": "shape", "value":1.0} for x in jernames if "Down" in x}
+    jer={x[0:-4]:{"type": "shape",   "decorrelate": {"":DY+EWK+TT+Hmm}, "value":1.0} for x in jernames if "Down" in x}
     jerfew={    "JER":{
                 "type": "shape",
+		  "decorrelate": {"":DY+EWK+TT+Hmm},
                 "value":1.0,
        }}
 #    jesnames=[ "JESPt0To30Eta0To2","JESPt30To50Eta0To2","JESPt50To100Eta0To2","JESPt100To2000Eta0To2","JESPt0To30Eta2To2p5","JESPt30To50Eta2To2p5","JESPt50To100Eta2To2p5","JESPt100To2000Eta2To2p5","JESPt0To30Eta2p5To3p1","JESPt30To50Eta2p5To3p1","JESPt50To100Eta2p5To3p1","JESPt100To2000Eta2p5To3p1","JESPt0To30Eta3p1To5","JESPt30To50Eta3p1To5","JESPt50To100Eta3p1To5","JESPt100To2000Eta3p1To5" ]
@@ -206,7 +213,7 @@ def systematicGrouping (background, signal,jesList) :
 #    systematicDetail.update(jerfew)
 
     from btagvariations import btagsys
-    btag={x[0:-4]:{"type": "shape", "value":1.0} for x in btagsys if "Down" in x}
+    btag={x[0:-4]:{"type": "shape", "value":1.0,  "decorrelate": {"":DY+EWK+TT+Hmm},} for x in btagsys if "Down" in x}
     systematicDetail.update(btag)
 
     sthsNames=["Yield","PTH200","Mjj60","Mjj120","Mjj350","Mjj700","Mjj1000","Mjj1500","PTH25","JET01"]
