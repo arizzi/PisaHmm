@@ -1,59 +1,61 @@
 from samples2017 import *
 name="H"
 background={
-"DY":["DY105_2017AMCPY"], ## Alternative: "DY105_2017MGPY"
-"DYVBF":[ "DY105VBF_2017AMCPY"], ## Alternative: "DY105VBF_2017MGPY"
-"EWKZ":[
+#"DY":["DY105_2017AMCPY"], ## Alternative: "DY105_2017MGPY"
+#"DYVBF":[ "DY105VBF_2017AMCPY"], ## Alternative: "DY105VBF_2017MGPY"
+"DY":["DY105_2017AMCPY", "DY105VBF_2017AMCPY"], ## Alternative: "DY105VBF_2017MGPY"
+"VBF Z":[
    "EWKZ105FIX2_2017MGHERWIG",
    # interference with DY
-#   "EWKZint_2017MGPY" 
+  "EWKZint_2017MGPY" 
 ],
 "Top":[
    ### Single Top (s, t, tW channels) ###
- #  "STs_2017AMCPY",
-### MISSING ### "STt_2017POW_MADSPIN_PY",
+   "STs_2017AMCPY",
+   "STt_2017POWPY",
    "STwt_2017POWPY", 
    
    ### Single Anti-Top (s, t, tW channels) ###
 ### MISSING ### "STsbar_2017AMCPY",
-### MISSING ### "STtbar_2017POW_MADSPIN_PY",
+   #"STtbar_2017POW_MADSPIN_PY",
    "STwtbar_2017POWPY",
    
    ### TTbar (leptonic, semileptonic, hadronic)
    "TTlep_2017POWPY",   # 2 lept
-  # "TTsemi_2017POWPY",  # 1 lept
+  "TTsemi_2017POWPY",  # 1 lept
    #"TThad_2017POWPY",  # 0 lept
    ### TTbar alternatives (inclusive): "TT_2017POWPY", "TT_2017AMCPY",
 ],
 "Other":[
          ### W+jets ###
          #--- inclusive ---
-#         "W2J_2017AMCPY",
-### MISSING ### "W1J_2017AMCPY",
-   #      "W0J_2017AMCPY", 
+        "W2J_2017AMCPY",
+       ##"W1J_2017AMCPY",
+        "W0J_2017AMCPY", 
          
          ### WW ###
          #--- 2 lept ---
          "WW2l2n_2017POWPY",
+         "WWlnqq_2017POWPY",
          #--- 1 lept ---
 ### MISSING ### "WWlnqq_2017AMC_MADSPIN_PY", ## Alternative: "WWlnqq_2017POWPY",
          #--- incl ---
          
          ### WZ ###
          #--- 3 lept ---
-    #     "WZ3l1n_2017AMCPY", ## Alternative #"WZ3l1n_2017POWPY"
+        "WZ3l1n_2017AMCPY", ## Alternative #"WZ3l1n_2017POWPY"
          #--- 2 lept ---
-         "WZ2l2q_2017AMC_MADSPIN_PY",
+         ### MISSING ###"WZ2l2q_2017AMC_MADSPIN_PY",
          #--- 1 lept ---
-     #    "WZ1l1n2q_2017AMCPY",
-      #   "WZ1l3n_2017AMCPY", 
+        "WZ1l1n2q_2017AMCPY",
+        "WZ1l3n_2017AMCPY", 
          
          ### ZZ ###
          #--- 4 lept ---
-       #  "ZZ4l_2017POWPY",
+       ##  "ZZ4l_2017POWPY",
          #--- 2 lept ---
-        # "ZZ2l2q_2017POWPY",
-         #"ZZ2l2n_2017POWPY",
+        "ZZ2l2q_2017POWPY",
+         ### MISSING ###"ZZ2l2n_2017POWPY",
          #--- 0 lept ---
 ### MISSING ### "ZZ2q2n_2017POWPY",
 
@@ -68,17 +70,22 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+backgroundSorted=["Other","Top","DY","VBF Z"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
-
 
 signal={
 "VBF H":["vbfHmm_2017AMCPY"], ## Alternative: "vbfHmm_2017POWPY"
 "gg H":["ggHmm_2017AMCPY"],   ## Alternative: "ggHmm_2017POWPY"
-#"ZH":["zHmm_2017POWPY"],
-#"WH":["WplusHmm_2017POWPY","WminusHmm_2017POWPY"],
-#"ttH":["ttHmm_2017POWPY"]
+"VH":["WplusHmm_2017POWPY","WminusHmm_2017POWPY", "zHmm_2017POWPY"],
+"ttH":["ttHmm_2017POWPY"]
 }
+
+#legend sorting
+backgroundSortedForLegend=["DY","VBF Z","Top", "Other"]
+backgroundSortedForLegend+=[x for x in background if x not in backgroundSortedForLegend]
+signalSortedForLegend=["VBF H","gg H"]
+signalSortedForLegend+=[x for x in signal if x not in signalSortedForLegend]
+
 
 data={
 "2017":["data2017"]
@@ -88,13 +95,14 @@ import ROOT
 fillcolor={
 "DY": ROOT.kOrange,
 "DYVBF": ROOT.kOrange-3,
-"EWKZ": ROOT.kViolet,
-"Top": ROOT.kGreen,
-"Other" : ROOT.kGreen+1,
+"VBF Z": ROOT.kMagenta+2,
+"Top": ROOT.kGreen+1,
+"Other" : ROOT.kGreen+3,
 "VBF H":ROOT.kRed,
 "gg H":ROOT.kRed+4,
 "ZH":ROOT.kPink+4,
 "WH":ROOT.kPink+9,
+"VH":ROOT.kPink+5,
 "ttH":ROOT.kRed-4,
 }
 
