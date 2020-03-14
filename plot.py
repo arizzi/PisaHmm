@@ -273,19 +273,17 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSamples, alphaUp = +
     ratio = histoUp.Clone(histoNameUp.replace("altSampleUp", "altSampleRatio"))
     ratio.Divide(histoDown)
     ## up   = ratio^alpha_up   * nom
-    if "Up" in sy: 
-        histoNameSyst = hn.replace("___","__syst__AlternativeUp___"  )   + "__syst__AlternativeUp"
-        histoSyst     = histoNom.Clone(histoNameSyst)
-        histoSyst.Multiply( powerHisto( ratio, alphaUp ) )
-        return copy.copy(histoSyst)
+    histoNameSyst = hn.replace("___","__syst__%s___"%sy  ) + "__syst__%s"%sy
+    histoSyst     = histoNom.Clone(histoNameSyst)
+    
+    alpha = None
+    if "Up" in sy: alpha = alphaUp
     ## down = ratio^alpha_down * nom
-    elif "Down" in sy:
-        histoNameSyst = hn.replace("___","__syst__AlternativeDown___"  ) + "__syst__AlternativeDown"
-        histoSyst     = histoNom.Clone(histoNameSyst)
-        histoSyst.Multiply( powerHisto( ratio, alphaDown ) )
-        return copy.copy(histoSyst)
-    else:
-        print "No alternative sample for %s"%d
+    elif "Down" in sy: alpha = alphaDown
+    else: print "No alternative sample for %s"%d
+    if alpha: histoSyst.Multiply( powerHisto( ratio, alpha ) )
+#    print "Making %s using %s %s %s %s %s %f"%(sy, nominalSample, alternativeSamples, str(alpha), hn, histoNameSyst, histoSyst.GetMean()/histoNom.GetMean())
+    return copy.copy(histoSyst)
 
 ''' #REBINNING using envelopeNBins
     envelopeNBins = model.systematicDetail[sy_base]["envelopeNBins"]
