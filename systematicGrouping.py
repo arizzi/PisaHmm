@@ -27,6 +27,8 @@ def systematicGrouping (background, signal,jesList) :
     WJets = ["W2J","W1J","W0J"]
     Hmm = ["vbfHmm","ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
     HmmNoVBF = ["ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
+    DY01J=["DY105J01", "DY105VBFJ01"]
+    DY2J=["DY105J2", "DY105VBFJ2"]
 
     allSamples = {}
     for x in DY+EWK+TT+ST+WW+WZ+ZZ+WJets+Hmm : allSamples[x] = [x]
@@ -41,9 +43,11 @@ def systematicGrouping (background, signal,jesList) :
             },
    	"XSecAndNorm" :{
                 "type": "lnN",
-                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+#                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY01J":DY01J,"DY2J":DY2J , "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "additionalNormalizations": ["LHERen","LHEFac"], #"PDFX0"],
-                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY01J":1.010,"DY2J":1.010 ,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+#                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010 ,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
                 "type": "shapeOnly",

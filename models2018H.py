@@ -3,7 +3,10 @@ name="H"
 background={
 #"DY":["DY105_2018AMCPY"], ## Alternative: "DY105_2018MGPY"
 #"DYVBF":[ "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
-"DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
+#DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
+"DY01J":["DY105J01_2018AMCPY", "DY105VBFJ01_2018AMCPY"],
+"DY2J":["DY105J2_2018AMCPY", "DY105VBFJ2_2018AMCPY"],
+
 "VBF Z":[
    "EWKZ105FIX2_2018MGHERWIG", ## Alternative "EWKZ_2018MGPY"
    # interference with DY
@@ -73,7 +76,8 @@ background={
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","VBF Z"]
+#backgroundSorted=["Other","Top","DY","VBF Z"]
+backgroundSorted=["Other","Top","DY2J","DY01J","VBF Z"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
@@ -86,6 +90,7 @@ signal={
 
 #legend sorting
 backgroundSortedForLegend=["DY","VBF Z","Top", "Other"]
+backgroundSortedForLegend=["DY2J","DY01J","VBF Z","Top", "Other"]
 backgroundSortedForLegend+=[x for x in background if x not in backgroundSortedForLegend]
 signalSortedForLegend=["VBF H","gg H"]
 signalSortedForLegend+=[x for x in signal if x not in signalSortedForLegend]
@@ -100,6 +105,8 @@ data={
 import ROOT
 fillcolor={
 "DY": ROOT.kOrange,
+"DY01J": ROOT.kOrange-1,
+"DY2J": ROOT.kOrange-2,
 "DYVBF": ROOT.kOrange-3,
 "VBF Z": ROOT.kMagenta+2,
 "Top": ROOT.kGreen+1,

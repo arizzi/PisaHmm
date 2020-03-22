@@ -18,10 +18,15 @@ samples={
 #"DY105Inclusive_2017AMCPY"     : {"xsec": 41.81, "filter": "MqqGen < 350"},
 #"DY105Inclusive_2017MGPY"      : {"xsec": 41.25, "filter": "MqqGen < 350"},
 
+"DY105J01_2017AMCPY"     : {"xsec": 47.17, "filter":  "DY01JAntiVBF","nameforfile":"DY105_2017AMCPY"},
+"DY105J2_2017AMCPY"     : {"xsec": 47.17, "filter":  "DY2JAntiVBF", "nameforfile":"DY105_2017AMCPY"},
+
 "DY105_2017AMCPY"     : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag"},
 "DY105NEW_2017AMCPY"     : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag"},
 "DY105_2017MGPY"      : {"xsec": 47.17, "filter":  "VBFFilterAntiFlag", "training":False},
 
+"DY105VBFJ01_2017AMCPY"  : {"xsec": 2.04, "filter":  "DY01JVBF", "nameforfile":"DY105VBF_2017AMCPY"},
+"DY105VBFJ2_2017AMCPY"  : {"xsec": 2.04, "filter":  "DY2JVBF", "nameforfile":"DY105VBF_2017AMCPY"},
 "DY105VBF_2017AMCPY"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
 #"DY105VBF_2017AMCPYnew"  : {"xsec": 2.04, "filter":  "VBFFilterFlag"},
 "DY105VBF_2017MGPY"   : {"xsec": 2.04, "filter":  "VBFFilterFlag", "training":False},
@@ -134,6 +139,9 @@ samples={
 ## Add "files" automatically if not defined
 for sample in samples:
     if not "files" in samples[sample].keys():
-        samples[sample]["files"] = [path2017+sample+".root"]
+	if "nameforfile" in samples[sample].keys() :
+            samples[sample]["files"] = [path2017+samples[sample]["nameforfile"]+".root"]
+	else:
+            samples[sample]["files"] = [path2017+sample+".root"]
 
 

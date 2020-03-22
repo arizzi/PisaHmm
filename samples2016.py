@@ -15,6 +15,12 @@ samples={
 #"DY105Inclusuve_2016AMCPY"     : {"xsec": 41.81},
 #"DY105Inclusuve_2016MGPY"      : {"xsec": 41.25},
 
+"DY105J01_2016AMCPY"     : {"xsec": 47.17, "filter":  "DY01JAntiVBF","nameforfile":"DY105_2016AMCPY"},
+"DY105J2_2016AMCPY"     : {"xsec": 47.17, "filter":  "DY2JAntiVBF", "nameforfile":"DY105_2016AMCPY"},
+"DY105VBFJ01_2016AMCPY"  : {"xsec": 1.77, "filter":  "DY01JVBF", "nameforfile":"DY105VBF_2016AMCPY"},
+"DY105VBFJ2_2016AMCPY"  : {"xsec": 1.77, "filter":  "DY2JVBF", "nameforfile":"DY105VBF_2016AMCPY"},
+
+
 "DY105_2016AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag"},
 "DY105_2016MGPY"      : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
 "DY105VBF_2016AMCPY"  : {"xsec": 1.77, "filter": "VBFFilterFlag"}, #this name has to change
@@ -107,6 +113,9 @@ samples={
 ## Add "files" automatically if not defined
 for sample in samples:
     if not "files" in samples[sample].keys():
-        samples[sample]["files"] = [path2016+sample+".root"]
+        if "nameforfile" in samples[sample].keys() :
+            samples[sample]["files"] = [path2016+samples[sample]["nameforfile"]+".root"]
+        else:
+            samples[sample]["files"] = [path2016+sample+".root"]
 
  

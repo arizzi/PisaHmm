@@ -6,7 +6,7 @@ bdtInputHistos=["Mqq_over400_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zsta
 signalHistosVariations=["DNN18AtanNoMass"]#,"DNN18AtanNoMass2"]
 signalHistos=["DNN18Atan"]#,"DNN18Atan2"]
 signalHistosMassScan=[] #["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,21)]
-balance=["pTbalanceAll","pTbalance","pTbalanceAllLog","pTbalanceLog", "pTbalanceLead","pTbalanceLeadLog"]
+balance=[]#"pTbalanceAll","pTbalance","pTbalanceAllLog","pTbalanceLog", "pTbalanceLead","pTbalanceLeadLog"]
 snapregion="SignalRegion"
 #signalHistos=["SBClassifier"]
 
@@ -18,14 +18,19 @@ histosPerSelection={
 "SideBand" : signalHistosVariations, #+ ["DNN18AtanMassSpread","DNN18AtanMassSpread2"],#+genericHistos+bdtInputHistos,
 #"BDT1p1" : bdtInputHistos+genericHistos,
 #"BDT1p2" : bdtInputHistos+genericHistos,
+}
+
+manyZregions={
 "ZRegionSLJeta0pt0":signalHistosVariations+balance,
 "ZRegionSLJeta1pt0":signalHistosVariations+balance,
 "ZRegionSLJeta2pt0":signalHistosVariations+balance,
 "ZRegionSLJeta2pt1":signalHistosVariations+balance,
 "ZRegionSLJeta3pt0":signalHistosVariations+balance,
 "ZRegionSLJeta3pt1":signalHistosVariations+balance,
-
 }
+#histosPerSelection.update(manyZregions)
+
+
 histosPerSelectionFullJecs={
 "SignalRegion":signalHistos+signalHistosMassScan,
 "SideBand":signalHistosVariations, #+["DNN18AtanMassSpread","DNN18AtanMassSpread2"],
@@ -35,14 +40,8 @@ histosPerSelectionFullJecs={
 #"SideBand":["BDTAtanNoMass","DNNAtanNoMass","DNN18AtanNoMass"],
 #"ZRegion":["BDTAtanNoMass","pTbalanceAll","DNNAtanNoMass","DNN18AtanNoMass"],
 #ZRegionSMP":["BDTAtanNoMass","pTbalanceAll","DNNAtanNoMass"],
-"ZRegionSLJeta0pt0":signalHistosVariations+balance,
-"ZRegionSLJeta1pt0":signalHistosVariations+balance,
-"ZRegionSLJeta2pt0":signalHistosVariations+balance,
-"ZRegionSLJeta2pt1":signalHistosVariations+balance,
-"ZRegionSLJeta3pt0":signalHistosVariations+balance,
-"ZRegionSLJeta3pt1":signalHistosVariations+balance,
 }
-
+#histosPerSelectionFullJecs.update(manyZregions)
 
 #quick override for missing plots
 if False:

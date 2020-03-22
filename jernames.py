@@ -12,3 +12,13 @@ jernames=[
 "JEReta2pt1Down",
 "JEReta3pt1Down",
 ]
+
+
+if True : #split in match vs nomatch
+  jerUponly=[x for x in jernames if "Up" in x]
+  jernames=[]
+  for suffix in ["MatchUp","MatchDown","NotMatchUp","NotMatchDown"] :
+	  jernames+=[x[:-2]+suffix for x in jerUponly]
+
+print "JERNAMES"
+print jernames
