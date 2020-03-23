@@ -19,7 +19,7 @@ combineCards.py run2016=datacard2016.txt run2017=datacard2017.txt run2018=dataca
 #TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE $SIGNALBDT"
 #TOFIT="$SIDEBDT $ZREGIONBDT"
 TOMASK="$SIGNAL" # $ZREGION"
-TOFIT="$SIDE $ZREGION $ZCONTROL"
+TOFIT="$SIDE " # $ZREGION $ZCONTROL"
 PREFITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 PREFITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 PREFIT="--setParameters $PREFITMASK$PREFITNOMASK"
@@ -27,7 +27,7 @@ PREFIT="--setParameters $PREFITMASK$PREFITNOMASK"
 #TOMASK="$ZCONTROL $SIGNAL $ZREGION  $SIDE"
 #TOFIT="$SIDEBDT $ZREGIONBDT $SIGNALBDT"
 TOMASK=" $ZREGION"
-TOFIT="$SIDE $SIGNAL $ZCONTROL"
+TOFIT="$SIDE $SIGNAL" # $ZCONTROL"
 FITMASK=`for y in $YEARS ; do for i in $TOMASK; do echo -ne mask_${y}_${i}=1, ; done ; done`
 FITNOMASK=`for y in $YEARS ; do for i in $TOFIT; do echo -ne mask_${y}_${i}=0, ; done ; done`
 FIT="--setParameters $FITMASK$FITNOMASK"

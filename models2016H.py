@@ -152,6 +152,6 @@ for i in  signalHistosMassScan :
 
 
 from systematicGrouping import *
-systematicDetail = systematicGrouping(background, signal,jesList)
+systematicDetail = systematicGrouping(background, signal,jesList,"2016")
 
 

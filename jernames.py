@@ -14,7 +14,7 @@ jernames=[
 ]
 
 
-if True : #split in match vs nomatch
+if False : #split in match vs nomatch
   jerUponly=[x for x in jernames if "Up" in x]
   jernames=[]
   for suffix in ["MatchUp","MatchDown","NotMatchUp","NotMatchDown"] :

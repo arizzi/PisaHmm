@@ -14,7 +14,7 @@ background={
 ],
 "Top":[
    ### Single Top (s, t, tW channels) ###
-   "STs_2017AMCPY",
+#   "STs_2017AMCPY",
    "STt_2017POWPY",
    "STwt_2017POWPY", 
    
@@ -34,7 +34,7 @@ background={
          #--- inclusive ---
         "W2J_2017AMCPY",
        ##"W1J_2017AMCPY",
-        "W0J_2017AMCPY", 
+#        "W0J_2017AMCPY", 
          
          ### WW ###
          #--- 2 lept ---
@@ -51,7 +51,7 @@ background={
          ### MISSING ###"WZ2l2q_2017AMC_MADSPIN_PY",
          #--- 1 lept ---
         "WZ1l1n2q_2017AMCPY",
-        "WZ1l3n_2017AMCPY", 
+#        "WZ1l3n_2017AMCPY", 
          
          ### ZZ ###
          #--- 4 lept ---
@@ -147,6 +147,6 @@ for i in  signalHistosMassScan :
  rebin[i]=rebin["DNN18Atan"]
 
 from systematicGrouping import *
-systematicDetail = systematicGrouping(background, signal,jesList)
+systematicDetail = systematicGrouping(background, signal,jesList,"2017")
 
 
