@@ -11,31 +11,31 @@ background={
    #"EWKZ105FIX2_2016MGHERWIG",
    "EWKZ105FIX2_2016MGHERWIG",
    # interference with DY
-  "EWKZint_2016MGPY"
+#  "EWKZint_2016MGPY"
 ],
 "Top":[
    ### Single Top (s, t, tW channels) ###
-  "STs_2016AMCPY",
-  "STt_2016POW_MADSPIN_PY",
+# "STs_2016AMCPY",
+# "STt_2016POW_MADSPIN_PY",
    "STwt_2016POWPY", 
    
    ### Single Anti-Top (s, t, tW channels) ###
    #"STsbar_2016AMCPY",
-  "STtbar_2016POW_MADSPIN_PY",
+#  "STtbar_2016POW_MADSPIN_PY",
    "STwtbar_2016POWPY",
    
    ### TTbar (leptonic, semileptonic, hadronic)
    "TTlep_2016POWPY",   # 2 lept
-   "TTsemi_2016POWPY", # 1 lept
+#   "TTsemi_2016POWPY", # 1 lept
 ### MISSING ### "TThad_2016POWPY",  # 0 lept
    ### TTbar alternatives (inclusive): "TT_2016POWPY", "TT_2016AMCPY",
 ],
 "Other":[
          ### W+jets ###
          #--- inclusive ---
-        "W2J_2016AMCPY",
-        "W1J_2016AMCPY",
-        "W0J_2016AMCPY", 
+ #      "W2J_2016AMCPY",
+  #     "W1J_2016AMCPY",
+   #    "W0J_2016AMCPY", 
          
          ### WW ###
          #--- 2 lept ---
@@ -46,18 +46,18 @@ background={
          
          ### WZ ###
          #--- 3 lept ---
-        "WZ3l1n_2016AMCPY", ## Alternative: #"WZ3l1n_2016POWPY"
+    #   "WZ3l1n_2016AMCPY", ## Alternative: #"WZ3l1n_2016POWPY"
          #--- 2 lept ---
          "WZ2l2q_2016AMC_MADSPIN_PY",
          #--- 1 lept ---
 ### MISSING ### "WZ1l1n2q_2016AMCPY",
-        "WZ1l3n_2016AMCPY", 
+     #  "WZ1l3n_2016AMCPY", 
          
          ### ZZ ###
          #--- 4 lept ---
 ### MISSING ### "ZZ4l_2016POWPY",
          #--- 2 lept ---
-        "ZZ2l2q_2016POWPY",
+      # "ZZ2l2q_2016POWPY",
 ### MISSING ### "ZZ2l2n_2016POWPY",
          #--- 0 lept ---
 ## MISSING ### "ZZ2q2n_2016POWPY",

@@ -17,7 +17,7 @@ def systematicGrouping (background, signal,jesList,year) :
     legendGrouping.update(background)
     legendGrouping.update(signal)
 
-    DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J"]
+    DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J", "DY105J01", "DY105VBFJ01","DY105J2", "DY105VBFJ2",]
     EWK= ["EWKZ", "EWKZint", "EWKZ105FIX","EWKZ105","EWKZ105FIX2"] 
     TT = ["TTlep","TTsemi","TThad", "TT"]
     ST = ["STs","STwtbar","STwt","STtbar","STt"]
@@ -82,7 +82,7 @@ def systematicGrouping (background, signal,jesList,year) :
                    "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"], #"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
                 },
                 "alternativeSamples": {
-#                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
+                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
 #		    "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
 #		    "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
 #		    "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),

@@ -6,7 +6,7 @@
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
+path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/" #reduced JES
 
 #path2018data = path2018
 

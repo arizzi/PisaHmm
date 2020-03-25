@@ -8,7 +8,7 @@ import re
 ##############################################################################################################
 #########################  region[x] : keys are plot names, values are region names  #########################
 ##############################################################################################################
-regionName = {"SignalRegion" : "SR", "SideBand" : "SB", "ZRegion" : "ZR", "PreSel" : "PS", "ZRegionSLJeta0pt0" : "ZRegionSLJeta0pt0","ZRegionSLJeta1pt0" : "ZRegionSLJeta1pt0","ZRegionSLJeta2pt0" : "ZRegionSLJeta2pt0","ZRegionSLJeta2pt1" : "ZRegionSLJeta2pt1","ZRegionSLJeta3pt0" : "ZRegionSLJeta3pt0","ZRegionSLJeta3pt1" : "ZRegionSLJeta3pt1",}
+regionName = {"SignalRegion" : "SR", "SideBand" : "SB", "ZRegion" : "ZR", "PreSel" : "PS", "ZRegionSLJeta0pt0" : "ZRegionSLJeta0pt0","ZRegionSLJeta1pt0" : "ZRegionSLJeta1pt0","ZRegionSLJeta2pt0" : "ZRegionSLJeta2pt0","ZRegionSLJeta2pt1" : "ZRegionSLJeta2pt1","ZRegionSLJeta3pt0" : "ZRegionSLJeta3pt0","ZRegionSLJeta3pt1" : "ZRegionSLJeta3pt1","SignalRegionT" : "SRT", "SideBandT" : "SBT", "ZRegionT" : "ZRT",}
 
 
 

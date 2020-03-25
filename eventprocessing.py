@@ -9,7 +9,7 @@ def getFlow(year):
 	#flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
 	if FSR :
 	    if FSRnew :
-	       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/vbfHmm_"+year+"AMCPY.root")
+	       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/vbfHmm_"+year+"AMCPY.root")
 	    else:
 	       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/VBF_HToMuMu_nano2016.root")
 	else:

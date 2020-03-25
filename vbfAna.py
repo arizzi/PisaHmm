@@ -412,7 +412,21 @@ if len(sys.argv[2:]) :
 	   print "failed",s
 	   toproc.append((s,samples[s]["files"]))
    else:
-       toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
+      if sys.argv[2][:5]=="model":
+	import importlib
+	model=importlib.import_module(sys.argv[2])
+#	samples=model.samples
+	allmc= [y for x in model.background for y in model.background[x]]+[y for x in model.signal for y in model.signal[x]]
+	alldata= [y for x in model.data for y in model.data[x]]
+        for x in allmc :
+          print x,"\t",samples[x]["xsec"]
+        for x in alldata :
+          print x,"\t",samples[x]["lumi"]
+
+        toproc=[ (s,samples[s]["files"]) for s in sams if s in allmc+alldata]
+	
+      else:
+          toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
 
 print "Will process", toproc
    

@@ -83,7 +83,7 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 signal={
 "VBF H":["vbfHmm_2018AMCPY"], 
-"gg H":["ggHmm_2018POWPY"],  #AR# fix use AMC!! 
+"gg H":["ggHmm_2018AMCPY"],  #AR# fix use AMC!! 
 #AR# "VH":["WplusHmm_2018POWPY","WminusHmm_2018POWPY", "zHmm_2018POWPY"],
 #AR# "ttH":["ttHmm_2018POWPY"]
 }
