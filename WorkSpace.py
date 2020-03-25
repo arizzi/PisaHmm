@@ -203,8 +203,7 @@ def modifySystematicDetail(systematicDetail, listAllSample_noYear, all_histo_all
                 systematicDetail[syst]["decorrelate"].pop(g, None)
           
         if len(systematicDetail[syst]["decorrelate"])==0 : systematicDetail.pop(syst, None)
-        elif not re.search("__Norm", syst) :
-        #elif len(systematicDetail[syst]["decorrelate"].keys()) > 1:
+        elif not re.search("__Norm", syst) and len(systematicDetail[syst]["decorrelate"].keys()) > 1:
             for g in systematicDetail[syst]["decorrelate"] :
                 systematicDetail[syst+g] =copy.deepcopy(systematicDetail[syst])
                 if systematicDetail[syst]["type"] != "lnN" and systematicDetail[syst]["type"] != "normalizationOnly" :
