@@ -9,7 +9,7 @@ background={
 
 "VBF Z":[
    #"EWKZ105FIX2_2016MGHERWIG",
-   "EWKZ105FIX2_2016MGHERWIG",
+   "EWKZ105CORR_2016MGHERWIG",
    # interference with DY
 #  "EWKZint_2016MGPY"
 ],
@@ -79,12 +79,12 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
 signal={
-"VBF H":["vbfHmm_2016AMCPY"], ## Alternative: "vbfHmm_2016POWPY"
+"VBF H":["vbfHmm_2016POWPY"], ## Alternative: "vbfHmm_2016POWPY"
 "gg H":["ggHmm_2016AMCPY"],   ## Alternative: "ggHmm_2016POWPY"
 #"ZH":["zHmm_2016POWPY"],
 #"WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],
-"VH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY", "zHmm_2016POWPY"],
-"ttH":["ttHmm_2016POWPY"]
+#"VH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY", "zHmm_2016POWPY"],
+#"ttH":["ttHmm_2016POWPY"]
 }
 
 #legend sorting
@@ -123,7 +123,7 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 #ystematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 #systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down","PDFX2Up","PDFX2Down"]
+systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down","PDFX2Up","PDFX2Down","EWKZjjPartonShowerUp","EWKZjjPartonShowerDown","SignalPartonShowerUp","SignalPartonShowerDown"]
 
 systematicsToPlot+=["JESUp","JESDown"]
 

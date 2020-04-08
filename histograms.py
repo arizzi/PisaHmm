@@ -5,7 +5,7 @@ bdtInputHistos=["Mqq_over400_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zsta
 #signalHistos=["SBClassifier","BDTAtan","LHE_NpNLO","DNNClassifier", "DNNAtan", "DNN18Atan"]#,"DNN18AtanNoQGL"]
 signalHistosVariations=["DNN18AtanNoMass"]#,"DNN18AtanNoMass2"]
 signalHistos=["DNN18Atan"]#,"DNN18Atan2"]
-signalHistosMassScan=[] #["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,21)]
+signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,21)]
 balance=["pTbalanceAll"]#"pTbalance","pTbalanceAllLog","pTbalanceLog", "pTbalanceLead","pTbalanceLeadLog"]
 snapregion="SignalRegion"
 #signalHistos=["SBClassifier"]
@@ -13,11 +13,11 @@ snapregion="SignalRegion"
 histosPerSelection={
 #"PreSel" : ["Higgs_m"],
 "SignalRegion": signalHistos+signalHistosVariations+signalHistosMassScan, #+bdtInputHistos+ genericHistos,
-"ZRegion": signalHistosVariations+balance,#+genericHistos +bdtInputHistos,
+#"ZRegion": signalHistosVariations+balance,#+genericHistos +bdtInputHistos,
 "SideBand" : signalHistosVariations, #+ ["DNN18AtanMassSpread","DNN18AtanMassSpread2"],#+genericHistos+bdtInputHistos,
-"SignalRegionT": signalHistos+signalHistosVariations+signalHistosMassScan, #+bdtInputHistos+ genericHistos,
-"ZRegionT": signalHistosVariations+balance,#+genericHistos +bdtInputHistos,
-"SideBandT" : signalHistosVariations, #+ ["DNN18AtanMassSpread","DNN18AtanMassSpread2"],#+genericHistos+bdtInputHistos,
+#"SignalRegionT": signalHistos+signalHistosVariations+signalHistosMassScan, #+bdtInputHistos+ genericHistos,
+#"ZRegionT": signalHistosVariations+balance,#+genericHistos +bdtInputHistos,
+#"SideBandT" : signalHistosVariations, #+ ["DNN18AtanMassSpread","DNN18AtanMassSpread2"],#+genericHistos+bdtInputHistos,
 #"ZRegionSMP": signalHistosVariations+["pTbalanceAll"]+bdtInputHistos,
 #"BDT1p1" : bdtInputHistos+genericHistos,
 #"BDT1p2" : bdtInputHistos+genericHistos,
@@ -37,10 +37,10 @@ manyZregions={
 histosPerSelectionFullJecs={
 "SignalRegion":signalHistos+signalHistosMassScan,
 "SideBand":signalHistosVariations, #+["DNN18AtanMassSpread","DNN18AtanMassSpread2"],
-"ZRegion":signalHistosVariations+balance,
-"SignalRegionT":signalHistos+signalHistosMassScan,
-"SideBandT":signalHistosVariations, #+["DNN18AtanMassSpread","DNN18AtanMassSpread2"],
-"ZRegionT":signalHistosVariations+balance,
+#"ZRegion":signalHistosVariations+balance,
+#"SignalRegionT":signalHistos+signalHistosMassScan,
+#"SideBandT":signalHistosVariations, #+["DNN18AtanMassSpread","DNN18AtanMassSpread2"],
+#"ZRegionT":signalHistosVariations+balance,
 #"ZRegionSMP":["pTbalanceAll","DNN18AtanNoMass"],
 #"SignalRegion":["BDTAtan","DNNAtan","DNN18Atan"],#,"DNN18AtanNoQGL"],
 #"SideBand":["BDTAtanNoMass","DNNAtanNoMass","DNN18AtanNoMass"],
