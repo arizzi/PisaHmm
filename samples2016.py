@@ -8,8 +8,8 @@
 #path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/" 
 path2016 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/" #reduced JES
 #path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-#path2016data = path2016
-path2016data = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_00/"
+path2016data = path2016
+#path2016data = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_00/"
 
 samples={
 #"DY105Inclusuve_2016AMCPY"     : {"xsec": 41.81},
@@ -33,7 +33,8 @@ samples={
 #"DYTau_2016AMCPY" : {"xsec":5765.40 / 3. * 0.1739 * 0.1739},
 "DYM50_2016AMCPY" : {"xsec":5765.40},
 
-"EWKZ105FIX2_2016MGHERWIG"   : {"xsec": 0.07486} ,#,"files": [path2016+"/EWKZ105FIX3_2016MGHERWIG.root"] },
+"EWKZ105FIX2_2016MGHERWIG"   : {"xsec": 0.07486,"files": [path2016+"/EWKZ105FIX3_2016MGHERWIG.root"] },
+"EWKZ105CORR_2016MGHERWIG"   : {"xsec": 0.07486 },
 "EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ105_2016MGPY"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2016MGHERWIG" : {"xsec":1.664},
@@ -46,7 +47,7 @@ samples={
 "STtbar_2016POW_MADSPIN_PY" : {"xsec":80.95}, ##or 26.38!??  80.95 is for inclusive decays (used), 26.38 is for lepton decays (not used)
 "STt_2016POW_MADSPIN_PY"    : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
-"data2016": {"lumi":35900.,"data":True,"files":[path2016data+"/data2016.root"]},
+"data2016": {"lumi":35900.,"data":True,"files":[path2016data+"/SingleMuonRun2016.root"]},
 
 "TT_2016POWPY"      : {"xsec":809., "training":False},
 "TTlep_2016POWPY"   : {"xsec":85.65},
@@ -66,14 +67,14 @@ samples={
 
 
 #"WW2l2n_2016POWHERWIG"      : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
-"WW2l2n_2016POWPY"          : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
+"WW2l2n_2016POWPY"          : {"xsec": 12.178},#118.7 * 21.34 * 21.34 / 10000.},
 #"WWlnqq_2016AMC_MADSPIN_PY" : {"xsec":118.7 * 2 * 21.34 * 67.41 / 10000.},
 
 
 
 #"WZ1l1n2q_2016AMCPY"            : {"xsec":47.13 * 21.34 * 69.91 / 10000.},
 "WZ1l3n_2016AMCPY"              : {"xsec":47.13 * 21.34 * 20.00 / 10000.},
-"WZ2l2q_2016AMC_MADSPIN_PY"     : {"xsec":47.13 * 6.729 * 67.41 / 10000.},
+"WZ2l2q_2016AMC_MADSPIN_PY"     : {"xsec": 6.321},#}47.13 * 6.729 * 67.41 / 10000.},
 #"WZ3l1n_2016POWPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 "WZ3l1n_2016AMCPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 

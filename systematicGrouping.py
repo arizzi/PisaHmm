@@ -18,7 +18,7 @@ def systematicGrouping (background, signal,jesList,year) :
     legendGrouping.update(signal)
 
     DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J", "DY105J01", "DY105VBFJ01","DY105J2", "DY105VBFJ2",]
-    EWK= ["EWKZ", "EWKZint", "EWKZ105FIX","EWKZ105","EWKZ105FIX2"] 
+    EWK= ["EWKZ", "EWKZint", "EWKZ105FIX","EWKZ105","EWKZ105FIX2","EWKZ105CORR"] 
     TT = ["TTlep","TTsemi","TThad", "TT"]
     ST = ["STs","STwtbar","STwt","STtbar","STt"]
     WW = ["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]
@@ -73,16 +73,30 @@ def systematicGrouping (background, signal,jesList,year) :
                 "value":1.0,
         },
 
-        "Alternative":{
+        "SignalPartonShower":{
+                "type": "shape",
+                "value": 1.0,
+                "powerUp":  +1., ## up   = ratio^alpha_up   * nom
+                "powerDown": -1., ## down = ratio^alpha_down * nom
+                "decorrelate":{
+                   "vbfHmm" :["vbfHmm"],
+                },
+                "alternativeSamples": {
+                    "vbfHmm_2016POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+                    "vbfHmm_2017POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+                    "vbfHmm_2018POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+	},
+	},
+        "EWKZjjPartonShower":{
                 "type": "shapeOnly",
                 "value": 1.0,
                 "powerUp":  +0.2,   ## up   = ratio^alpha_up   * nom
                 "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
-                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"], #"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
+                   "EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ","EWKZ105CORR"], #"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
                 },
                 "alternativeSamples": {
-                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
+
 #		    "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
 #		    "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
 #		    "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
@@ -97,7 +111,10 @@ def systematicGrouping (background, signal,jesList,year) :
                     "EWKZ105_2018MGHERWIG":     ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
                     "EWKZ_2016MGHERWIG":        ("EWKZ_2016MGPY",    "EWKZ_2016MGHERWIG"),
                     "EWKZ_2017MGHERWIG":        ("EWKZ_2017MGPY",    "EWKZ_2017MGHERWIG"),
-                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG")
+                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG"),
+                    "EWKZ105CORR_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105CORR_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105CORR_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
                 },
         },
         ##"Alternative":{

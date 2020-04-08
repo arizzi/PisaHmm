@@ -8,8 +8,8 @@
 
 path2017     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
 path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-path2017 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
 path2017 = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_08/" #fix skim JER
+path2017 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_0/" #reduced JES
 
 #path2017data = path2017
 
@@ -53,6 +53,7 @@ samples={
 "EWKZ_2017MGPY"     : {"xsec":1.664},
 "EWKZint_2017MGPY"  : {"xsec":0.128},
 "EWKZ105FIX2_2017MGHERWIG"   : {"xsec": 0.0789 },
+"EWKZ105CORR_2017MGHERWIG"   : {"xsec": 0.0789 },
 
 
 "STs_2017AMCPY"             : {"xsec":3.36},
@@ -61,7 +62,7 @@ samples={
 "STtbar_2017POWPY"          : {"xsec":80.95}, ##or 26.38!??  80.95 is for inclusive decays (used), 26.38 is for lepton decays (not used)
 "STt_2017POWPY"             : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
-"data2017": {"lumi":41530.,"data":True, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_04/data2017.root"]},
+"data2017": {"lumi":41530.,"data":True, "files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/data2017.root"]},
 #"data2017": {"lumi":41530.,"data":True, "files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/SingleMuonRun2017.root"]},
 
 "TT_2017AMCPY"      : {"xsec":809., "training":False},    #generator is different from 2016
@@ -84,7 +85,7 @@ samples={
 
 
 #"WW2l2n_2017POWHERWIG"      : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
-"WW2l2n_2017POWPY"          : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
+"WW2l2n_2017POWPY"          : {"xsec":12.178 }, #118.7 * 21.34 * 21.34 / 10000.},
 "WWlnqq_2017POWPY"          : {"xsec":118.7 * 2 * 21.34 * 67.41 / 10000.},
 #"WWlnqq_2017POWPY"          : {"xsec":118.7 * 67.41 * 67.41 / 10000.},      # useless
 
@@ -93,7 +94,7 @@ samples={
 
 "WZ1l1n2q_2017AMCPY"            : {"xsec":47.13 * 21.34 * 69.91 / 10000.},
 "WZ1l3n_2017AMCPY"              : {"xsec":47.13 * 21.34 * 20.00 / 10000.},
-"WZ2l2q_2017AMC_MADSPIN_PY"     : {"xsec":47.13 * 6.729 * 67.41 / 10000.},
+"WZ2l2q_2017AMC_MADSPIN_PY"     : {"xsec": 6.321}, #47.13 * 6.729 * 67.41 / 10000.},
 "WZ3l1n_2017POWPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 "WZ3l1n_2017AMCPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 
@@ -126,7 +127,9 @@ samples={
 
 "vbfHmm_2017POWPY"      : {"xsec":0.0008210722, "training":False},
 "vbfHmm_2017AMCPY"      : {"xsec":0.0008210722},
-"vbfHmm_2017AMCPY2"     : {"xsec":0.0008210722},
+"vbfHmm_2017POWPY2"     : {"xsec":0.0008210722},
+"vbfHmm_2017POWHERWIG7"     : {"xsec":0.0008210722},
+"vbfHmm_2017POWHERWIG"     : {"xsec":0.0008210722},
 
 "zHmm_2017POWPY"        : {"xsec":0.00019201024},
 "ttHmm_2017POWPY"       : {"xsec":0.00011034496},

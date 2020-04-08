@@ -38,6 +38,7 @@ samples={
 "EWKZint_2018MGPY"  : {"xsec":0.128},
 "EWKZ105_2018MGPY"     : {"xsec":0.0508896},
 "EWKZ105FIX2_2018MGHERWIG"   : {"xsec": 0.0789 },
+"EWKZ105CORR_2018MGHERWIG"   : {"xsec": 0.0789 },
 
 
 "STs_2018AMCPY"             : {"xsec":3.36},
@@ -47,7 +48,8 @@ samples={
 "STt_2018POWPY"             : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
 
-"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2018.root"]},
+#"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2018.root"]},
+"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/data2018.root"]},
 #data2018V16": {"lumi":59970.,"data":True},
 
 
@@ -71,7 +73,7 @@ samples={
 
 
 
-"WW2l2n_2018POWPY"          : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
+"WW2l2n_2018POWPY"          : {"xsec":12.178},#118.7 * 21.34 * 21.34 / 10000.},
 #"WW2l2n_PSw_2018POWPY"      : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
 "WWlnqq_2018POWPY"          : {"xsec":118.7 * 2 * 21.34 * 67.41 / 10000.},
 #"WWlnqq_2018AMC_MADSPIN_PY" : {"xsec":118.7 * 2 * 21.34 * 67.41 / 10000.},
@@ -79,7 +81,7 @@ samples={
 
 
 "WZ1l3n_2018AMCPY"              : {"xsec":47.13 * 21.34 * 20.00 / 10000.},
-"WZ2l2q_2018AMC_MADSPIN_PY"     : {"xsec":47.13 * 6.729 * 67.41 / 10000.},
+"WZ2l2q_2018AMC_MADSPIN_PY"     : {"xsec":6.321}, #47.13 * 6.729 * 67.41 / 10000.},
 "WZ3l1n_2018POWPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 #"WZ3l1n_2018AMCPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 

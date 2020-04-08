@@ -11,10 +11,10 @@ DCnominal=datacard${YEAR}Hnominal.root
 
 echo combine -M Significance  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist
 combine -M Significance  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist  >>${YEAR}.log
-echo combine -M MultiDimFit  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist  --saveToys
+echo combine -M MultiDimFit -n$YEAR  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist  --saveToys
 
-combine -M MultiDimFit  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist  --saveToys >>${YEAR}.log
+combine -M MultiDimFit -n$YEAR -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist  --saveToys >>${YEAR}.log
 
-combine -M MultiDimFit -t -1 $DCnominal --setParameters r=1  --toysFrequentist  --toysFile higgsCombineTest.MultiDimFit.mH120.123456.root 
+combine -M MultiDimFit -n$YEAR -t -1 $DCnominal --setParameters r=1  --toysFrequentist  --toysFile higgsCombine${YEAR}.MultiDimFit.mH120.123456.root 
 
 
