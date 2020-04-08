@@ -59,7 +59,7 @@ ftxt.write(flow.Describe(used))
 snap=[] 
 snaplist=["Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","event","Higgs_m_uncalib","nJet","Higgs_m","QJet0_qgl","QJet1_qgl","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_pt","Mu0_corrected_pt","Mu1_corrected_pt","Mu1_pt","Mu0_eta","Mu1_eta","Mu1_phi","Mu0_phi","nGenPart","GenPart_pdgId","GenPart_eta","GenPart_phi","GenPart_pt"]#,"twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion","qqDeltaEta","event","HLT_IsoMu24","QJet0_pt_nom","QJet1_pt_nom","QJet0_puId","QJet1_puId","SBClassifier","Higgs_m","Mqq_log","mmjj_pt_log","NSoft5","ll_zstar","theta2","mmjj_pz_logabs","MaxJetAbsEta","ll_zstar_log"]#,"QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
 #snaplist=["QJet0_prefireWeight","QJet1_prefireWeight","PrefiringCorrection","CorrectedPrefiringWeight"]
-snaplist=[ "event"]
+snaplist=[]# "event"]
 fullsnaplist=["Mu0_charge","Mu1_charge","Mu0_dxybs","Mu1_dxybs","Mu0_pt_GeoFitCorrection","Mu1_pt_GeoFitCorrection","Mu0_eta","Mu0_pt","Mu1_eta","Mu1_pt",
     "Higgs_pt", "Higgs_eta", "Higgs_mRelReso", "Higgs_mReso", "Higgs_m", "ll_zstar_log", "ll_zstar",
     "QJet0_pt_touse", "QJet0_phi", "QJet0_eta", "QJet0_pt_nom", "QJet0_puId", "QJet0_qgl",
@@ -75,6 +75,7 @@ flow.binningRules = binningrules
 
 flowData=copy.deepcopy(flow)
 procData=flowData.CreateProcessor("eventProcessorData"+year,snaplist+["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
+#procData=flowData.CreateProcessor("eventProcessorData"+year,snaplist,histosPerSelection,snap,"SignalRegion",nthreads)
 
 print "Data processor created"
 
@@ -97,7 +98,7 @@ addQGLvariation(flow)
 addPreFiringVariation(flow)
 
 
-snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "PrefiringWeight", "QGLweight","QJet1_partonFlavour","QJet0_partonFlavour"]
+#snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "PrefiringWeight", "QGLweight","QJet1_partonFlavour","QJet0_partonFlavour"]
 systematics=flow.variations #take all systematic variations
 print "Systematics for all plots", systematics
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
@@ -423,7 +424,7 @@ if len(sys.argv[2:]) :
         for x in alldata :
           print x,"\t",samples[x]["lumi"]
 
-        toproc=[ (s,samples[s]["files"]) for s in sams if s in allmc+alldata]
+        toproc=[ (s,samples[s]["files"]) for s in sams if s in allmc+alldata+sys.argv[3:]]
 	
       else:
           toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
