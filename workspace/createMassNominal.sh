@@ -3,6 +3,9 @@ FIRST=6
 YEAR=$1
 MASS=`seq 1200 5 1300`
 for m in $MASS ; do
+  cd MassScan$m
+  ../makerateparam1.sh ${YEAR} H
+  cd -
   F=MassScan$m/datacard${YEAR}H.txt
   FO=MassScan$m/datacard${YEAR}Hnominal.txt
   N=`wc -l $F | awk '{print $1}'`

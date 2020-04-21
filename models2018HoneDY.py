@@ -1,17 +1,14 @@
 from samples2018 import *
-import samples2016,samples2017
-samples.update(samples2016.samples)
-
 name="H"
 background={
 #"DY":["DY105_2018AMCPY"], ## Alternative: "DY105_2018MGPY"
 #"DYVBF":[ "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
-#DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
-"DY01J":["DY105J01_2018AMCPY", "DY105VBFJ01_2018AMCPY"],
-"DY2J":["DY105J2_2018AMCPY", "DY105VBFJ2_2018AMCPY"],
+"DY":["DY105_2018AMCPY", "DY105VBF_2018AMCPY"], ## Alternative: "DY105VBF_2018MGPY"
+#"DY01J":["DY105J01_2018AMCPY", "DY105VBFJ01_2018AMCPY"],
+#"DY2J":["DY105J2_2018AMCPY", "DY105VBFJ2_2018AMCPY"],
 
 "VBF Z":[
-   "EWKZ105CORR_2018MGHERWIG", ## Alternative "EWKZ_2018MGPY"
+   "EWKZ105FIX2_2018MGHERWIG", ## Alternative "EWKZ_2018MGPY"
    # interference with DY
 #AR# "EWKZint_2018MGPY" 
 ],
@@ -79,21 +76,21 @@ background={
 
 
 #sorting
-#backgroundSorted=["Other","Top","DY","VBF Z"]
-backgroundSorted=["Other","Top","DY2J","DY01J","VBF Z"]
+backgroundSorted=["Other","Top","DY","VBF Z"]
+#backgroundSorted=["Other","Top","DY2J","DY01J","VBF Z"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
 signal={
-"VBF H":["vbfHmm_2018POWPY"], 
-"gg H":["ggHmm_2018AMCPY"],  #AR# fix use AMC!! 
+"VBF H":["vbfHmm_2018AMCPY"], 
+"gg H":["ggHmm_2018POWPY"],  #AR# fix use AMC!! 
 #AR# "VH":["WplusHmm_2018POWPY","WminusHmm_2018POWPY", "zHmm_2018POWPY"],
 #AR# "ttH":["ttHmm_2018POWPY"]
 }
 
 #legend sorting
 backgroundSortedForLegend=["DY","VBF Z","Top", "Other"]
-backgroundSortedForLegend=["DY2J","DY01J","VBF Z","Top", "Other"]
+#backgroundSortedForLegend=["DY2J","DY01J","VBF Z","Top", "Other"]
 backgroundSortedForLegend+=[x for x in background if x not in backgroundSortedForLegend]
 signalSortedForLegend=["VBF H","gg H"]
 signalSortedForLegend+=[x for x in signal if x not in signalSortedForLegend]
@@ -126,7 +123,7 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 #ystematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 #systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down","PDFX2Up","PDFX2Down","EWKZjjPartonShowerUp","EWKZjjPartonShowerDown","SignalPartonShowerUp","SignalPartonShowerDown"]
+systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down","PDFX2Up","PDFX2Down"]
 
 systematicsToPlot+=["JESUp","JESDown"]
 from btagvariations import btagsys
@@ -162,6 +159,6 @@ for i in  signalHistosMassScan :
  rebin[i]=rebin["DNN18Atan"]
 
 from systematicGrouping import *
-systematicDetail = systematicGrouping(background, signal,jesList,"2018")
+systematicDetail = systematicGrouping(background, signal,jesList)
 
 

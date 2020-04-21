@@ -7,6 +7,7 @@ text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel  
 
 DC=datacard${YEAR}H.root
 
+combine -M Significance  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1    >>${YEAR}.log
 combine -M Significance  -t -1 $DC --setParameters mask_${SIGNAL}=0,mask_${SIDE}=0,r=1   --toysFrequentist  >>${YEAR}.log
 
 

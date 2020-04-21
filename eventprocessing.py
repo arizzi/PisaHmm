@@ -9,7 +9,7 @@ def getFlow(year):
 	#flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
 	if FSR :
 	    if FSRnew :
-	       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/vbfHmm_"+year+"AMCPY.root")
+	       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/vbfHmm_"+year+"AMCPY.root")
 	    else:
 	       flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/VBF_HToMuMu_nano2016.root")
 	else:
@@ -133,8 +133,8 @@ def getFlow(year):
 	#flow.Define("Jet_associatedMuonPt","abs(TakeDef(Muon_correctedFSR_pt,Jet_muonIdx1,0))")
 
 	flow.SubCollection("SelectedJet","Jet",'''
-	(year != 2017 ||  Jet_puId17 > 6 || abs(Jet_eta) < 2.6 || abs(Jet_eta) > 3.0 ) && 
-	Jet_pt_touse > jetPtCut && ( Jet_pt_touse > 50 
+	(year != 2017 ||  Jet_puId17 > 6 || abs(Jet_eta) < 2.6 || abs(Jet_eta) > 3.0) && 
+	Jet_pt_touse > jetPtCut && ( Jet_pt > 50 
 	|| (  Jet_puId17  > 0  && year==2017)
         || ((Jet_puId ) > 0 && year!=2017 ) )
 	 &&   Jet_jetId  > 0  && abs(Jet_eta) < 4.7  &&  
@@ -306,7 +306,9 @@ def getFlow(year):
 	flow.Selection("ZRegion","VBFRegion && MassWindowZ  && qqDeltaEta > 2.5", requires=["VBFRegion","MassWindowZ","PreSel"])
 	flow.Selection("ZRegionSMP","Mqq > 250 && MassWindowZ && QJet0_pt_touse> 50 && QJet1_pt_touse > 30 && twoOppositeSignMuons && twoJets && TriggerSel&& abs(SubMuon_eta) <2.4 && abs(LeadMuon_eta) < 2.4 ", requires=["twoOppositeSignMuons","twoJets"])
 	flow.Selection("TwoJetsTwoMu","twoJets && twoOppositeSignMuons", requires=["twoJets","twoOppositeSignMuons"])
-
+	flow.Selection("SignalRegionT","SignalRegion && QJet0_pt_touse>45 && QJet1_pt_touse > 27",requires=["SignalRegion"])
+	flow.Selection("ZRegionT","ZRegion && QJet0_pt_touse>45 && QJet1_pt_touse > 27",requires=["ZRegion"])
+	flow.Selection("SideBandT","SideBand && QJet0_pt_touse>45 && QJet1_pt_touse > 27",requires=["SideBand"])
 	#with bug
 	#flow.Define("SBClassifier","mva.eval(__slot,{Higgs_m,Mqq_log,mmjj_pt_log,qqDeltaEta,float(NSoft5),ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])
 	#flow.Define("SBClassifierNoMass","mva.eval(__slot,{125.,Mqq_log,mmjj_pt_log,qqDeltaEta,float(NSoft5),ll_zstarbug_log,Higgs_pt,theta2,mmjj_pz_logabs,MaxJetAbsEta})") #,inputs=["Higgs_pt","Higgs_m","Mqq","Rpt","DeltaRelQQ"])

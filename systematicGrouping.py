@@ -11,14 +11,14 @@
 
 
 
-def systematicGrouping (background, signal,jesList) :
+def systematicGrouping (background, signal,jesList,year) :
     
     legendGrouping = {}
     legendGrouping.update(background)
     legendGrouping.update(signal)
 
-    DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J"]
-    EWK= ["EWKZ", "EWKZint", "EWKZ105FIX","EWKZ105","EWKZ105FIX2"] 
+    DY = ["DY105","DY105VBF", "DY0J", "DY1J", "DY2J", "DY105J01", "DY105VBFJ01","DY105J2", "DY105VBFJ2",]
+    EWK= ["EWKZ", "EWKZint", "EWKZ105FIX","EWKZ105","EWKZ105FIX2","EWKZ105CORR"] 
     TT = ["TTlep","TTsemi","TThad", "TT"]
     ST = ["STs","STwtbar","STwt","STtbar","STt"]
     WW = ["WWdps","WWJJlnln","WLLJJln", "WW2l2n","WWlnqq"]
@@ -27,6 +27,8 @@ def systematicGrouping (background, signal,jesList) :
     WJets = ["W2J","W1J","W0J"]
     Hmm = ["vbfHmm","ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
     HmmNoVBF = ["ggHmm", "zHmm", "WplusHmm", "WminusHmm", "ttHmm"]
+    DY01J=["DY105J01", "DY105VBFJ01","DY0J","DY1J"]
+    DY2J=["DY105J2", "DY105VBFJ2","DY2J"]
 
     allSamples = {}
     for x in DY+EWK+TT+ST+WW+WZ+ZZ+WJets+Hmm : allSamples[x] = [x]
@@ -39,11 +41,13 @@ def systematicGrouping (background, signal,jesList) :
                 "type": "lnN",
                 "value":1.025
             },
-   	"XSecAndNorm" :{
+   	"XSecAndNorm"+year :{
                 "type": "lnN",
-                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY,  "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+#               "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
+                "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY01J":DY01J,"DY2J":DY2J , "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "additionalNormalizations": ["LHERen","LHEFac"], #"PDFX0"],
-                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010, "ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+#                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010 ,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY01J":1.010,"DY2J":1.010 ,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
         },
         "QGLweight":{
                 "type": "shapeOnly",
@@ -69,19 +73,33 @@ def systematicGrouping (background, signal,jesList) :
                 "value":1.0,
         },
 
-        "Alternative":{
+        "SignalPartonShower":{
+                "type": "shape",
+                "value": 1.0,
+                "powerUp":  +1., ## up   = ratio^alpha_up   * nom
+                "powerDown": -1., ## down = ratio^alpha_down * nom
+                "decorrelate":{
+                   "vbfHmm" :["vbfHmm"],
+                },
+                "alternativeSamples": {
+                    "vbfHmm_2016POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+                    "vbfHmm_2017POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+                    "vbfHmm_2018POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+	},
+	},
+        "EWKZjjPartonShower":{
                 "type": "shapeOnly",
                 "value": 1.0,
                 "powerUp":  +0.2,   ## up   = ratio^alpha_up   * nom
                 "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
-                   "vbfHmm" :["vbfHmm"],"EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ"],"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
+                   "EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ","EWKZ105CORR"], #"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
                 },
                 "alternativeSamples": {
-#                    "vbfHmm_2016AMCPY":         ("vbfHmm_2016AMCHERWIG", "vbfHmm_2016AMCPY"),
-		    "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
-		    "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
-		    "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+
+#		    "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+#		    "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+#		    "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
                     "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
                     "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
                     "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
@@ -93,7 +111,10 @@ def systematicGrouping (background, signal,jesList) :
                     "EWKZ105_2018MGHERWIG":     ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
                     "EWKZ_2016MGHERWIG":        ("EWKZ_2016MGPY",    "EWKZ_2016MGHERWIG"),
                     "EWKZ_2017MGHERWIG":        ("EWKZ_2017MGPY",    "EWKZ_2017MGHERWIG"),
-                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG")
+                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG"),
+                    "EWKZ105CORR_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
+                    "EWKZ105CORR_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
+                    "EWKZ105CORR_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
                 },
         },
         ##"Alternative":{

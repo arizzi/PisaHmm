@@ -141,9 +141,13 @@ def addDecorrelatedJER(flow):
 	       cutstring="(%s)&&(%s)"%(eta,pt)
 	    print "Jer cutstring",cutstring
 	    name="eta%spt%s"%(i,j)
-            flow.Systematic("JER%sDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%cutstring) #name, target, replacement 
             #flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerUp_touse,Jet_pt_touse)"%cutstring) #name, target, replacement
+            flow.Systematic("JER%sDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%cutstring) #name, target, replacement 
             flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_nom,Jet_pt_touse)"%cutstring) #name, target, replacement
+            flow.Systematic("JER%sMatchDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%(cutstring+"&&Jet_genJetIdx>=0")) #name, target, replacement 
+            flow.Systematic("JER%sMatchUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_nom,Jet_pt_touse)"%(cutstring+"&&Jet_genJetIdx>=0")) #name, target, replacement
+            flow.Systematic("JER%sNotMatchDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%(cutstring+"&&Jet_genJetIdx<0")) #name, target, replacement 
+            flow.Systematic("JER%sNotMatchUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_nom,Jet_pt_touse)"%(cutstring+"&&Jet_genJetIdx<0")) #name, target, replacement
 	  
 import jesnames
 def addCompleteJecs(flow,year):

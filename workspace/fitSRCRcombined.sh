@@ -11,5 +11,6 @@ combineCards.py run2016=datacard2016H.txt run2017=datacard2017H.txt run2018=data
 text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel    --channel-masks combined.txt   --PO  'map=.*Hmm.*:r[1.,-10,10]'  >>${NAME}.log
 
 DC=combined.root
+combine -M Significance $DC -t -1  --setParameters r=1    >>${NAME}.log
 combine -M Significance $DC -t -1  --setParameters r=1  --toysFrequentist  >>${NAME}.log
 

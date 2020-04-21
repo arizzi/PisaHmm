@@ -6,13 +6,19 @@
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/" #reduced JES
+path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/" #reduced JES
 
 #path2018data = path2018
 
 samples={
 #"DY105Inclusuve_2018AMCPY"     : {"xsec": 41.81},
 #"DY105Inclusuve_2018MGPY"      : {"xsec": 41.25},
+
+"DY105J01_2018AMCPY"     : {"xsec": 47.17, "filter":  "DY01JAntiVBF","nameforfile":"DY105_2018AMCPY"},
+"DY105J2_2018AMCPY"     : {"xsec": 47.17, "filter":  "DY2JAntiVBF", "nameforfile":"DY105_2018AMCPY"},
+"DY105VBFJ01_2018AMCPY"  : {"xsec": 2.03, "filter":  "DY01JVBF", "nameforfile":"DY105VBF_2018AMCPY"},
+"DY105VBFJ2_2018AMCPY"  : {"xsec": 2.03, "filter":  "DY2JVBF", "nameforfile":"DY105VBF_2018AMCPY"},
+
 
 "DY105_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
 "DY105NEW_2018AMCPY"     : {"xsec": 47.17, "filter": "VBFFilterAntiFlag", "training":False},
@@ -32,6 +38,7 @@ samples={
 "EWKZint_2018MGPY"  : {"xsec":0.128},
 "EWKZ105_2018MGPY"     : {"xsec":0.0508896},
 "EWKZ105FIX2_2018MGHERWIG"   : {"xsec": 0.0789 },
+"EWKZ105CORR_2018MGHERWIG"   : {"xsec": 0.0789 },
 
 
 "STs_2018AMCPY"             : {"xsec":3.36},
@@ -41,7 +48,8 @@ samples={
 "STt_2018POWPY"             : {"xsec":136.02}, ##or 44.33   136.02 is for inclusive decays (used), 44.33 is for lepton decays (not used)
 
 
-"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2018.root"]},
+#"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2018.root"]},
+"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/data2018.root"]},
 #data2018V16": {"lumi":59970.,"data":True},
 
 
@@ -65,7 +73,7 @@ samples={
 
 
 
-"WW2l2n_2018POWPY"          : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
+"WW2l2n_2018POWPY"          : {"xsec":12.178},#118.7 * 21.34 * 21.34 / 10000.},
 #"WW2l2n_PSw_2018POWPY"      : {"xsec":118.7 * 21.34 * 21.34 / 10000.},
 "WWlnqq_2018POWPY"          : {"xsec":118.7 * 2 * 21.34 * 67.41 / 10000.},
 #"WWlnqq_2018AMC_MADSPIN_PY" : {"xsec":118.7 * 2 * 21.34 * 67.41 / 10000.},
@@ -73,7 +81,7 @@ samples={
 
 
 "WZ1l3n_2018AMCPY"              : {"xsec":47.13 * 21.34 * 20.00 / 10000.},
-"WZ2l2q_2018AMC_MADSPIN_PY"     : {"xsec":47.13 * 6.729 * 67.41 / 10000.},
+"WZ2l2q_2018AMC_MADSPIN_PY"     : {"xsec":6.321}, #47.13 * 6.729 * 67.41 / 10000.},
 "WZ3l1n_2018POWPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 #"WZ3l1n_2018AMCPY"              : {"xsec":47.13 * 21.34 * 10.099 / 10000.},
 
@@ -112,7 +120,10 @@ samples={
 ## Add "files" automatically if not defined
 for sample in samples:
     if not "files" in samples[sample].keys():
-        samples[sample]["files"] = [path2018+sample+".root"]
+        if "nameforfile" in samples[sample].keys() :
+            samples[sample]["files"] = [path2018+samples[sample]["nameforfile"]+".root"]
+        else:
+            samples[sample]["files"] = [path2018+sample+".root"]
 
 
 #----- Hmumu xSec 125.00 ------
