@@ -348,6 +348,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     badFit = 0
     hs0=None
+    debug = False
+    if debug: ratios = []
     while hs and hs.GetMaximum()>0:
         if envelopeBinning: hs = hs.Rebin(len(envelopeBinning)-1, nomHistoRebinned.GetName(), array('d',envelopeBinning)).Clone(hs.GetName())
         if i==0:
@@ -361,6 +363,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
 	        hs0=nomHistoRebinned
 	
         ratio.Divide(hs, hs0)
+        if debug: ratios.append(ratio.Clone("ratio"+str(i)))
         ratio.Fit(funct,"QN0R")
         if abs(funct.GetParameter(0)-1)<0.2: 
             par2 += (funct.GetParameter(envelopeFunctionParameter) - envelopeFunctionParameterValues[envelopeFunctionParameter])**2
@@ -384,6 +387,13 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
     print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+    ### DEBUG: Save ratio plots
+    if debug: 
+        testFile = ROOT.TFile("debug/%s_%s_%s.root"%(hn,sy, d),"recreate")
+        funct.Write()
+        for ratio in ratios:
+            ratio.Write()
+        testFile.Close()
     return copy.copy(nhisto)
 
 def makeEnvelopeShapeOld(hn,sy,f, d, model):
