@@ -6,6 +6,7 @@ bdtInputHistos=["Mqq_over400_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zsta
 signalHistosVariations=["DNN18AtanNoMass"]#,"DNN18AtanNoMass2"]
 signalHistos=["DNN18Atan"]#,"DNN18Atan2"]
 signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,21)]
+#signalHistosMassScan=[] #"DNN18AtanM1255","DNN18AtanM1245","DNN18AtanM1250"]
 balance=["pTbalanceAll"]#"pTbalance","pTbalanceAllLog","pTbalanceLog", "pTbalanceLead","pTbalanceLeadLog"]
 snapregion="SignalRegion"
 #signalHistos=["SBClassifier"]

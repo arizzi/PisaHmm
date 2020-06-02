@@ -38,11 +38,12 @@ if year == "2018" :
    samples=samples2018
    
    
-signalSample = "vbfHmm_"+year+"AMCPY"
+signalSample = "vbfHmm_"+year+"POWPYDIPOLE"
+#signalSample = "vbfHmm_"+year+"AMCPY"
 
 
-fSignal     =ROOT.TFile.Open("out/"+signalSample+"Histos.root")
-fBackground =ROOT.TFile.Open("out/"+signalSample+"Histos.root")
+fSignal     =ROOT.TFile.Open("outROCCNoRetrain/"+signalSample+"Histos.root")
+fBackground =ROOT.TFile.Open("outROCCNoRetrain/"+signalSample+"Histos.root")
 
 
 hSignal     = fSignal.Get(variable+"___SignalRegion").Clone()
@@ -55,10 +56,10 @@ Nbins_binning = hSignal.GetNbinsX()
 MinNumberOfBin_inBinning = int(binMinWidth/xMax*Nbins_binning)
 binLimitDown = Nbins_binning
 
-minNumberOfEventPerBin = 0.3
+minNumberOfEventPerBin = 0.6
 hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"])
 tot=hSignal.Integral(0, Nbins_binning+1)
-N=tot*2
+N=13 #tot*2
 print "Total number of events:  ", tot
 delta=2.*(tot-minNumberOfEventPerBin*N)/N**2
 print "min size",minNumberOfEventPerBin, "step",delta, "N",N,"tot",tot

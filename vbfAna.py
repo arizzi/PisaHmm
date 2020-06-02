@@ -222,7 +222,7 @@ def f(ar):
 	   rdf=rdf.Define("isHerwig",("true" if "HERWIG" in s else "false"))
 	   if  "HTXS_stage1_1_fine_cat_pTjet30GeV" not in list(rdf.GetColumnNames()) :
 	       print "Add fake STXS category"
-               rdf=rdf.Define("HTXS_stage1_1_fine_cat_pTjet30GeV","0l")
+               rdf=rdf.Define("HTXS_stage1_1_fine_cat_pTjet30GeV","-1l")
 	       print "Added"
 	   if  "ggH" in s :
                print "Adding ggH weights"
@@ -291,22 +291,24 @@ def f(ar):
 	    print "adding postproc",s
 	    ouspec=specificPostProcessors[s](ou.rdf[""])
 	    print "added"
-	 
+
          normalizationHandle = ou.rdf[""].Filter("twoJets","twoJets").Mean("QGLweight")
+         normalizationHandleSR = ou.rdf["SignalRegion"].Mean("QGLweight")
+         normalizationHandleSB = ou.rdf["SideBand"].Mean("QGLweight")
 	 #Event loop should not be triggered anove this point
 
          #snaplist=["nJet","nGenJet","Jet_pt_touse","GenJet_pt","Jet_genJetIdx","Jet_pt_touse","Jet_pt","Jet_pt_nom","Jet_genPt","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","PrefiringWeight","DNN18Atan","QJet0_prefireWeight","QJet1_prefireWeight", "QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","QGLweight","genWeight","btagWeight","muEffWeight"]
 #"QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","twoJets","twoOppositeSignMuons","PreSel","VBFRegion","MassWindow","SignalRegion"]
 
  #        snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2","LHEPdfUp","LHEPdfDown","LHEPdfSquaredSum","LHEPdfRMS","nLHEPdfWeight","LHEPdfWeight","PrefiringWeight","DNN18Atan__syst__MuScaleDown","Higgs_eta__syst__MuScaleUp","Higgs_mRelReso__syst__MuScaleUp","Higgs_mReso__syst__MuScaleUp","Higgs_m__syst__MuScaleUp","Higgs_pt__syst__MuScaleUp","Mqq","Mqq_log","NSoft5__syst__MuScaleUp","QJet0_eta","QJet0_phi","QJet0_pt_touse","QJet0_qgl","QJet1_eta","QJet1_phi","QJet1_pt_touse","QJet1_qgl","Rpt__syst__MuScaleUp","event","ll_zstar__syst__MuScaleUp","minEtaHQ__syst__MuScaleUp","qqDeltaEta"]
-	 snaplist=["run","event","Higgs_m","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_GFpt","Mu1_GFpt","nbtaggedL","nbtagged","LeadMuon_pt","SubMuon_pt","SubMuon_eta","LeadMuon_eta","qqDeltaEta"]
+	 snaplist=["run","event","Higgs_m","QJet0_pt_touse","QJet1_pt_touse","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Higgs_m","qqDeltaEta","SelectedMuon_GFp4_pt0","SelectedMuon_GFp4_pt1","SignalRegionWeight__Central","QGLweight"]
          branchList = ROOT.vector('string')()
 	 map(lambda x : branchList.push_back(x), snaplist)
  #        if "lumi" not in samples[s].keys()  :
-         rep=ou.rdf[""].Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","ZRegion").Report() 
-	 rep.Print()
+ #        rep=ou.rdf[""].Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","ZRegion").Report() 
+#	 rep.Print()
 	 print "Above the cutflow for",s
-#         ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
+         ou.rdf["SignalRegion"].Define("SelectedMuon_GFp4_pt0","SelectedMuon_GFp4[0].Pt()").Define("SelectedMuon_GFp4_pt1","SelectedMuon_GFp4[1].Pt()").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
           
          if "training" in samples[s].keys() and samples[s]["training"] : 
              #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
@@ -319,6 +321,7 @@ def f(ar):
 
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
+#	 return 1
          print ou.histos.size()#,ouspec.histos.size()
          fff=ROOT.TFile.Open("out/%sHistos.root"%(s),"recreate")
          ROOT.gROOT.ProcessLine('''
@@ -327,16 +330,29 @@ def f(ar):
          
 
 	 normalization=normalizationHandle.GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
-	 print "Normalization = ", normalization 
+	 normalizationSB=normalizationHandleSB.GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
+	 normalizationSR=normalizationHandleSR.GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
+	 print "Normalization = ", normalization, normalizationSB, normalizationSR, s 
+	 ffftxt=open("out/%s.txt"%s,"w")
+	 ffftxt.write("Normalization = %s %s %s %s \n"%( normalization, normalizationSB, normalizationSR, s))
+	 ffftxt.close()
+	 print "Normalization = ", normalization, normalizationSB, normalizationSR, s 
 	 if normalization == 0:
 	    normalization =1.
+	    normalizationSR =1.
+	    normalizationSB =1.
 	 if ouspec is not None :
 	    print "Postproc hisots"
             for h in ouspec.histos :
+                hname = h.GetName()
+		nor=normalization
+		if "SignalRegion" in hname:
+			nor=normalizationSR
+		if "SideBand" in hname:
+			nor=normalizationSB
                 h.GetValue()
                 fff.cd()
-                h.Scale(1./normalization/sumws)
-                hname = h.GetName()
+                h.Scale(1./nor/sumws)
                 if "__syst__LHEPdf" in hname:
                     if h.GetMaximum()==0.: continue ## skip empty LHEPdf
                     PdfIdx = hname.split("__syst__LHEPdf")[-1]
@@ -346,10 +362,15 @@ def f(ar):
                 h.Write()
          for h in ou.histos : 
 #            print "histo"
+            hname = h.GetName()
+	    nor=normalization
+	    if "SignalRegion" in hname:
+	 	nor=normalizationSR
+	    if "SideBand" in hname:
+		nor=normalizationSB
             h.GetValue()
             fff.cd()
-            h.Scale(1./normalization/sumws)
-            hname = h.GetName()
+            h.Scale(1./nor/sumws)
             if "__syst__LHEPdf" in hname:
                 if h.GetMaximum()==0.: continue ## skip empty LHEPdf
                 PdfIdx = hname.split("__syst__LHEPdf")[-1]

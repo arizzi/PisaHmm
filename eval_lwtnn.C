@@ -60,6 +60,13 @@ std::vector<std::string> vFeb = {
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt1_feb.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_feb.json",
 "/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_feb.json"
+
+//re-add ROCC
+/*"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt0_may.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt1_may.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt2_may.json",
+"/scratch/mandorli/Hmumu/allYearsTraining/nn_evt3_may.json"
+*/
 };
 
 std::vector<std::string> vFeb2 = {

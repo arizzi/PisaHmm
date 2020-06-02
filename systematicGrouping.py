@@ -41,15 +41,22 @@ def systematicGrouping (background, signal,jesList,year) :
                 "type": "lnN",
                 "value":1.025
             },
+	"BR_mm":{
+                "type": "lnN",
+                "decorrelate": { "Hmm": Hmm},   
+                "additionalNormalizations": [], #"PDFX0"],
+                "groupValues":  {"Hmm":1.0123},
+	},
    	"XSecAndNorm"+year :{
                 "type": "lnN",
 #               "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY":DY, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "decorrelate": { "Hmm": HmmNoVBF, "EWK":EWK,"DY01J":DY01J,"DY2J":DY2J , "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "additionalNormalizations": ["LHERen","LHEFac"], #"PDFX0"],
 #                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY":1.010 ,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
-                "groupValues":  {"Hmm":1.01, "EWK":1.01, "DY01J":1.010,"DY2J":1.010 ,"ZZ":1.01,"WZ":1.01,"WW":1.01,"WJets":1.01,"TT":1.005,"ST":1.005},
+                "groupValues":  {"Hmm":1.00, "EWK":1.00, "DY01J":1.000,"DY2J":1.000 ,"ZZ":1.00,"WZ":1.00,"WW":1.00,"WJets":1.00,"TT":1.000,"ST":1.000},
         },
         "QGLweight":{
+                "decorrelate": { "Hmm": Hmm, "EWK":EWK,"DY":DY, "TT":TT ,"ST":ST, "WJets":WJets, "ZZ":ZZ, "WZ":WZ, "WW":WW},   
                 "type": "shapeOnly",
                 "value":1.0,
         },
@@ -82,41 +89,47 @@ def systematicGrouping (background, signal,jesList,year) :
                    "vbfHmm" :["vbfHmm"],
                 },
                 "alternativeSamples": {
-                    "vbfHmm_2016POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
-                    "vbfHmm_2017POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
-                    "vbfHmm_2018POWPY":         ("vbfHmm_2016POWHERWIG", "vbfHmm_2016POWPY"),
+                    "vbfHmm_2016POWPYDIPOLE":         ("vbfHmm_2018POWHERWIG7", "vbfHmm_2018POWPYDIPOLE"),##AR
+                    "vbfHmm_2017POWPYDIPOLE":         ("vbfHmm_2017POWHERWIG7", "vbfHmm_2017POWPYDIPOLE"),
+                    "vbfHmm_2018POWPYDIPOLE":         ("vbfHmm_2018POWHERWIG7", "vbfHmm_2018POWPYDIPOLE"),
 	},
 	},
-        "EWKZjjPartonShower":{
+        "DYModel":{
                 "type": "shapeOnly",
                 "value": 1.0,
-                "powerUp":  +0.2,   ## up   = ratio^alpha_up   * nom
+                "powerUp":  +0.1,   ## up   = ratio^alpha_up   * nom
                 "powerDown": -0.2, ## down = ratio^alpha_down * nom
                 "decorrelate":{
-                   "EWKZ" :["EWKZ105","EWKZ105FIX","EWKZ105FIX2","EWKZ","EWKZ105CORR"], #"DY":["DY0J", "DY1J", "DY2J"], #"EWKZ":["EWKZ"],
+                   "DY2J":["DY105J2", "DY105VBFJ2"], #"EWKZ":["EWKZ"],
                 },
                 "alternativeSamples": {
 
-#		    "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
-#		    "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
-#		    "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
-                    "EWKZ105FIX_2016MGHERWIG":  ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
-                    "EWKZ105FIX_2017MGHERWIG":  ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
-                    "EWKZ105FIX_2018MGHERWIG":  ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
-                    "EWKZ105FIX2_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
-                    "EWKZ105FIX2_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
-                    "EWKZ105FIX2_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
-                    "EWKZ105_2016MGHERWIG":     ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
-                    "EWKZ105_2017MGHERWIG":     ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
-                    "EWKZ105_2018MGHERWIG":     ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
-                    "EWKZ_2016MGHERWIG":        ("EWKZ_2016MGPY",    "EWKZ_2016MGHERWIG"),
-                    "EWKZ_2017MGHERWIG":        ("EWKZ_2017MGPY",    "EWKZ_2017MGHERWIG"),
-                    "EWKZ_2018MGHERWIG":        ("EWKZ_2018MGPY",    "EWKZ_2018MGHERWIG"),
-                    "EWKZ105CORR_2016MGHERWIG": ("EWKZ105_2016MGPY", "EWKZ105_2016MGHERWIG"),
-                    "EWKZ105CORR_2017MGHERWIG": ("EWKZ105_2017MGPY", "EWKZ105_2017MGHERWIG"),
-                    "EWKZ105CORR_2018MGHERWIG": ("EWKZ105_2018MGPY", "EWKZ105_2018MGHERWIG"),
+#                   "DY0J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+#                   "DY1J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+#                   "DY2J_2017AMCPY" : ("DY_2016AMCHERWIG","DY_2016AMCPY"),
+                    "DY105VBFJ2_2018AMCPY":  ("DY105VBFJ2_2016AMCPY", "DY105VBFJ2_2018AMCPY"),
+                    "DY105VBFJ2_2017AMCPY":  ("DY105VBFJ2_2016AMCPY", "DY105VBFJ2_2017AMCPY"),
+                    "DY105J2_2018AMCPY":  ("DY105J2_2016AMCPY", "DY105J2_2018AMCPY"),
+                    "DY105J2_2017AMCPY":  ("DY105J2_2016AMCPY", "DY105J2_2017AMCPY"),
+		}
+
+        },
+
+        "EWKZjjPartonShower":{
+                "type": "shape",
+                "value": 1.0,
+                "powerUp":  +1.,   ## up   = ratio^alpha_up   * nom
+                "powerDown": -1., ## down = ratio^alpha_down * nom
+                "decorrelate":{
+                   "EWKZ" :["EWKZ105CORR"], #"EWKZ":["EWKZ"],
+                },
+                "alternativeSamples": {
+                    "EWKZ105CORR_2016MGHERWIG": ("EWKZ105_2016MGPYDIPOLE", "EWKZ105CORR_2016MGHERWIG"),
+                    "EWKZ105CORR_2017MGHERWIG": ("EWKZ105_1718MGPYDIPOLE", "EWKZ105CORR_1718MGHERWIG"),
+                    "EWKZ105CORR_2018MGHERWIG": ("EWKZ105_1718MGPYDIPOLE", "EWKZ105CORR_1718MGHERWIG"),
                 },
         },
+
         ##"Alternative":{
                 ##"type": "shape",
                 ##"value":1.0,

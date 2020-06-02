@@ -9,7 +9,7 @@
 path2017     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/"
 path2017     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
 path2017 = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_08/" #fix skim JER
-path2017 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_0/" #reduced JES
+path2017 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_4/" #reduced JES
 
 #path2017data = path2017
 
@@ -49,6 +49,7 @@ samples={
 
 "EWKZ105_2017MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ105_2017MGPY"     : {"xsec":0.0508896, "training":False},
+"EWKZ105_2017MGPYDIPOLE"     : {"xsec":0.0508896, "training":False,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_5/EWKZ105_2017MGPYDIPOLE.root"]},
 "EWKZ_2017MGHERWIG" : {"xsec":1.664}, #it does not exist yet
 "EWKZ_2017MGPY"     : {"xsec":1.664},
 "EWKZint_2017MGPY"  : {"xsec":0.128},
@@ -130,6 +131,7 @@ samples={
 "vbfHmm_2017POWPY2"     : {"xsec":0.0008210722},
 "vbfHmm_2017POWHERWIG7"     : {"xsec":0.0008210722},
 "vbfHmm_2017POWHERWIG"     : {"xsec":0.0008210722},
+"vbfHmm_2017POWPYDIPOLE"  : {"xsec":0.0008210722},
 
 "zHmm_2017POWPY"        : {"xsec":0.00019201024},
 "ttHmm_2017POWPY"       : {"xsec":0.00011034496},

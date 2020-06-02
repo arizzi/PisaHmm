@@ -2,7 +2,7 @@ from samples2017 import *
 
 import samples2016,samples2018
 samples.update(samples2016.samples)
-#samples.update(samples2018.samples)
+samples.update(samples2018.samples)
 
 name="H"
 background={
@@ -82,8 +82,9 @@ backgroundSorted=["Other","Top","DY2J","DY01J","VBF Z"]
 #backgroundSorted=["Other","Top","DY","VBF Z"]
 backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
+
 signal={
-"VBF H":["vbfHmm_2017POWHERWIG"], ## Alternative: "vbfHmm_2017POWPY"
+"VBF H":["vbfHmm_2017POWPYDIPOLE"], ## Alternative: "vbfHmm_2017POWPY"
 "gg H":["ggHmm_2017AMCPY"],   ## Alternative: "ggHmm_2017POWPY"
 #"VH":["WplusHmm_2017POWPY","WminusHmm_2017POWPY", "zHmm_2017POWPY"],
 #"ttH":["ttHmm_2017POWPY"]
@@ -122,7 +123,7 @@ fillcolor={
 #systematicsToPlot=["JERUp","JERDown","JESUp","JESDown","WithJER","puWeightUp","puWeightDown"]
 #ystematicsToPlot=["JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
 #systematicsToPlot=["PSWeightISRUp","PSWeightISRDown","PSWeightFSRUp","PSWeightFSRDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown"]
-systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down","PDFX2Up","PDFX2Down","EWKZjjPartonShowerUp","EWKZjjPartonShowerDown","SignalPartonShowerUp","SignalPartonShowerDown"]
+systematicsToPlot=["PrefiringWeightUp","PrefiringWeightDown","LHEPdfUp","LHEPdfDown","QGLweightUp","QGLweightDown","JERUp","JERDown","puWeightUp","puWeightDown","LHERenUp","LHERenDown","LHEFacUp","LHEFacDown","MuScaleUp","MuScaleDown","AlternativeUp","AlternativeDown","PDFX1Up","PDFX1Down","PDFX0Up","PDFX0Down","PDFX2Up","PDFX2Down","EWKZjjPartonShowerUp","EWKZjjPartonShowerDown","SignalPartonShowerUp","SignalPartonShowerDown","DYModelUp","DYModelDown"]
 
 
 systematicsToPlot+=["JESUp","JESDown"]

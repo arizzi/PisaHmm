@@ -6,10 +6,10 @@
 #path2016data = "/scratchssd/mandorli/Hmumu/fileSkim2016_FSR/"
 
 #path2016     = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_6_2/" 
-path2016 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/" #reduced JES
+path2016 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_4/" #reduced JES
 #path2016     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
 path2016data = path2016
-#path2016data = "/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_00/"
+#path2016data = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/"
 
 samples={
 #"DY105Inclusuve_2016AMCPY"     : {"xsec": 41.81},
@@ -35,6 +35,12 @@ samples={
 
 "EWKZ105FIX2_2016MGHERWIG"   : {"xsec": 0.07486,"files": [path2016+"/EWKZ105FIX3_2016MGHERWIG.root"] },
 "EWKZ105CORR_2016MGHERWIG"   : {"xsec": 0.07486 },
+"EWKZ105CORR_ALLMGHERWIG"   : {"xsec": 0.07486 },
+"EWKZ105CORR_1718MGHERWIG"   : {"xsec": 0.07486 },
+"EWKZ105_2016MGPYDIPOLE"   : {"xsec": 0.07486,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_5/EWKZ105_2016MGPYDIPOLE.root"] },
+"EWKZ105_ALLMGPYDIPOLE"   : {"xsec": 0.07486 },
+"EWKZ105_1718MGPYDIPOLE"   : {"xsec": 0.07486 },
+"EWKZ105_ALLMGHERWIG"   : {"xsec": 0.07486 },
 "EWKZ105_2016MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZ105_2016MGPY"     : {"xsec":0.0508896, "training":False},
 "EWKZ_2016MGHERWIG" : {"xsec":1.664},
@@ -102,6 +108,7 @@ samples={
 "vbfHmm_2016POWHERWIG"  : {"xsec":0.0008210722},
 "vbfHmm_2016AMCPY"      : {"xsec":0.0008210722},
 "vbfHmm_2016AMCHERWIG"  : {"xsec":0.0008210722},
+"vbfHmm_2016POWPYDIPOLE"  : {"xsec":0.0008210722},
 
 "zHmm_2016POWPY"        : {"xsec":0.00019201024},
 "ttHmm_2016POWPY"       : {"xsec":0.00011034496},

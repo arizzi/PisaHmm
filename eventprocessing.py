@@ -74,7 +74,8 @@ def getFlow(year):
 	    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
 	    flow.Define("Muon_iso","Where((Muon_iso_FSR < 0.8),(Muon_pfRelIso04_all*Muon_corrected_pt-Muon_pt_FSR)/Muon_correctedFSR_pt,Muon_pfRelIso04_all)")
 
-	  flow.Define("Muon_pt_GeoFitCorrection","Map(Muon_dxybs*Muon_charge, Muon_pt,Muon_eta, [ year](float d0, float pt, float eta) { return PtGeoCor::PtGeo_BS_Roch(d0, pt, eta, year); })")
+	  flow.Define("Muon_pt_GeoFitCorrection","Map(Muon_dxybs*Muon_charge, Muon_corrected_pt,Muon_eta, [ year](float d0, float pt, float eta) { return PtGeoCor::PtGeo_BS_Roch(d0, pt, eta, year); })")
+#	  flow.Define("Muon_pt_GeoFitCorrection","Map(Muon_dxybs*Muon_charge, Muon_pt,Muon_eta, [ year](float d0, float pt, float eta) { return PtGeoCor::PtGeo_BS_Roch(d0, pt, eta, year); })")
 	  #flow.Define("Muon_pt_GeoFitCorrection","Muon_pt*2.f")
 	  
 	else :
@@ -83,7 +84,8 @@ def getFlow(year):
 	  flow.Define("Muon_correctedFSR_pt","Muon_corrected_pt")
 	  flow.Define("Muon_pt_GeoFitCorrection","Muon_pt*0.f")
 	  
-	flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_eta*0.f)")
+	flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_mass)")
+	#flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_mass*0.f)")
 	  
 	flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId && Muon_correctedFSR_pt > 20. && abs(Muon_eta) < 2.4") 
 

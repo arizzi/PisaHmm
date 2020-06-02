@@ -1,4 +1,7 @@
 from samples2016 import *
+import samples2018,samples2017
+samples.update(samples2018.samples)
+
 name="H"
 background={
 #"DY":["DY105_2016AMCPY"], ## Alternative: "DY105_2016MGPY"
@@ -79,7 +82,7 @@ backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 
 signal={
-"VBF H":["vbfHmm_2016POWPY"], ## Alternative: "vbfHmm_2016POWPY"
+"VBF H":["vbfHmm_2016POWPYDIPOLE"], ## Alternative: "vbfHmm_2016POWPY"
 "gg H":["ggHmm_2016AMCPY"],   ## Alternative: "ggHmm_2016POWPY"
 #"ZH":["zHmm_2016POWPY"],
 #"WH":["WplusHmm_2016POWPY","WminusHmm_2016POWPY"],

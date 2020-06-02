@@ -6,7 +6,7 @@
 #path2018data = "/scratch/mandorli/Hmumu/fileSkimFromNanoAOD/fileSkim2018_nanoV5/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_4_3/"
 path2018     = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_10_0/"
-path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/" #reduced JES
+path2018 = "/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_4/" #reduced JES
 
 #path2018data = path2018
 
@@ -34,11 +34,14 @@ samples={
 "EWKZ_2018MGHERWIG" : {"xsec":1.664},   # DY1J 2018 NANOAOD does not exist yet 
 #"EWKZ_20187MGHERWIG" : {"xsec":1.664},   # DY1J 2018 NANOAOD does not exist yet 
 "EWKZ_2018MGPY"     : {"xsec":1.664},
+"EWKZ_2018MGPYDIPOLE"     : {"xsec":1.664},
+"EWKZ105_2018MGPYDIPOLE"   : {"xsec": 0.0789, "files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_5/EWKZ105_2018MGPYDIPOLE.root"]},
 "EWKZ105_2018MGHERWIG"     : {"xsec":0.0508896, "training":False},
 "EWKZint_2018MGPY"  : {"xsec":0.128},
 "EWKZ105_2018MGPY"     : {"xsec":0.0508896},
 "EWKZ105FIX2_2018MGHERWIG"   : {"xsec": 0.0789 },
 "EWKZ105CORR_2018MGHERWIG"   : {"xsec": 0.0789 },
+
 
 
 "STs_2018AMCPY"             : {"xsec":3.36},
@@ -108,7 +111,8 @@ samples={
 "vbfHmm_2018POWPY"      : {"xsec":0.0008210722, "training":False},
 #"vbfHmm_PSw_2018POWPY"      : {"xsec":0.0008210722}, # it exists but it has not been hadded
 "vbfHmm_2018AMCPY"      : {"xsec":0.0008210722},
-
+"vbfHmm_2018POWPYDIPOLE"  : {"xsec":0.0008210722},
+"vbfHmm_2018POWHERWIG7" : {"xsec":0.0008210722},
 
 "zHmm_2018POWPY"        : {"xsec":0.00019201024},
 "ttHmm_2018POWPY"       : {"xsec":0.00011034496},
