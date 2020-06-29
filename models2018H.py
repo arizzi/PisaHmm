@@ -143,6 +143,7 @@ from jernames import jernames
 jesList=jesnames2018
 systematicsForDC=systematicsToPlot+[x[7:] for x in jesList ]+jernames
 
+systematicsToPlot=jernames+["JERUp","JERDown"]
 
 
 linecolor=fillcolor

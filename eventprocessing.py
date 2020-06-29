@@ -37,7 +37,13 @@ def getFlow(year):
 	flow.Define("LHEScaleWeightSafe","nLHEScaleWeight>=8?LHEScaleWeight:std::vector<float>(9,1)")
 	flow.Define("PSWeightSafe","nPSWeight>=4?PSWeight:std::vector<float>(4,1)")
 	#flow.Define("Jet_pt_touse","Jet_pt_newJEC")
-	flow.Define("Jet_pt_touse","Jet_pt")
+	#flow.Define("Jet_pt_touse","Jet_pt")
+	if int(year)==2018:
+		print "Use NEW JEC"
+		flow.Define("Jet_pt_touse","Jet_pt_newJEC")
+	else:
+		flow.Define("Jet_pt_touse","Jet_pt")
+
 	flow.Define("Jet_pt_mix","Jet_pt*(20.f/Jet_pt) + Jet_pt_nom*(1.f-20.f/Jet_pt)")
 
 	#Higgs to mumu reconstruction
@@ -350,10 +356,19 @@ def getFlow(year):
 	flow.Define("DNN18Classifier","lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {22,3})")
 	flow.Define("DNN18Atan","atanh(DNN18Classifier)")
 	flow.Define("DNN18Atan2","atanh(lwtnn_feb2.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
+	flow.Define("DNN18AtanM12509","atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m-0.09f,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
+	flow.Define("DNN18AtanM12538","atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m-0.38f,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
 	for x in range(0,21) :
 	   name="DNN18AtanM%4.0f"%((x*0.5+120)*10)
 	   bias=5.-x/2.
 	   flow.Define(name,"atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m+%ff,Higgs_mRelReso,Higgs_mReso}, {22,3}))"%bias)
+
+	for x in range(1,10) :
+	   name="DNN18AtanM%4.0f"%((x*0.1+125)*10)
+	   bias=-x/10.
+	   if x!=5 :
+  	      flow.Define(name,"atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m+%ff,Higgs_mRelReso,Higgs_mReso}, {22,3}))"%bias)
+
 
 #	flow.Define("DNNwithZClassifier","lwtnn_withZ.eval(event, {Mqq_log,Rpt,qqDeltaEta,log(ll_zstar),float(NSoft5New),minEtaHQ,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {19,3})")
 #	flow.Define("DNNnovClassifier_GF","lwtnn_nov.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m_GF,Higgs_mRelReso,Higgs_mReso}, {22,3})")
@@ -394,6 +409,14 @@ def getFlow(year):
 	#flow.Define("CS_theta","CS_pair.first")
 	#flow.Define("CS_phi","CS_pair.second")
 
+
+	flow.AddExternalCode(header="weightedMass.h",cppfiles=["weightedMass.C"],ipaths=["."])
+	flow.Define("weightDNNSB","weightDNNSB(DNN18AtanNoMass,year)")
+	flow.Selection("SignalRegionDNNWeighted","SignalRegion",requires=["SignalRegion"])
+        flow.Selection("SRplusSBDNNWeighted","Higgs_m < 150 && Higgs_m > 110 && VBFRegion &&  qqDeltaEta > 2.5",requires=["VBFRegion","PreSel"])
+#flow.Selection("SRplusSBDNNWeighted","SignalRegion || SideBand")
+	flow.Selection("TightMassRegion","SignalRegion && abs(Higgs_m-125.0f) < 2.f",requires=["SignalRegion"])
+#	flow.CentralWeight("weightDNNSB",["SignalRegionDNNWeighted","SRplusSBDNNWeighted"])
 
 	flow.AddExternalCode(header="nnlops.h",cppfiles=["nnlops.C"],ipaths=["."])
 

@@ -52,7 +52,15 @@ samples={
 
 
 #"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/mandorli/Hmumu/fileSkimFromNanoAOD/PROD_8_02/data2018.root"]},
-"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/data2018.root"]},
+#"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_12_0/data2018.root"]},
+"data2018": {"lumi":59970.,"data":True,"files":["/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_2/data2018.root"]},
+"4data2018": {"lumi":59970.,"data":True,"files":[
+"/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_2/SingleMuonRun2018A.root",
+"/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_2/SingleMuonRun2018B.root",
+"/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_2/SingleMuonRun2018C.root",
+"/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_2/SingleMuonRun2018D.root",
+
+]},
 #data2018V16": {"lumi":59970.,"data":True},
 
 

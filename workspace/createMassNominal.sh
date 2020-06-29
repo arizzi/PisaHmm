@@ -1,8 +1,9 @@
 #!/bin/bash
 FIRST=6
 YEAR=$1
-MASS=`seq 1200 5 1300`
-for m in $MASS ; do
+#MASS=`seq 1200 5 1300`
+MASS=`seq 1250 1 1260` 
+for m in $MASS 12538 ; do
   cd MassScan$m
   ../makerateparam1.sh ${YEAR} H
   cd -

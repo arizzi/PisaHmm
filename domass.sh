@@ -4,7 +4,8 @@ STRING=" -f out/" # -f outBackup/"
 YEAR=$1
 #MASS=`seq 1200 5 1300`
 #fewer points to play
-MASS=`seq 1200 5 1300`
+#MASS=`seq 1200 5 1300`
+MASS=`seq 1250 1 1260`
 for m in $MASS ; do
   echo "Launching mass",$m
   mkdir -p workspace/MassScan$m

@@ -4,15 +4,20 @@ bdtInputHistos=["Mqq_over400_log","Rpt","mmjj_pt","qqDeltaEta","NSoft5","ll_zsta
 #signalHistosVariations=["SBClassifierNoMass","BDTAtanNoMass","SBClassifierNoMassNoNSJ","BDTAtanNoMassNoNSJ","DNNClassifierNoMass", "DNNAtanNoMass","DNN18AtanNoMass"]
 #signalHistos=["SBClassifier","BDTAtan","LHE_NpNLO","DNNClassifier", "DNNAtan", "DNN18Atan"]#,"DNN18AtanNoQGL"]
 signalHistosVariations=["DNN18AtanNoMass"]#,"DNN18AtanNoMass2"]
-signalHistos=["DNN18Atan"]#,"DNN18Atan2"]
-signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,21)]
-#signalHistosMassScan=[] #"DNN18AtanM1255","DNN18AtanM1245","DNN18AtanM1250"]
+signalHistos=["DNN18Atan","DNN18AtanNoMass"]#,"DNN18Atan2"]
+signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.5+120)*10) for x in range(0,10) ]
+#signalHistosMassScan=["DNN18AtanM%4.0f"%((x*0.1+125)*10) for x in range(0,11)]
+#signalHistosMassScan=["DNN18AtanM12509","DNN18AtanM12538"]
+#signalHistosMassScan+=["DNN18AtanM12538"]
 balance=["pTbalanceAll"]#"pTbalance","pTbalanceAllLog","pTbalanceLog", "pTbalanceLead","pTbalanceLeadLog"]
 snapregion="SignalRegion"
 #signalHistos=["SBClassifier"]
 
 histosPerSelection={
 #"PreSel" : ["Higgs_m"],
+#"SignalRegionDNNWeighted" : ["Higgs_m"],
+#"SRplusSBDNNWeighted" : ["Higgs_m"],
+#"TightMassRegion" : ["DNN18AtanNoMass"],
 "SignalRegion": signalHistos+signalHistosVariations+signalHistosMassScan, #+bdtInputHistos+ genericHistos,
 #"ZRegion": signalHistosVariations+balance,#+genericHistos +bdtInputHistos,
 "SideBand" : signalHistosVariations, #+ ["DNN18AtanMassSpread","DNN18AtanMassSpread2"],#+genericHistos+bdtInputHistos,
@@ -36,6 +41,9 @@ manyZregions={
 
 
 histosPerSelectionFullJecs={
+#"SignalRegionDNNWeighted" : ["Higgs_m"],
+"SignalRegionDNNWeighted" : ["Higgs_m"],
+"SRplusSBDNNWeighted" : ["Higgs_m"],
 "SignalRegion":signalHistos+signalHistosMassScan,
 "SideBand":signalHistosVariations, #+["DNN18AtanMassSpread","DNN18AtanMassSpread2"],
 #"ZRegion":signalHistosVariations+balance,

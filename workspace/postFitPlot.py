@@ -137,12 +137,16 @@ background_schemes={}
 #import models2018Z,models2018H
 #import  models2016Z as models2018Z
 #import  models2016H as models2018H
-models2018Z=importlib.import_module("models"+args.year+"Z")
-models2018H=importlib.import_module("models"+args.year+"H")
+if args.year == "cmb" :
+   models2018Z=importlib.import_module("modelA")
+   models2018H=importlib.import_module("modelA")
+else:
+   models2018Z=importlib.import_module("models"+args.year+"Z")
+   models2018H=importlib.import_module("models"+args.year+"H")
 
 background_schemes['ch1']=[backgroundComp(x,models2018Z.background[x],models2018Z.fillcolor[x]) for x in models2018Z.backgroundSorted]+[backgroundComp(x,models2018Z.signal[x],models2018Z.fillcolor[x]) for x in models2018Z.signal]
 #background_schemes['ch2_SignalRegion']=[backgroundComp(x,models2018H.background[x],models2018H.fillcolor[x]) for x in models2018H.backgroundSorted]+[backgroundComp(x,models2018H.signal[x],models2018H.fillcolor[x]) for x in models2018H.signal]
-background_schemes['ch2']=[backgroundComp(x,models2018H.background[x],models2018H.fillcolor[x]) for x in models2018H.backgroundSorted]+[backgroundComp(x,models2018H.signal[x],models2018H.fillcolor[x]) for x in models2018H.signal]
+background_schemes['ch1']=[backgroundComp(x,models2018H.background[x],models2018H.fillcolor[x]) for x in models2018H.backgroundSorted]+[backgroundComp(x,models2018H.signal[x],models2018H.fillcolor[x]) for x in models2018H.signal]
 
 
 
@@ -310,6 +314,7 @@ latex2.DrawLatex(0.145,0.955,channel_label)
 
 #CMS and lumi labels
 lumiperYear={
+"cmb":"137.4 fb^{-1} (13 TeV)",
 "2016":"35.9 fb^{-1} (13 TeV)",
 "2017":"41.5 fb^{-1} (13 TeV)",
 "2018":"60.0 fb^{-1} (13 TeV)",

@@ -27,9 +27,9 @@ combine -M Significance -t -1 $DCnominal --setParameters r=1  --toysFrequentist 
 combine -M Significance -t -1 $DCnominal --setParameters r=1  --toysFrequentist  --toysFile higgsCombine${YEAR}.MultiDimFit.mH120.123456.root --pvalue  > pval${YEAR}.txt
 
 
-#combine -M MultiDimFit  $DCnominal --algo singles > r${YEAR}obs.txt
-#combine -M Significance  $DCnominal > sig${YEAR}obs.txt
-#combine -M Significance  $DCnominal --pvalue > pval${YEAR}obs.txt
+combine -M MultiDimFit  $DCnominal --algo singles > r${YEAR}obs.txt
+combine -M Significance  $DCnominal > sig${YEAR}obs.txt
+combine -M Significance  $DCnominal --pvalue > pval${YEAR}obs.txt
 
 #combine -M MultiDimFit -t -1 $DCnominal --robustFit 1 --setParameters r=1  --toysFrequentist  --toysFile ../Mass130Scan$2/higgsCombineTest.MultiDimFit.mH120.123456.root  > r${YEAR}130.txt
 #combine -M Significance -t -1 $DCnominal --setParameters r=1  --toysFrequentist  --toysFile ../Mass130Scan$2/higgsCombineTest.MultiDimFit.mH120.123456.root  > sig${YEAR}130.txt

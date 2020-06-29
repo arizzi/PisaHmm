@@ -1,7 +1,6 @@
 import samples2016
 import samples2017
 import samples2018
-
 samples = {}
 samples.update(samples2016.samples)
 samples.update(samples2017.samples)
@@ -12,6 +11,7 @@ import models2017H as models2017
 import models2018H as models2018
 name="H"
 
+from models2016H import *
 
 background={}
 signal={}
@@ -41,8 +41,8 @@ print
 
 
 #sorting
-backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
-backgroundSorted+=[x for x in background if x not in backgroundSorted]
+#backgroundSorted=["Other","Top","DY","DYVBF","EWKZ"]
+#backgroundSorted+=[x for x in background if x not in backgroundSorted]
 
 fillcolor={}
 fillcolor.update(models2016.fillcolor)
@@ -61,7 +61,7 @@ from rebinning import *
 #possibly change the rebinning here
 
 from systematicGrouping import *
-systematicDetail = systematicGrouping(background, signal)
+systematicDetail = systematicGrouping(background, signal,[],"2017")
 
 
 

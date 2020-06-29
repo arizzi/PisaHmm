@@ -57,6 +57,8 @@ def makeText (x, y, someText, font, size = 0.05) :
     tex.SetLineWidth(2);
     return tex
 
+
+
 def d_value(h1, h2) :
     hSignal = h1.Clone()
     hBackground = h2.Clone()
@@ -340,8 +342,8 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     ratio = nomHistoRebinned.Clone("ratio")
     ratio.Reset()
 
-#    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
-    funct = ROOT.TF1("funct",envelopeFunction,envelopeFunctionRange[0],envelopeFunctionRange[1])
+    funct = ROOT.TF1("funct",envelopeFunction,nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
+#    funct = ROOT.TF1("funct",envelopeFunction,envelopeFunctionRange[0],envelopeFunctionRange[1])
     funct.SetParameters(*envelopeFunctionParameterValues)
     par2 = 0
     i = 0
@@ -749,6 +751,14 @@ def makeplot(hn,saveintegrals=True):
    #histosum[hn].Add(histoSigsum[hn])
    ftxt.write("d_value = "+d_value(histosum[hn], histoSigsum[hn]))
    
+   S=histoSigsum[hn].Clone()
+   B=histosum[hn].Clone()
+   B.Add(S)
+   R=S.Divide(B)
+   fR=ROOT.TFile.Open(outpath+"/%s_SBratio.root"%hn,"recreate")
+   S.Write()
+   fR.Close()
+
    
    for gr in model.signalSortedForLegend:
         h=histosSignal[hn][gr]     
@@ -761,13 +771,15 @@ def makeplot(hn,saveintegrals=True):
         myLegend.AddEntry(h,gr+" x20","l")       
    firstBlind=100000
    lastBlind=-1
+
    for i in range(histosSig[hn].GetStack().Last().GetNbinsX()+1) :
 	if histosSig[hn].GetStack().Last().GetBinContent(i) > 0.1*sqrt(abs(histos[hn].GetStack().Last().GetBinContent(i))) and histosSig[hn].GetStack().Last().GetBinContent(i)/(0.001+abs(histos[hn].GetStack().Last().GetBinContent(i))) > 0.05 :
 		#print "to blind",hn,i,abs(histos[hn].GetStack().Last().GetBinContent(i)), histosSig[hn].GetStack().Last().GetBinContent(i)	
 	        if i < firstBlind:
 		    firstBlind=i
                 lastBlind=i
-   for i in range(firstBlind,lastBlind+1) :
+   if False: #blind!
+     for i in range(firstBlind,lastBlind+1) :
        datastack[hn].GetStack().Last().SetBinContent(i,0)
        datasum[hn].SetBinContent(i,0)
        #print "blinded",i,hn

@@ -3,7 +3,7 @@ import ROOT
 import sys
 
 #flow=SampleProcessing("VBF Hmumu Analysis","/scratch/arizzi/Hmm/nail/samples/6B8A2AC8-35E6-1146-B8A8-B1BA90E3F3AA.root")
-flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_11_1/vbfHmm_2016AMCPY.root")
+flow=SampleProcessing("VBF Hmumu Analysis","/scratchssd/sdonato/fileSkimFromNanoAOD/PROD_13_4/vbfHmm_2016AMCPY.root")
 flow.AddExpectedInput("year","int")
 flow.SubCollection("GenLepton","GenPart",sel="(abs(GenPart_pdgId)==13 || abs(GenPart_pdgId)==11 || abs(GenPart_pdgId)==15)")
 flow.MatchDeltaR("GenLepton","GenJet") 

@@ -9,7 +9,8 @@ def addDefaultWeights(flow):
 #   flow.Define("btagEventWeight","isMC?(std::accumulate(SelectedJet_btagWeight.begin(),SelectedJet_btagWeight.end(),1, std::multiplies<double>())):1.f")
     flow.Define("SelectedJet_weight","Where(abs(SelectedJet_eta) < 2.4 && isMC,SelectedJet_btagSF_shape,SelectedJet_btagSF_shape*0.f+1.f)")
     flow.Define("btagEventWeight","isMC?(std::accumulate(SelectedJet_weight.begin(),SelectedJet_weight.end(),1.f, std::multiplies<double>())):1.f")
-    flow.CentralWeight("genWeight")
+    flow.CentralWeight("genWeight")#*
+    flow.CentralWeight("nnlopsWeight")
     flow.CentralWeight("btagEventWeight")
     #flow.CentralWeight("btagWeight")
     flow.CentralWeight("puWeight")
