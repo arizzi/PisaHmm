@@ -8,8 +8,7 @@ import re
 ##############################################################################################################
 #########################  region[x] : keys are plot names, values are region names  #########################
 ##############################################################################################################
-#regionName = {"SignalRegion" : "SR", "SideBand" : "SB", "ZRegion" : "ZR", "PreSel" : "PS", "ZRegionSLJeta0pt0" : "ZRegionSLJeta0pt0","ZRegionSLJeta1pt0" : "ZRegionSLJeta1pt0","ZRegionSLJeta2pt0" : "ZRegionSLJeta2pt0","ZRegionSLJeta2pt1" : "ZRegionSLJeta2pt1","ZRegionSLJeta3pt0" : "ZRegionSLJeta3pt0","ZRegionSLJeta3pt1" : "ZRegionSLJeta3pt1","SignalRegionT" : "SRT", "SideBandT" : "SBT", "ZRegionT" : "ZRT",}
-regionName = {}
+regionName = {"SignalRegion" : "SR", "SideBand" : "SB", "ZRegion" : "ZR", "PreSel" : "PS", "SignalRegionT" : "SRT", "SideBandT" : "SBT",}
 
 
 
@@ -89,14 +88,18 @@ def writeLine (uncName, systematicDetailElement, allSamples, region) :
                 if re.search(s+"_", sl) :  
                     if all(not re.search(regionName[region[y]]+"$", uncName) for y in notThisRegion) :
                         position.append(n)
-                        if "valueFromPlots" in systematicDetailElement.keys() : orderedUncertainties[-1] =  str(systematicDetailElement["valueFromPlots"][s])[:7]
+                        if "valueFromPlots" in systematicDetailElement.keys() : 
+                            if isinstance(systematicDetailElement["valueFromPlots"][s], float) :
+                                orderedUncertainties[-1] =  str(systematicDetailElement["valueFromPlots"][s])[:7]
+                            else :
+                                orderedUncertainties[-1] =  str(systematicDetailElement["valueFromPlots"][s][regionName[region[x]]])[:7]
                         else : orderedUncertainties[-1] =  value
             n+=1
     
     
     if len(position)==0 : return ""
 
-    line += uncName + "\t"*(6 - len(uncName)/8)
+    line += uncName + "\t"*(4 - len(uncName)/8)
     line += uncType + "\t"*(3 - len(uncType)/8)
     line += writeUncertainities (orderedUncertainties, len(orderedUncertainties), position)
 
@@ -184,6 +187,13 @@ def divideShapeAndNormalization (systematicDetail) :
             systematicDetail[syst]["type"] = "normalizationOnly"
 
 
+def decorrelateNormOnly (systematicDetail, availableSamples) :
+    
+    systKeys = systematicDetail.keys()
+    for syst in systKeys :
+        if "normalizationOnly" in systematicDetail[syst].keys() and "decorrelate" not in systematicDetail[syst].keys():
+            systematicDetail[syst]["decorrelate"] = {}
+            for x in availableSamples : systematicDetail[syst]["decorrelate"][x] = x
     
 
 
@@ -203,7 +213,7 @@ def modifySystematicDetail(systematicDetail, listAllSample_noYear, all_histo_all
                 systematicDetail[syst]["decorrelate"].pop(g, None)
           
         if len(systematicDetail[syst]["decorrelate"])==0 : systematicDetail.pop(syst, None)
-        elif not re.search("__Norm", syst) and len(systematicDetail[syst]["decorrelate"].keys()) > 1:
+        elif len(systematicDetail[syst]["decorrelate"].keys()) > 1:
             for g in systematicDetail[syst]["decorrelate"] :
                 systematicDetail[syst+g] =copy.deepcopy(systematicDetail[syst])
                 if systematicDetail[syst]["type"] != "lnN" and systematicDetail[syst]["type"] != "normalizationOnly" :
@@ -283,8 +293,8 @@ def valuesFromPlots(systematicDetail, all_histo_all_syst, region) :
                                 #print "CCCCC", samp, "  \t ",  systName, "  \t ",s
                                 if re.search("__", syst) : systName = re.match("^.*__(.*)$",syst).group(1)[:-len(sKey)]
                                 Nbins = all_histo_all_syst[x][samp]["nom"].GetNbinsX()+1
-                                variationUp   = 1. if all_histo_all_syst[x][samp]["nom"].Integral(1,Nbins)<=0           else all_histo_all_syst[x][samp][systName+"Up"].Integral(1,Nbins) / all_histo_all_syst[x][samp]["nom"].Integral(1,Nbins)
-                                variationDown = 1. if all_histo_all_syst[x][samp][systName+"Down"].Integral(1,Nbins)<=0 else all_histo_all_syst[x][samp]["nom"].Integral(1,Nbins)         / all_histo_all_syst[x][samp][systName+"Down"].Integral(1,Nbins)
+                                variationUp   = 1. if all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)<=0           else all_histo_all_syst[x][samp][systName+"Up"].Integral(0,Nbins) / all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)
+                                variationDown = 1. if all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)<=0 else all_histo_all_syst[x][samp]["nom"].Integral(0,Nbins)         / all_histo_all_syst[x][samp][systName+"Down"].Integral(0,Nbins)
                                 value = (variationUp + variationDown)/2.
 
                         systematicDetail[syst+"_"+regionName[region[x]]]["valueFromPlots"][s] = value   
@@ -345,13 +355,59 @@ def mergeToSys(systematicDetail, listAllSample_noYear) :
             sysTomergeList = systematicDetail[syst]["additionalNormalizations"]
             for s in sysTomergeList :
                 for sysTomerge in systKeys :
-                    if re.search(s + systematicDetail[syst]["decorrelate"].keys()[0], sysTomerge) :
-                #if sysTomerge in systKeys : 
+                    if re.search(s + systematicDetail[syst]["decorrelate"].keys()[0], sysTomerge) or s == sysTomerge :
                         if systematicDetail[syst]["type"] == "lnN" and  systematicDetail[sysTomerge]["type"] == "lnN" : 
                             mergedSystematic.append(sysTomerge)
                             mergeTwoSystematics(systematicDetail, syst, sysTomerge, listAllSample_noYear)
                 
     for s in set(mergedSystematic) : systematicDetail.pop(s, None)
+
+
+
+def divideNormalizationByRegion (systematicDetail, all_histo_all_syst, region) :
+    
+    band = [regionName[region[x]] for x in region]
+    systKeys = systematicDetail.keys()
+    mergedSystematic = [] # the pop() cannot be done on the fly because several systematics can have identical "mergeToSys"
+    for syst in systKeys :
+        if "additionalNormalizations" in systematicDetail[syst].keys() :
+            toRemove = False
+            for b in band :
+                systematicDetail[syst+"_"+b] = copy.deepcopy(systematicDetail[syst])
+                sysTomergeList = systematicDetail[syst+"_"+b]["additionalNormalizations"]
+                for s in sysTomergeList :
+                    for sysTomerge in systKeys :
+                        if re.search(s + systematicDetail[syst+"_"+b]["decorrelate"].keys()[0]+ ".*" + b + "$", sysTomerge) :
+                            systematicDetail[syst+"_"+b]["additionalNormalizations"].remove(s)
+                            systematicDetail[syst+"_"+b]["additionalNormalizations"].append(sysTomerge)
+                            toRemove = True
+            if toRemove : systematicDetail.pop(syst, None)
+            
+            
+
+def  mergeNormalizationsFromAllRegions(systematicDetail, all_histo_all_syst, region) :
+    
+    band = [regionName[region[x]] for x in region]
+    systematicSplittedByRegionToMerge = set()
+    systKeys = systematicDetail.keys()
+    for syst in systKeys :
+        if "additionalNormalizations" in systematicDetail[syst].keys() :
+            if any(re.search( b + "$", syst) for b in band) :
+                systNameNoRegion = syst
+                for b in band : systNameNoRegion = systNameNoRegion.replace("_"+b,"")
+                systematicSplittedByRegionToMerge.add(systNameNoRegion)
+
+                
+    for name in systematicSplittedByRegionToMerge:
+        systematicDetail[name] =  copy.deepcopy(systematicDetail[name+"_"+band[0]])
+        
+        for samp in systematicDetail[name]["valueFromPlots"] :
+            systematicDetail[name]["valueFromPlots"][samp] = {}
+            for b in band : 
+                systematicDetail[name]["valueFromPlots"][samp][b] = systematicDetail[name+"_"+b]["valueFromPlots"][samp]
+                
+        for b in band :  systematicDetail.pop(name+"_"+b, None)
+        
 
 
 def modifyRegionName(region) :
@@ -393,15 +449,9 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
         plotName[x] = x
         #region[x] = x.split("___")[-1]  # keys are plot names, values are region names
         region[x] = x  # keys are plot names, values are region names
-        regionName[x] = x
 
-    #print "region 1 : ", region
-    #print "regionName 1 : ", regionName
-    #modifyRegionName(region)        
-
-    #print "region 2 : ", region
-    #print "regionName 2 : ", regionName
-        
+    modifyRegionName(region)        
+    
     region = collections.OrderedDict(sorted(region.items()))
     
     os.system("mkdir -p "+outdir)
@@ -445,22 +495,22 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     listAllSample_noYear = [s.split("_")[0] for s in listAllSample]
     availableSamples = collections.OrderedDict(sorted(availableSamples.items()))
 
-    datacard.write("bin \t \t \t \t \t \t")
+    datacard.write("bin \t \t \t \t \t")
     for x in region : 
         for s in availableSamples[x] :
             datacard.write(region[x]+" \t\t")
         
-    datacard.write("\nprocess \t \t \t \t \t")
+    datacard.write("\nprocess \t \t \t \t")
     for x in region : 
         for s in availableSamples[x] :
             datacard.write(s+"\t"+("" if len(s)>15 else "\t"))
         
-    datacard.write("\nprocess \t \t \t \t \t")
+    datacard.write("\nprocess \t \t \t \t")
     for x in region : 
         for s in availableSamples[x] :
             datacard.write(str(processNumber[s])+"\t\t\t")
         
-    datacard.write("\nrate \t \t \t \t \t \t")
+    datacard.write("\nrate \t \t \t \t \t")
     for x in region : 
         for s in availableSamples[x] :
             datacard.write(str(all_histo_all_syst[x][s]["nom"].Integral(1, nBins[x]+1))+"\t\t")
@@ -474,16 +524,13 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     #print "\n ---------------------------- \n" 
 
 
-    # it creates new systematics for each sample group in "additionalNormalizations" (syst -> syst + "__" + systToAdd). It creates new systematics for each sample group in "groupValues" (syst -> syst + "__Norm" + groupName) and it assignes the defined value.
-    createNewSystematicForMergeWithOption (model.systematicDetail)  
-    #printSystematicGrouping (model.systematicDetail, "grouping0.py")
+    createNewSystematicForMergeWithOption (model.systematicDetail) 
+    printSystematicGrouping (model.systematicDetail, "grouping0.py")
     
-    # systematics with "shapeAndNorm" split in two different systematics with "normalizationOnly" (syst -> syst) and "shapeOnly" (syst -> syst+"Shape")
     divideShapeAndNormalization (model.systematicDetail) 
+    #decorrelateNormOnly (model.systematicDetail, availableSamples)
     #printSystematicGrouping (model.systematicDetail, "grouping1.py")
 
-    # pop all samples in "decorrelates" that are not in listAllSample_noYear. 
-    # Split systematics if "decorrelates" has more than one keys and name them with sysName+sampName (the only exception is "__Norm"+groupName). Modify all_histo_all_syst histograms names from sysName+"Up/Down" to sysName+"_"+sampName+"Up/Down"
     modifySystematicDetail(model.systematicDetail, listAllSample_noYear, all_histo_all_syst) 
     #printSystematicGrouping (model.systematicDetail, "grouping2.py") 
     
@@ -491,7 +538,7 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     removeUnusedSystematics(model.systematicDetail, all_histo_all_syst) 
     #printSystematicGrouping (model.systematicDetail, "grouping3.py") 
     
-    # set the values as ( UP/NOM + NOM/DOWN ) / 2. Add postfix for region
+    
     valuesFromPlots(model.systematicDetail, all_histo_all_syst, region)
     #printSystematicGrouping (model.systematicDetail, "grouping4.py") 
     
@@ -500,12 +547,16 @@ def createWorkSpace(model, all_histo_all_syst, year,outdir="workspace/") :
     #printSystematicGrouping (model.systematicDetail, "grouping5.py") 
     
     
+    divideNormalizationByRegion(model.systematicDetail, all_histo_all_syst, region) 
+    #printSystematicGrouping (model.systematicDetail, "grouping51.py") 
+    
     mergeToSys(model.systematicDetail, listAllSample_noYear) 
     #printSystematicGrouping (model.systematicDetail, "grouping6.py") 
 
-
-
-        
+    mergeNormalizationsFromAllRegions (model.systematicDetail, all_histo_all_syst, region)
+    #printSystematicGrouping (model.systematicDetail, "grouping7.py") 
+    
+    
     writeSystematic (outdir+"/fileCombine"+year+model.name+".root", region, varName, model.systematicDetail, all_histo_all_syst, availableSamples, datacard, year) 
 
 
