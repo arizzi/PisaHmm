@@ -159,9 +159,9 @@ rebin["DNN18Atan2"]= [0 , 0.311666666667 , 0.635 , 0.845 , 1.04166666667 , 1.185
 #rebin["DNN18Atan2"]=  [0 , 0.49 , 0.768333333333 , 0.993333333333 , 1.15333333333 , 1.295 , 1.41 , 1.515 , 1.61833333333 , 1.73 , 1.83166666667 , 1.925 , 2.01166666667 , 2.09666666667 , 2.175 , 2.255 , 2.32666666667 , 2.40166666667 , 2.475 , 2.55666666667 , 2.645 , 2.73666666667 , 2.83833333333 , 2.96 , 3.13166666667 , 5.0 ]
 
 #ebin["DNN18Atan"]=dnn032018
-from histograms import signalHistosMassScan
+from histograms import signalHistosMassScanAll
 
-for i in  signalHistosMassScan :
+for i in  signalHistosMassScanAll :
  rebin[i]=rebin["DNN18Atan"]
 
 from systematicGrouping import *

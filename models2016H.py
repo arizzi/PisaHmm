@@ -149,9 +149,9 @@ linecolor=fillcolor
 markercolor=fillcolor
 
 from rebinning import *
-from histograms import signalHistosMassScan
+from histograms import signalHistosMassScanAll
 
-for i in  signalHistosMassScan :
+for i in  signalHistosMassScanAll :
  rebin[i]=rebin["DNN18Atan"]
 #ebin["DNN18Atan2"]=rebin["DNN18Atan"]
 

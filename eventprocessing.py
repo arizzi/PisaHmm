@@ -74,7 +74,7 @@ def getFlow(year):
             flow.Define("Muon_wFSR_p4","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 1.8 && Muon_FSR_drEt2 < 0.012 && Muon_FSR_pt/Muon_pt<0.4 && abs(Muon_FSR_eta)<2.4 ),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
 	    #flow.Define("Muon_wFSR_p4","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 0.8 && Muon_FSR_drEt2 < 0.019 ),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
 	    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
-	    flow.Define("Muon_iso","(Muon_pfRelIso04_all*Muon_pt-Muon_FSR_pt)/Muon_correctedFSR_pt")
+	    flow.Define("Muon_iso","Where((Muon_fsrPhotonIdx != -1 && Muon_FSR_iso < 1.8 && Muon_FSR_drEt2 < 0.012 && Muon_FSR_pt/Muon_pt<0.4 && abs(Muon_FSR_eta)<2.4 ),(Muon_pfRelIso04_all*Muon_pt-Muon_FSR_pt)/Muon_correctedFSR_pt,(Muon_pfRelIso04_all*Muon_pt)/Muon_correctedFSR_pt)")
 	  else:
 	    flow.Define("Muon_wFSR_p4","Where((Muon_iso_FSR < 0.8),Muon_FSR_p4+Muon_p4_orig,Muon_p4_orig)")
 	    flow.Define("Muon_correctedFSR_pt","MemberMap(Muon_wFSR_p4,Pt())")
@@ -92,7 +92,6 @@ def getFlow(year):
 	  
 	flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_mass)")
 	#flow.Define("Muon_p4GFcorr","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > >(Muon_pt_GeoFitCorrection , Muon_eta, Muon_phi , Muon_mass*0.f)")
-	  
 	flow.SubCollection("SelectedMuon","Muon",sel="Muon_iso < 0.25 && Muon_mediumId && Muon_correctedFSR_pt > 20. && abs(Muon_eta) < 2.4") 
 
 	#flow.Define("SelectedMuon_p4","vector_map_t<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> >        >(SelectedMuon_corrected_pt , SelectedMuon_eta, SelectedMuon_phi, SelectedMuon_mass)")
@@ -100,7 +99,8 @@ def getFlow(year):
 	#need FSR
 	if FSR:
 	  flow.Define("SelectedMuon_p4","SelectedMuon_wFSR_p4")
-	  flow.Define("SelectedMuon_GFp4","Where((Muon_FSR_pt == 0.),SelectedMuon_p4GFcorr,SelectedMuon_p4)")
+#  flow.Define("SelectedMuon_GFp4","Where((Muon_FSR_pt == 0.),SelectedMuon_p4GFcorr,SelectedMuon_p4)")
+	  flow.Define("SelectedMuon_GFp4","Where((SelectedMuon_fsrPhotonIdx != -1 && SelectedMuon_FSR_iso < 1.8 && SelectedMuon_FSR_drEt2 < 0.012 && SelectedMuon_FSR_pt/SelectedMuon_corrected_pt<0.4 && abs(SelectedMuon_FSR_eta)<2.4 ) && (SelectedMuon_FSR_pt > 0.),SelectedMuon_p4,SelectedMuon_p4GFcorr)")  
 	else :
 	  flow.Define("SelectedMuon_p4","SelectedMuon_p4_orig")
 	  flow.Define("SelectedMuon_GFp4","SelectedMuon_p4GFcorr")
@@ -357,6 +357,7 @@ def getFlow(year):
 	flow.Define("DNN18Atan","atanh(DNN18Classifier)")
 	flow.Define("DNN18Atan2","atanh(lwtnn_feb2.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
 	flow.Define("DNN18AtanM12509","atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m-0.09f,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
+	flow.Define("Higgs_m38","Higgs_m+0.38f")
 	flow.Define("DNN18AtanM12538","atanh(lwtnn_feb.eval(event, {Mqq_log,Rpt,qqDeltaEta,ll_zstar_log,float(NSoft5NewNoRapClean),SAHT2,minEtaHQ,CS_phi, CS_theta,Higgs_pt,log(Higgs_pt),Higgs_eta,Mqq,QJet0_pt_touse,QJet1_pt_touse,QJet0_eta,QJet1_eta,QJet0_phi,QJet1_phi,QJet0_qgl,QJet1_qgl,float(year),Higgs_m-0.38f,Higgs_mRelReso,Higgs_mReso}, {22,3}))")
 	for x in range(0,21) :
 	   name="DNN18AtanM%4.0f"%((x*0.5+120)*10)

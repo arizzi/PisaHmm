@@ -182,8 +182,8 @@ def systematicGrouping (background, signal,jesList,year) :
                 "decorrelate":{
                     "ggH":["ggHmm"],
                     "vbfHmm":["vbfHmm"],
-                    "DY" :["DY105VBF","DY105"],
-                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2"],
+                    "DY" :["DY105VBF","DY105","DY105J2", "DY105VBFJ2"],
+                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2","EWKZ105CORR"],
                 },
                 "envelope": "LHEPdf",
                 "envelopeFunction": "[0] + [1]*x",
@@ -196,8 +196,9 @@ def systematicGrouping (background, signal,jesList,year) :
                 "decorrelate":{
                     "ggH":["ggHmm"],
                     "vbfHmm":["vbfHmm"],
-                    "DY" : DY,
-                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2"],
+#                    "DY" : DY,
+                    "DY" :["DY105VBF","DY105","DY105J2", "DY105VBFJ2"],
+                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2","EWKZ105CORR"],
                 },
                 "envelope": "LHEPdf",
                 "envelopeFunction": "[0] + [1]*x",
@@ -210,12 +211,12 @@ def systematicGrouping (background, signal,jesList,year) :
                 "decorrelate":{
                     "ggH":["ggHmm"],
                     "vbfHmm":["vbfHmm"],
-                    "DY" : DY,
-                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2"],
+                    "DY" :["DY105VBF","DY105","DY105J2", "DY105VBFJ2"],
+                    "EWKZ" :["EWKZ","EWKZ105","EWKZ105FIX2","EWKZ105CORR"],
                 },
                 "envelope": "LHEPdf",
                 "envelopeFunction": "[0] + [1]*x*x",
-                "envelopeFunctionParameter": 1,
+               "envelopeFunctionParameter": 1,
                 "envelopeFunctionParameterValues": (1, 0),
                 "envelopeFunctionRange": (0. , 4.5)
         },

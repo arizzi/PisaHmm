@@ -148,8 +148,8 @@ markercolor=fillcolor
 
 from rebinning import *
 #rebin["DNN18Atan"]=dnn032018
-from histograms import signalHistosMassScan
-for i in  signalHistosMassScan :
+from histograms import signalHistosMassScanAll
+for i in  signalHistosMassScanAll :
  rebin[i]=rebin["DNN18Atan"]
 
 from systematicGrouping import *
