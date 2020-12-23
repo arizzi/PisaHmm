@@ -29,7 +29,7 @@ for i in range(len(histoNom)):
 
 bins.append(histoNom.GetBinLowEdge(i))
 #bins = [1.*i/10 for i in range(0,40)]
-print bins
+print(bins)
 
 c2 = ROOT.TCanvas("c2")
 
@@ -37,7 +37,7 @@ fil.cd()
 histoNomReb = histoNom.Rebin(len(bins)-1, "aa", array.array('d',bins))
 histoNomReb.Draw()
 
-print fil.GetName(), x1, x2
+print(fil.GetName(), x1, x2)
 #histo1 = ROOT.TH1F("histo1","",100,-0.03,0.03)
 rat = []
 sumSquared = 0
@@ -51,15 +51,15 @@ sumSquares = [0]*len(ratio)
 i = 0 ## nominal is the first entry.
 fil.cd()
 hs = fil.Get(hName+"0")
-print fil.ls(hName+"0")
-print hs
-print hs.GetName()
+print(fil.ls(hName+"0"))
+print(hs)
+print(hs.GetName())
 hs = hs.Rebin(len(bins)-1, "aa", array.array('d',bins))
 hs0= hs
 while hs and hs.GetMaximum()>0:
     hs = hs.Rebin(len(bins)-1, "aa", array.array('d',bins))
     hs.Draw("same")
-    print hs.GetName()
+    print(hs.GetName())
     for bin_ in range(len(ratio)):
         rat =  hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
         sums[bin_] += rat
@@ -93,11 +93,11 @@ ratio.SetMinimum(-0.01)
 ratio.Draw()
 c1.SaveAs("sumSquares_DY105_rebinned.png")
 
-print "StdDev",(sumSquared/i - (sum/i)**2)**0.5 
+print("StdDev",(sumSquared/i - (sum/i)**2)**0.5) 
 
-print "StdDev",(sumSquared/i - (sum/i)**2)**0.5 
+print("StdDev",(sumSquared/i - (sum/i)**2)**0.5) 
 
-print "StdDev * SQRT(N)",(sumSquared/i - (sum/i)**2)**0.5 * i**0.5
+print("StdDev * SQRT(N)",(sumSquared/i - (sum/i)**2)**0.5 * i**0.5)
 
 #histo1.Draw()
 

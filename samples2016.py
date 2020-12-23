@@ -113,8 +113,8 @@ samples={
 
 ## Add "files" automatically if not defined
 for sample in samples:
-    if not "files" in samples[sample].keys():
-        if "nameforfile" in samples[sample].keys() :
+    if not "files" in list(samples[sample].keys()):
+        if "nameforfile" in list(samples[sample].keys()) :
             samples[sample]["files"] = [path2016+samples[sample]["nameforfile"]+".root"]
         else:
             samples[sample]["files"] = [path2016+sample+".root"]

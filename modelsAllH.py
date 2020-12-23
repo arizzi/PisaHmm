@@ -30,13 +30,13 @@ for models in [models2016,models2017,models2018]:
 
 import pprint
 
-print "\nbackground = ",
+print("\nbackground = ", end=' ')
 pprint.pprint(background)
-print "\nsignal = ",
+print("\nsignal = ", end=' ')
 pprint.pprint(signal)
-print "\ndata = ",
+print("\ndata = ", end=' ')
 pprint.pprint(data)
-print
+print()
 
 
 

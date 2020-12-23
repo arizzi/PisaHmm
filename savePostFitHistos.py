@@ -42,7 +42,7 @@ fit_res = f.Get("fit_b")
 
 params = fit_res.floatParsFinal()
 
-print(len(params))
+print((len(params)))
 
 fittedParams={}
 for i in range(len(params)):
@@ -87,11 +87,11 @@ for DCsyst in DCsysts:
     nuisances[name].postfit_down    = fittedParams[name][1]
     nuisances[name].postfit_up      = fittedParams[name][2]
 
-print "NUISANCES: "
+print("NUISANCES: ")
 for nuis in nuisances:
-    print(nuis,nuisances[nuis].type,nuisances[nuis].postfit_central,nuisances[nuis].postfit_down,nuisances[nuis].postfit_up,nuisances[nuis].datacardValues)
+    print((nuis,nuisances[nuis].type,nuisances[nuis].postfit_central,nuisances[nuis].postfit_down,nuisances[nuis].postfit_up,nuisances[nuis].datacardValues))
 
-print ""
+print("")
 
 folder = "out"
 
@@ -116,8 +116,8 @@ def fromNuisanceToHistoName(histos, nominalHistoName, nuis, ud):
                 if histoName[-2:] == "Up":
                     lastWord = histoName.split("_")[-1]
                     if lastWord[:-2] in nuis: return histoName[:-2]+ud
-    print("Failed looking for %s of %s."%(nuis,nominalHistoName))
-    print("%s nor %s found in histos."%(histoName,histoName2))
+    print(("Failed looking for %s of %s."%(nuis,nominalHistoName)))
+    print(("%s nor %s found in histos."%(histoName,histoName2)))
 #    for histo in histos: print(histo)
     return "HistoSystNotFound"
 
@@ -134,10 +134,10 @@ def fromHistoNameToNuisance(histoName, nuisances, sample):
         return "UnfittedNuisance"+lastWord
     else:
         if not (lastWord in systematicDetail):
-            print "Warning7 %s not found in %s. %s"%(lastWord, systematicDetail.keys(), matchingNuisances)
+            print("Warning7 %s not found in %s. %s"%(lastWord, list(systematicDetail.keys()), matchingNuisances))
             return "UnfittedNuisance"+lastWord
         if not ('decorrelate' in systematicDetail[lastWord]):
-            print "Error %s has no 'decorrelate'. %s"%(lastWord,matchingNuisances)
+            print("Error %s has no 'decorrelate'. %s"%(lastWord,matchingNuisances))
             return 1
         for group in systematicDetail[lastWord]['decorrelate']:
             if  group == sampleShort: return lastWord+group
@@ -145,9 +145,9 @@ def fromHistoNameToNuisance(histoName, nuisances, sample):
 #                print systematicDetail[lastWord]['decorrelate'][group]
                 if sampleShort in systematicDetail[lastWord]['decorrelate'][group]:
                     return lastWord+group
-        print "Error %s not found in 'decorrelate'"%(lastWord)
+        print("Error %s not found in 'decorrelate'"%(lastWord))
         return 1
-    print "Error with %s\t%s"%(histoName, sample)
+    print("Error with %s\t%s"%(histoName, sample))
     return 1
 
 
@@ -167,7 +167,7 @@ def applyNuisance(newHisto,histos,nominalHistoName,nuisHistoNameDown,nuisHistoNa
            var  = smoothedNusiance(fitValue,up/up_norm-nom,down/down_norm-nom) 
            sf  = pow(1.+smoothedNusianceDividedMu(fitValue,up_norm-1,down_norm-1),fitValue)
         except:
-            print("Warning. Histo %s. Bin %d. nom=%f up=%f down=%f. %s=%f. Forcing sf=1"%(nominalHistoName, i, nom, up, down, nuisHistoNameDown, fitValue))
+            print(("Warning. Histo %s. Bin %d. nom=%f up=%f down=%f. %s=%f. Forcing sf=1"%(nominalHistoName, i, nom, up, down, nuisHistoNameDown, fitValue)))
             sf  = 1
             var = 1 
         newHisto.SetBinContent(i, newHisto.GetBinContent(i)*sf + var*sf)
@@ -185,7 +185,7 @@ def calculatePostFitHisto(sample, nominalHistoName, histos, nuisances):
                     nuisHistoNameDown = fromNuisanceToHistoName(histos, nominalHistoName, nuis, "Down")
                     nuisHistoNameUp = nuisHistoNameDown.replace("Down","Up")
                     if nuisHistoNameDown=='HistoSystNotFound' or nuisHistoNameUp=='HistoSystNotFound':
-                        print "Warning6: Systematic histo not found %s\t%s"%(str(nominalHistoName),str(nuis))
+                        print("Warning6: Systematic histo not found %s\t%s"%(str(nominalHistoName),str(nuis)))
                         continue
                     applyNuisance(newHisto,histos,nominalHistoName,nuisHistoNameDown,nuisHistoNameUp,postFit)
                 elif nuisances[nuis].type == "lnN":
@@ -193,7 +193,7 @@ def calculatePostFitHisto(sample, nominalHistoName, histos, nuisances):
                 else:
 		    pass
         else:
-            print("Warning3: ",sample,nuis)
+            print(("Warning3: ",sample,nuis))
             pass
         
     newHisto.Scale(normSyst)
@@ -202,7 +202,7 @@ def calculatePostFitHisto(sample, nominalHistoName, histos, nuisances):
 def createPostFitFile(inputFile, outputFile, nuisances):
     sample = inputFile.split("/")[-1].replace(".root","").replace("Histos","")
     if sample in DCprocesses or "data" in sample:
-        print("Creating %s"%outputFile)
+        print(("Creating %s"%outputFile))
         inFile =  ROOT.TFile.Open(inputFile)
         outFile = ROOT.TFile.Open(outputFile,"recreate")
         histos = {}
@@ -223,7 +223,7 @@ def createPostFitFile(inputFile, outputFile, nuisances):
 
         outFile.cd()
         
-        print "fileSysts = %s"%fileSysts
+        print("fileSysts = %s"%fileSysts)
         for nominalHistoName in nominalHistoNames:
             if  "data" in sample:
                 newHisto = histos[nominalHistoName].Clone()
@@ -236,7 +236,7 @@ def createPostFitFile(inputFile, outputFile, nuisances):
                     histoSysName_up = fromNuisanceToHistoName(histos, nominalHistoName, fileSyst, "Up")
                     histoSysName_down = fromNuisanceToHistoName(histos, nominalHistoName, fileSyst, "Down")
                     if histoSysName_down=='HistoSystNotFound' or histoSysName_up=='HistoSystNotFound':
-                        print "Warning5: Systematic histo not found %s\t%s"%(str(nominalHistoName),str(fileSyst))
+                        print("Warning5: Systematic histo not found %s\t%s"%(str(nominalHistoName),str(fileSyst)))
                         continue
                     newHisto_up = newHisto.Clone(histoSysName_up)
                     newHisto_down = newHisto.Clone(histoSysName_down)
@@ -245,7 +245,7 @@ def createPostFitFile(inputFile, outputFile, nuisances):
                         up_value, down_value =+1,-1
                     else:
                         up_value, down_value = nuisances[nuis].postfit_up, nuisances[nuis].postfit_down
-                    print "Adding plot %s\tsyst=%s\tnominal=%s\tsample=%s, using up|down = %f|%f"%(histoSysName_up,fileSyst,nominalHistoName,sample,up_value, down_value)
+                    print("Adding plot %s\tsyst=%s\tnominal=%s\tsample=%s, using up|down = %f|%f"%(histoSysName_up,fileSyst,nominalHistoName,sample,up_value, down_value))
                     applyNuisance(newHisto_up,  histos,nominalHistoName,histoSysName_down,histoSysName_up,up_value  )
                     applyNuisance(newHisto_down,histos,nominalHistoName,histoSysName_down,histoSysName_up,down_value)
                     newHisto_up.Write()
@@ -257,7 +257,7 @@ def createPostFitFile(inputFile, outputFile, nuisances):
         inFile.Close()
         outFile.Close()
     else:
-        print "Warning4: Skipping %s, it is not among processes in the datacard"%(sample)
+        print("Warning4: Skipping %s, it is not among processes in the datacard"%(sample))
 #        print DCprocesses
 
 def createPostFitFileSubmit( options):
@@ -282,7 +282,7 @@ for fName in fNames[:]:
     elif ".txt" in fName:
         os.popen("cp %s/%s %s/%s"%(folder,fName,newfolder,fName))
     else:
-        print("Please check file %s in %s"%(fName,folder))
+        print(("Please check file %s in %s"%(fName,folder)))
 
 if multiProcess:
 ### MULTI PROCESS ###

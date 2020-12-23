@@ -19,14 +19,14 @@ fitDiag = ROOT.TFile.Open("workspaceForPostFitHisto/fitDiagnostics.root")
 
 
 print("out and out/postfit")
-print(filePrefit.GetName())
-print(filePostfit.GetName())
+print((filePrefit.GetName()))
+print((filePostfit.GetName()))
 
 prefit = filePrefit.Get(hName).GetBinContent(8)
 postfit = filePostfit.Get(hName).GetBinContent(8)
-print("prefit ",prefit)
-print("postfit ",postfit)
-print("postfit/prefit ",postfit/prefit)
+print(("prefit ",prefit))
+print(("postfit ",postfit))
+print(("postfit/prefit ",postfit/prefit))
 
 
 ##################################################
@@ -52,16 +52,16 @@ print("postfit/prefit ",postfit/prefit)
 
 
 print("FitDiagnostic")
-print(fitDiag.GetName())
+print((fitDiag.GetName()))
 
 prefit_FD = fitDiag.Get("shapes_prefit/%s/%s"%(hName,sample)).Clone()
 postfit_FD = fitDiag.Get("shapes_fit_b/%s/%s"%(hName,sample)).Clone()
 prefit = prefit_FD.GetBinContent(8)
 postfit = postfit_FD.GetBinContent(8)
 
-print("prefit ",prefit)
-print("postfit ",postfit)
-print("postfit/prefit ",postfit/prefit)
+print(("prefit ",prefit))
+print(("postfit ",postfit))
+print(("postfit/prefit ",postfit/prefit))
 
 
 for sample in [
@@ -76,18 +76,18 @@ for sample in [
     ]:
     
     fName = "%sHistos.root"%sample
-    print fName
+    print(fName)
     filePrefit = ROOT.TFile.Open("out/%s"%fName)
     filePostfit = ROOT.TFile.Open("out/postfit/%s"%fName)
     prefit_FD = fitDiag.Get("shapes_prefit/%s/%s"%(hName,sample)).Clone()
     postfit_FD = fitDiag.Get("shapes_fit_b/%s/%s"%(hName,sample)).Clone()
-    print sample
+    print(sample)
     for i in range(1,len(filePrefit.Get(hName))):
         prefit  = filePrefit.Get(hName).GetBinContent(i)
         postfit = filePostfit.Get(hName).GetBinContent(i)
         prefit_FD_val  = prefit_FD.GetBinContent(i)
         postfit_FD_val = postfit_FD.GetBinContent(i)
-        if prefit>0 and postfit_FD_val>0: print "i=%d\tpostfit/prefit=%f\tfitDiag=%f\tdiff=%f"%(i,postfit/prefit,postfit_FD_val/prefit_FD_val,100.*(postfit/prefit - postfit_FD_val/prefit_FD_val))
+        if prefit>0 and postfit_FD_val>0: print("i=%d\tpostfit/prefit=%f\tfitDiag=%f\tdiff=%f"%(i,postfit/prefit,postfit_FD_val/prefit_FD_val,100.*(postfit/prefit - postfit_FD_val/prefit_FD_val)))
 
 ##################################################
 

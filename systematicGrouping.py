@@ -239,7 +239,7 @@ def systematicGrouping (background, signal,jesList,year) :
 
     sthsNames=["Yield","PTH200","Mjj60","Mjj120","Mjj350","Mjj700","Mjj1000","Mjj1500","PTH25","JET01"]
     THUs={"THU_VBF_"+x:{"type": "shape", "decorrelate": {  "vbfHmm" :["vbfHmm"] }, "value":1.0} for x in sthsNames }
-    print THUs
+    print(THUs)
     systematicDetail.update(THUs)
 
 

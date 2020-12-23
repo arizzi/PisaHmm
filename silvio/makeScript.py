@@ -71,15 +71,15 @@ nprocesses = vars(args) ["nprocesses"]
 if len(inputFolder)>0 and inputFolder[0]!="/": inputFolder = os.getcwd() + "/" + inputFolder
 
 if not (directory and years and steps):
-    print "Please set --directory, --years, and --steps"
-    print "Example:"
-    print ""
+    print("Please set --directory, --years, and --steps")
+    print("Example:")
+    print("")
 
 definePOI   = "--PO  'map=.*Hmm.*:r[1.,-20,20]'"
 if (fitZ and fitH) or (not fitZ and not fitH): raise Exception("Please use either --fitZ or --fitH (not both!).")
 if fitZ: definePOI   = "--PO  'map=.*EWKZ.*:r[1.,-20,20]'"
 
-print  vars(args)
+print(vars(args))
 
 for year in years.split(","):
     if not(year=="2016" or year=="2017" or year=="2018" or year=="All" or year=="Comb"): raise Exception("Year is '%s'. It must be among: 2016, 2017, 2018, All, and Comb."%year)
@@ -88,10 +88,10 @@ for year in years.split(","):
         bins = getBins("%s/datacard%s.txt"%(directory, year))
     else:
         bins = getBinsFromScratch(inputFolder, year)
-    print "Bins = ", bins
+    print("Bins = ", bins)
     mask        = makeMask(   fitPlots, bins)
     maskPrefit  = makeMask(prefitPlots, bins)
-    print "Mask : %s"%mask
+    print("Mask : %s"%mask)
     for step in steps.split(","):
         name = step+year
         logFile = name+".log"
@@ -171,21 +171,21 @@ for s in [years, fitZ, fitPlots, prefitPlots]:
 fName=fName.replace(",","_").replace("-","").replace(" ","_")
 fName = "fitScript"+fName+".sh"
 
-print directory
-print fName
+print(directory)
+print(fName)
 
 f = open(directory+"/"+fName, 'w')
 f.write(script)
 f.close()
 
-print
-print script
-print
-print "cd %s && chmod +x %s && ./%s "%(directory,fName,fName)
-print
+print()
+print(script)
+print()
+print("cd %s && chmod +x %s && ./%s "%(directory,fName,fName))
+print()
 os.system("cd %s && chmod +x %s && ./%s "%(directory,fName,fName))
 #aaa = os.popen("cd %s && source %s > log"%(directory,fName))
 #aaa.read()
-print
+print()
 
 

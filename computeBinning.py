@@ -59,9 +59,9 @@ minNumberOfEventPerBin = 0.3
 hSignal.Scale(samples[signalSample]["xsec"]*samples["data"+year]["lumi"])
 tot=hSignal.Integral(0, Nbins_binning+1)
 N=tot*2
-print "Total number of events:  ", tot
+print("Total number of events:  ", tot)
 delta=2.*(tot-minNumberOfEventPerBin*N)/N**2
-print "min size",minNumberOfEventPerBin, "step",delta, "N",N,"tot",tot
+print("min size",minNumberOfEventPerBin, "step",delta, "N",N,"tot",tot)
 
 
 #delta=0
@@ -77,10 +77,10 @@ while binLimitDown>0 :
             binLimitDown        = FindBinDown(hBackground, hSignal, binLimitUp, minNumberOfEventPerBin, MinNumberOfBin_inBinning)
 	    minNumberOfEventPerBin+=delta
 
-print "    \'"+variable+"\' : [0",
+print("    \'"+variable+"\' : [0", end=' ')
 for n in range(len(binning_BDT)-1, 0, -1) : 
-    print  ",", binning_BDT[n],
+    print(",", binning_BDT[n], end=' ')
         
-print "]"     
-print len(binning_BDT) 
+print("]")     
+print(len(binning_BDT)) 
 

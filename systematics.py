@@ -53,7 +53,7 @@ def addSTXS(flow):
 def addBtag(flow):
     btagsys=["Jet_btagSF_shape_up_jes","Jet_btagSF_shape_down_jes","Jet_btagSF_shape_up_lf","Jet_btagSF_shape_down_lf","Jet_btagSF_shape_up_hf","Jet_btagSF_shape_down_hf","Jet_btagSF_shape_up_hfstats1","Jet_btagSF_shape_down_hfstats1","Jet_btagSF_shape_up_hfstats2","Jet_btagSF_shape_down_hfstats2","Jet_btagSF_shape_up_lfstats1","Jet_btagSF_shape_down_lfstats1","Jet_btagSF_shape_up_lfstats2","Jet_btagSF_shape_down_lfstats2","Jet_btagSF_shape_up_cferr1","Jet_btagSF_shape_down_cferr1","Jet_btagSF_shape_up_cferr2","Jet_btagSF_shape_down_cferr2"]
     names=[x[17:] for x in btagsys]
-    print "Adding btag systematics",names
+    print("Adding btag systematics",names)
     for i in  names :
        flow.Define("SelectedJet_weight_%s"%i,"Where(abs(SelectedJet_eta) < 2.4 && isMC,SelectedJet_btagSF_shape_%s,SelectedJet_btagSF_shape*0.f+1.f)"%i)
        name=i
@@ -139,7 +139,7 @@ def addDecorrelatedJER(flow):
 	       cutstring="(%s)"%(eta)
 	    else :
 	       cutstring="(%s)&&(%s)"%(eta,pt)
-	    print "Jer cutstring",cutstring
+	    print("Jer cutstring",cutstring)
 	    name="eta%spt%s"%(i,j)
             #flow.Systematic("JER%sUp"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerUp_touse,Jet_pt_touse)"%cutstring) #name, target, replacement
             flow.Systematic("JER%sDown"%name,"Jet_pt_touse","Where(%s,Jet_pt_jerDown_touse,Jet_pt_touse)"%cutstring) #name, target, replacement 
@@ -152,7 +152,7 @@ def addDecorrelatedJER(flow):
 import jesnames
 def addCompleteJecs(flow,year):
     for j in getattr(jesnames,"jesnames"+year):
-       print "jes:",year, j
+       print("jes:",year, j)
        flow.Define("%s_touse"%j,"Jet_pt_touse*%s/Jet_pt_nom"%j)
        flow.Systematic(j[7:],"Jet_pt_touse","%s_touse"%j)
 

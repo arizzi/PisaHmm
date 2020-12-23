@@ -20,5 +20,5 @@ if False : #split in match vs nomatch
   for suffix in ["MatchUp","MatchDown","NotMatchUp","NotMatchDown"] :
 	  jernames+=[x[:-2]+suffix for x in jerUponly]
 
-print "JERNAMES"
-print jernames
+print("JERNAMES")
+print(jernames)

@@ -77,7 +77,7 @@ flowData=copy.deepcopy(flow)
 procData=flowData.CreateProcessor("eventProcessorData"+year,snaplist+["QGLweight"],histosPerSelection,snap,"SignalRegion",nthreads)
 #procData=flowData.CreateProcessor("eventProcessorData"+year,snaplist,histosPerSelection,snap,"SignalRegion",nthreads)
 
-print "Data processor created"
+print("Data processor created")
 
 #define some event weights
 from weights import *
@@ -100,7 +100,7 @@ addPreFiringVariation(flow)
 
 #snaplist+=["genWeight","puWeight","btagWeight","muEffWeight","EWKreweight", "PrefiringWeight", "QGLweight","QJet1_partonFlavour","QJet0_partonFlavour"]
 systematics=flow.variations #take all systematic variations
-print "Systematics for all plots", systematics
+print("Systematics for all plots", systematics)
 histosWithSystematics=flow.createSystematicBranches(systematics,histosPerSelection)
 #addPtEtaJecs(flow)
 
@@ -108,7 +108,7 @@ addSTXS(flow)
 addLhePdf(flow)
 addDecorrelatedJER(flow)
 addCompleteJecs(flow,year)
-print "######### full systematics #######"
+print("######### full systematics #######")
 histosWithFullJecs=flow.createSystematicBranches(systematics,histosPerSelectionFullJecs)
 
 for region in histosWithFullJecs:
@@ -117,10 +117,10 @@ for region in histosWithFullJecs:
    else:
 	histosWithSystematics[region]=list(set(histosWithSystematics[region]+histosWithFullJecs[region]))
 
-print "The following histograms will be created in the following regions"
+print("The following histograms will be created in the following regions")
 for sel in  histosWithSystematics:
-	print sel,":",histosWithSystematics[sel]
-print >> sys.stderr, "Number of known columns", len(flow.validCols)
+	print(sel,":",histosWithSystematics[sel])
+print("Number of known columns", len(flow.validCols), file=sys.stderr)
 
 #pproc=flow.CreateProcessor("eventProcessor",snaplist,histosWithSystematics,snap,"SignalRegion",nthreads)
 proc=flow.CreateProcessor("eventProcessor"+year,snaplist,histosWithSystematics,snap,"",nthreads)
@@ -146,11 +146,11 @@ from samplepreprocessing import flow as preflow
 specificPreProcessors={}
 specificPostProcessors={}
 for s in samples :
-   if "filter" in samples[s].keys():
-	print "Specific pre processor for" ,s
+   if "filter" in list(samples[s].keys()):
+	print("Specific pre processor for" ,s)
 	specificPreProcessors[s]=preflow.CreateProcessor(s+"Processor",[samples[s]["filter"]],{samples[s]["filter"]:[samples[s]["filter"]]},[],samples[s]["filter"],nthreads)
-   if "postproc" in samples[s].keys():
-       print "Specific post processor for" ,s
+   if "postproc" in list(samples[s].keys()):
+       print("Specific post processor for" ,s)
        flowSpec=copy.deepcopy(flow)
        specificPostProcessors[s]=samples[s]["postproc"](flowSpec,proc.produces,histosWithSystematics,snaplist,snap,nthreads)
 
@@ -159,14 +159,14 @@ import psutil
 def f(ar):
 #f,s,i=ar
      p = psutil.Process()
-     print "Affinity",p.cpu_affinity()
+     print("Affinity",p.cpu_affinity())
      p.cpu_affinity( list(range(psutil.cpu_count())))
      ROOT.gROOT.ProcessLine('''
      ROOT::EnableImplicitMT(%s);
      '''%nthreads)
      s,f=ar
-     print f
-     if not "lumi" in samples[s].keys()  :
+     print(f)
+     if not "lumi" in list(samples[s].keys())  :
         sumws, LHEPdfSumw = sumwsents(f)
      else:
         sumws, LHEPdfSumw = 1., []
@@ -182,13 +182,13 @@ def f(ar):
                     PdfLHA_down, PdfLHA_up = brTitle.split("LHA IDs ")[-1].split("-")
                     PdfLHA_down, PdfLHA_up = int(PdfLHA_down), int(PdfLHA_up)
                  if isHessianPdf(PdfLHA_down):
-                    print "Sample",s,"has Hessian PDF"
+                    print("Sample",s,"has Hessian PDF")
                     hessian = True
 
      vf=ROOT.vector("string")()
-     map(lambda x : vf.push_back(x), f)
+     list(map(lambda x : vf.push_back(x), f))
      for x in vf:
-	print x
+	print(x)
      import jsonreader 
      rdf=ROOT.RDataFrame("Events",vf) #.Range(10000)
      if rdf :
@@ -197,7 +197,7 @@ def f(ar):
 	 rdf=rdf.Define("TriggerSel",trigger)
 	 if  year!="2017" and ("Jet_puId17" not in list(rdf.GetColumnNames())):
 		rdf=rdf.Define("Jet_puId17","ROOT::VecOps::RVec<int>(nJet, 0)")
-	 if "lumi" in samples[s].keys()  :
+	 if "lumi" in list(samples[s].keys())  :
 #	   if "Muon_dxybs" not  in  list(rdf.GetColumnNames()) :
 #               rdf=rdf.Define("Muon_dxybs","Muon_pt*10000.f")
 #	       print "WWWWWWWWWWAAAAAAAAAAAAAARRRRRRRNINGGGGGGGGGG"
@@ -218,14 +218,14 @@ def f(ar):
 		  rdf=rdf.Define("PrefiringWeight","L1PreFiringWeight_Nom")
 		  rdf=rdf.Define("PrefiringWeightUp","L1PreFiringWeight_Up")
 		  rdf=rdf.Define("PrefiringWeightDown","L1PreFiringWeight_Dn")
-	   print "Is herwig?",("true" if "HERWIG" in s else "false"), s
+	   print("Is herwig?",("true" if "HERWIG" in s else "false"), s)
 	   rdf=rdf.Define("isHerwig",("true" if "HERWIG" in s else "false"))
 	   if  "HTXS_stage1_1_fine_cat_pTjet30GeV" not in list(rdf.GetColumnNames()) :
-	       print "Add fake STXS category"
+	       print("Add fake STXS category")
                rdf=rdf.Define("HTXS_stage1_1_fine_cat_pTjet30GeV","0l")
-	       print "Added"
+	       print("Added")
 	   if  "ggH" in s :
-               print "Adding ggH weights"
+               print("Adding ggH weights")
                rdf=rdf.Define("nnlopsWeight","evalNnlopsWeight(HTXS_njets30,HTXS_Higgs_pt)")
            else :
                rdf=rdf.Define("nnlopsWeight","1.f")
@@ -235,14 +235,14 @@ def f(ar):
 	   else:
 	       rdf=rdf.Define("lhefactor","1.f") 
 	   if "LHEPdfWeight" not in list(rdf.GetColumnNames()):
-	       print "ADDING FAKE PDF",f
+	       print("ADDING FAKE PDF",f)
 	       rdf=rdf.Define("LHEPdfWeight","ROOT::VecOps::RVec<float>(1,1)")
 	       rdf=rdf.Define("nLHEPdfWeight","uint32_t(1)")
 	   if hessian:
-	       print "Setting LHEPdfHasHessian to true"
+	       print("Setting LHEPdfHasHessian to true")
 	       rdf=rdf.Define("LHEPdfHasHessian","true")
 	   else:
-	       print "Setting LHEPdfHasHessian to false"
+	       print("Setting LHEPdfHasHessian to false")
 	       rdf=rdf.Define("LHEPdfHasHessian","false")
            if year == "2016":
                rdf=rdf.Define("Muon_sf","(20.1f/36.4f*Muon_ISO_SF + 16.3f/36.4f*Muon_ISO_eraGH_SF)*(20.1f/36.4f*Muon_ID_SF + 16.3f/36.4f*Muon_ID_eraGH_SF)")
@@ -260,11 +260,11 @@ def f(ar):
 	   if "LHEWeight_originalXWGTUP" not in list(rdf.GetColumnNames()):
 	       rdf=rdf.Define("LHEWeight_originalXWGTUP","genWeight")
 	   if "LHEScaleWeight" not in list(rdf.GetColumnNames()):
-	       print "ADDING FAKE LHE",f
+	       print("ADDING FAKE LHE",f)
 	       rdf=rdf.Define("LHEScaleWeight","ROOT::VecOps::RVec<float>(9,1)")
 	       rdf=rdf.Define("nLHEScaleWeight","uint32_t(0)")
 	   if "PSWeight" not in list(rdf.GetColumnNames()):
-	       print "ADDING FAKE PS WEIGHT",f
+	       print("ADDING FAKE PS WEIGHT",f)
 	       rdf=rdf.Define("PSWeight","ROOT::VecOps::RVec<float>(9,1)")
 	       rdf=rdf.Define("nPSWeight","uint32_t(1)")
 	   if "LHE_NpNLO" not in list(rdf.GetColumnNames()):
@@ -278,19 +278,19 @@ def f(ar):
 	 
 	 if "filter" in samples[s] :
            ou=specificPreProcessors[s](rdf)
-           print "res fetched"
+           print("res fetched")
            rdf=ou.rdf[""]
            rdf=rdf.Filter(samples[s]["filter"])
 
-	 if "lumi" in samples[s].keys() :
+	 if "lumi" in list(samples[s].keys()) :
    	    ou=procData(rdf)
 	 else :
             ou=proc(rdf)
 	 ouspec=None
-         if s in specificPostProcessors.keys():
-	    print "adding postproc",s
+         if s in list(specificPostProcessors.keys()):
+	    print("adding postproc",s)
 	    ouspec=specificPostProcessors[s](ou.rdf[""])
-	    print "added"
+	    print("added")
 	 
          normalizationHandle = ou.rdf[""].Filter("twoJets","twoJets").Mean("QGLweight")
 	 #Event loop should not be triggered anove this point
@@ -301,14 +301,14 @@ def f(ar):
  #        snaplist=["nJet","SelectedJet_pt_touse","Jet_pt","Jet_pt_nom","Jet_puId","Jet_eta","Jet_jetId","PreSel","VBFRegion","MassWindow","SignalRegion","jetIdx1","jetIdx2","Jet_muonIdx1","Jet_muonIdx2","LHEPdfUp","LHEPdfDown","LHEPdfSquaredSum","LHEPdfRMS","nLHEPdfWeight","LHEPdfWeight","PrefiringWeight","DNN18Atan__syst__MuScaleDown","Higgs_eta__syst__MuScaleUp","Higgs_mRelReso__syst__MuScaleUp","Higgs_mReso__syst__MuScaleUp","Higgs_m__syst__MuScaleUp","Higgs_pt__syst__MuScaleUp","Mqq","Mqq_log","NSoft5__syst__MuScaleUp","QJet0_eta","QJet0_phi","QJet0_pt_touse","QJet0_qgl","QJet1_eta","QJet1_phi","QJet1_pt_touse","QJet1_qgl","Rpt__syst__MuScaleUp","event","ll_zstar__syst__MuScaleUp","minEtaHQ__syst__MuScaleUp","qqDeltaEta"]
 	 snaplist=["run","event","Higgs_m","QJet0_eta","QJet1_eta","Mqq","Higgs_pt","Mu0_GFpt","Mu1_GFpt","nbtaggedL","nbtagged","LeadMuon_pt","SubMuon_pt","SubMuon_eta","LeadMuon_eta","qqDeltaEta"]
          branchList = ROOT.vector('string')()
-	 map(lambda x : branchList.push_back(x), snaplist)
+	 list(map(lambda x : branchList.push_back(x), snaplist))
  #        if "lumi" not in samples[s].keys()  :
          rep=ou.rdf[""].Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","ZRegion").Report() 
 	 rep.Print()
-	 print "Above the cutflow for",s
+	 print("Above the cutflow for",s)
 #         ou.rdf["SignalRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
           
-         if "training" in samples[s].keys() and samples[s]["training"] : 
+         if "training" in list(samples[s].keys()) and samples[s]["training"] : 
              #ou.rdf.Filter("twoMuons","twoMuons").Filter("twoOppositeSignMuons","twoOppositeSignMuons").Filter("twoJets","twoJets").Filter("MassWindow","MassWindow").Filter("VBFRegion","VBFRegion").Filter("PreSel","PreSel").Filter("SignalRegion","SignalRegion").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
            #ou.rdf["ZRegion"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
            ou.rdf["PreSel"].Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
@@ -319,7 +319,7 @@ def f(ar):
 
 #         ou.rdf.Filter("twoJets","twoJets").Filter("VBFRegion","VBFRegion").Filter("twoMuons__syst__MuScaleDown","twoMuons__syst__MuScaleDown").Filter("twoOppositeSignMuons__syst__MuScaleDown","twoOppositeSignMuons__syst__MuScaleDown").Filter("PreSel__syst__MuScaleDown","PreSel__syst__MuScaleDown").Filter("MassWindow__syst__MuScaleDown","MassWindow__syst__MuScaleDown").Filter("SignalRegion__syst__MuScaleDown","SignalRegion__syst__MuScaleDown").Snapshot("Events","out/%sSnapshot.root"%(s),branchList)
          #ou.rdf.Filter("event==63262831 || event == 11701422 || event== 60161978").Snapshot("Events","out/%sEventPick.root"%(s),branchList)
-         print ou.histos.size()#,ouspec.histos.size()
+         print(ou.histos.size())#,ouspec.histos.size()
          fff=ROOT.TFile.Open("out/%sHistos.root"%(s),"recreate")
          ROOT.gROOT.ProcessLine('''
      ROOT::EnableImplicitMT(%s);
@@ -327,11 +327,11 @@ def f(ar):
          
 
 	 normalization=normalizationHandle.GetValue()#1./(ou.rdf.Filter("twoJets","twoJets").Mean("QGLweight").GetValue())
-	 print "Normalization = ", normalization 
+	 print("Normalization = ", normalization) 
 	 if normalization == 0:
 	    normalization =1.
 	 if ouspec is not None :
-	    print "Postproc hisots"
+	    print("Postproc hisots")
             for h in ouspec.histos :
                 h.GetValue()
                 fff.cd()
@@ -360,7 +360,7 @@ def f(ar):
 	 
          sumWeights = getattr(ROOT,"TParameter<double>")("sumWeights", sumws)
          sumWeights.Write()
-         if not "lumi" in samples[s].keys() and PdfLHA_up:
+         if not "lumi" in list(samples[s].keys()) and PdfLHA_up:
                  LHApdf_down =  getattr(ROOT,"TParameter<int>")("LHApdf_down", PdfLHA_down)
                  LHApdf_down.Write()
                  LHApdf_up   =  getattr(ROOT,"TParameter<int>")("LHApdf_up",   PdfLHA_up)
@@ -372,12 +372,12 @@ def f(ar):
          fff.Write()
          fff.Close()
 	 return 0
-       except Exception, e: 
-	 print e
-	 print "FAIL",f
+       except Exception as e: 
+	 print(e)
+	 print("FAIL",f)
 	 return 1
      else :
-	print "Null file",f
+	print("Null file",f)
 
 #     return  os.system("./eventProcessor %s %s out/%s%s "%(4,f,s,i))  
 
@@ -385,14 +385,14 @@ def f(ar):
 from multiprocessing import Pool
 runpool = Pool(nprocesses)
 
-print samples.keys()
-sams=samples.keys()
+print(list(samples.keys()))
+sams=list(samples.keys())
 
 #sams=["DY2J","TTlep"]
 #toproc=[(x,y,i) for y in sams for i,x in enumerate(samples[y]["files"])]
 toproc=[ (s,samples[s]["files"]) for s in sams  if os.path.exists(samples[s]["files"][0])]
-toproc=sorted(toproc,key=lambda x : sum(map( lambda x : ( os.path.getsize(x) if os.path.exists(x) else 0 ),x[1])),reverse=True)
-print toproc
+toproc=sorted(toproc,key=lambda x : sum([( os.path.getsize(x) if os.path.exists(x) else 0 ) for x in x[1]]),reverse=True)
+print(toproc)
 
 if len(sys.argv[2:]) :
    if sys.argv[2] == "fix" :
@@ -400,17 +400,17 @@ if len(sys.argv[2:]) :
        sss=sams
        if(len(sys.argv[3:])) :
           sss=[s for s in sams if s in sys.argv[3:]]
-	  print "fixing",sss
+	  print("fixing",sss)
        for s in sss :
 	if os.path.exists(samples[s]["files"][0]) :
 	 try:
 	   ff=ROOT.TFile.Open("out/%sHistos.root"%s)
 	   if ff.IsZombie() or len(ff.GetListOfKeys()) == 0:
-	           print "zombie or zero keys",s
+	           print("zombie or zero keys",s)
 	           toproc.append((s,samples[s]["files"]))
 	 
 	 except:
-	   print "failed",s
+	   print("failed",s)
 	   toproc.append((s,samples[s]["files"]))
    else:
       if sys.argv[2][:5]=="model":
@@ -420,21 +420,21 @@ if len(sys.argv[2:]) :
 	allmc= [y for x in model.background for y in model.background[x]]+[y for x in model.signal for y in model.signal[x]]
 	alldata= [y for x in model.data for y in model.data[x]]
         for x in allmc :
-          print x,"\t",samples[x]["xsec"]
+          print(x,"\t",samples[x]["xsec"])
         for x in alldata :
-          print x,"\t",samples[x]["lumi"]
+          print(x,"\t",samples[x]["lumi"])
 
         toproc=[ (s,samples[s]["files"]) for s in sams if s in allmc+alldata+sys.argv[3:]]
 	
       else:
           toproc=[ (s,samples[s]["files"]) for s in sams if s in sys.argv[2:]]
 
-print "Will process", toproc
+print("Will process", toproc)
    
 if nprocesses>1:
-        results=zip(runpool.map(f, toproc ),[x[0] for x in toproc])
+        results=list(zip(runpool.map(f, toproc ),[x[0] for x in toproc]))
 else:
-        results=zip([f(x) for x in toproc] ,[x[0] for x in toproc])
+        results=list(zip([f(x) for x in toproc] ,[x[0] for x in toproc]))
 
-print "Results",results
-print "To resubmit",[x[1] for x in results if x[0] ]
+print("Results",results)
+print("To resubmit",[x[1] for x in results if x[0] ])

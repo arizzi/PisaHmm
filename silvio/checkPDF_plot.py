@@ -29,13 +29,13 @@ for i in range(len(histoNom)):
 
 bins.append(histoNom.GetBinLowEdge(i))
 #bins = [1.*i/10 for i in range(0,40)]
-print bins
+print(bins)
 
 
 fil.cd()
 histoNomReb = histoNom.Rebin(len(bins)-1, "aa", array.array('d',bins)).Clone("histoNomReb")
 
-print fil.GetName(), x1, x2
+print(fil.GetName(), x1, x2)
 #histo1 = ROOT.TH1F("histo1","",100,-0.03,0.03)
 rat = []
 sumSquared = 0
@@ -49,10 +49,10 @@ sumSquares = [0]*len(ratio)
 i = 0 ## nominal is the first entry.
 fil.cd()
 hs = fil.Get(hName+"0").Clone(hName+"0")
-print fil.ls(hName+"0")
-print hs
-print hs.GetMaximum()
-print hs.GetName()
+print(fil.ls(hName+"0"))
+print(hs)
+print(hs.GetMaximum())
+print(hs.GetName())
 hs = hs.Rebin(len(bins)-1, "aa", array.array('d',bins))
 hs0= hs
 c2 = ROOT.TCanvas("c2")
@@ -62,16 +62,16 @@ histoNomReb.SetLineWidth(2)
 j=0
 ratioN = {} 
 while hs and hs.GetMaximum()>0:
-    print "hs,",hs.GetNbinsX()
+    print("hs,",hs.GetNbinsX())
     hs = hs.Rebin(len(bins)-1, "aa", array.array('d',bins))
-    print "hs,",hs.GetNbinsX()
+    print("hs,",hs.GetNbinsX())
     ratioN[j] = hs.Clone("rat%d"%i)
-    print ratioN[j].GetNbinsX()
-    print histoNomReb.GetNbinsX()
-    print hs.GetNbinsX()
+    print(ratioN[j].GetNbinsX())
+    print(histoNomReb.GetNbinsX())
+    print(hs.GetNbinsX())
     ratioN[j].Divide(hs,histoNomReb)
     ratioN[j].Draw("same")
-    print hs.GetName(), hs.GetMaximum()
+    print(hs.GetName(), hs.GetMaximum())
     for bin_ in range(len(ratio)):
         rat =  hs.GetBinContent(bin_)/hs0.GetBinContent(bin_) if hs0.GetBinContent(bin_)>0 else 0. 
         sums[bin_] += rat
@@ -105,11 +105,11 @@ ratio.SetMinimum(-0.01)
 ratio.Draw()
 c1.SaveAs("sumSquares_DY105_rebinned.png")
 
-print "StdDev",(sumSquared/i - (sum/i)**2)**0.5 
+print("StdDev",(sumSquared/i - (sum/i)**2)**0.5) 
 
-print "StdDev",(sumSquared/i - (sum/i)**2)**0.5 
+print("StdDev",(sumSquared/i - (sum/i)**2)**0.5) 
 
-print "StdDev * SQRT(N)",(sumSquared/i - (sum/i)**2)**0.5 * i**0.5
+print("StdDev * SQRT(N)",(sumSquared/i - (sum/i)**2)**0.5 * i**0.5)
 
 #histo1.Draw()
 

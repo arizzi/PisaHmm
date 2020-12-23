@@ -29,5 +29,5 @@ bool passJson(int run, int lumi){
 ROOT.gInterpreter.Declare(passJsonfunc)
 ROOT.setJsonMap(m)
 
-print ROOT.passJson(1,1)
+print(ROOT.passJson(1,1))
 

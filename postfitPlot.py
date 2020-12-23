@@ -15,7 +15,7 @@ class PostFit :
                 self.postFitParam[sy["name"]]["Down"]     =  sy["fit"][0]
                 self.postFitParam[sy["name"]]["nom"]    =  sy["fit"][1]
                 self.postFitParam[sy["name"]]["Up"]   =  sy["fit"][2]
-          print self.postFitParam.keys()
+          print(list(self.postFitParam.keys()))
 	else :
 	  from altro import outputFit
           self.outputFit =  outputFit 
@@ -25,7 +25,7 @@ class PostFit :
                 self.postFitParam[sy]["nom"]    =  self.outputFit[sy][0]
                 self.postFitParam[sy]["Up"]   =  self.outputFit[sy][0]+self.outputFit[sy][1]
 
-          print self.postFitParam.keys()
+          print(list(self.postFitParam.keys()))
 	  
 
     def smoothStepFunc(self, x) :
@@ -36,8 +36,8 @@ class PostFit :
 
 
     def postfitValue (self, syName, syVar) :
-        if syName in self.postFitParam.keys() :   
-            if syVar in self.postFitParam[syName].keys() : 
+        if syName in list(self.postFitParam.keys()) :   
+            if syVar in list(self.postFitParam[syName].keys()) : 
                 return self.postFitParam[syName][syVar]
         #print syName, syVar
         return 0.

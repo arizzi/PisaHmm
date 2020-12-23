@@ -85,15 +85,15 @@ nprocesses = vars(args) ["nprocesses"]
 if len(inputDirectory)>0 and inputDirectory[0]!="/": inputDirectory = os.getcwd() + "/" + inputDirectory
 
 if not (directory and years and steps):
-    print "Please set --directory, --years, and --steps"
-    print "Example:"
-    print ""
+    print("Please set --directory, --years, and --steps")
+    print("Example:")
+    print("")
 
 definePOI   = "--PO  'map=.*Hmm.*:r[1.,-20,20]'"
 if (fitZ and fitH) or (not fitZ and not fitH): raise Exception("Please use either --fitZ or --fitH (not both!).")
 if fitZ: definePOI   = "--PO  'map=.*EWKZ.*:r[1.,-20,20]'"
 
-print  vars(args)
+print(vars(args))
 
 for stepfit in steps.split(","):
     if "_" in stepfit:
@@ -119,11 +119,11 @@ for year in years.split(","):
 #    else:
 #        bins = getBinsFromScratch(inputDirectory, year)
     bins = getBinsFromScratch(inputDirectory, year)
-    print "Bins = ", bins
+    print("Bins = ", bins)
     maskFullFit        = makeMask(   fullfitPlots, bins)
     maskPartialFit     = makeMask(partialfitPlots, bins)
-    print "maskFullFit : %s"%maskFullFit
-    print "maskPartialFit : %s"%maskPartialFit
+    print("maskFullFit : %s"%maskFullFit)
+    print("maskPartialFit : %s"%maskPartialFit)
     for step in steps.split(","):
         name = step+year
         logFile = name+".log"
@@ -211,24 +211,24 @@ from datetime import datetime
 fName = datetime.now().isoformat().split(".")[0].replace("-","").replace(":","")
 fName = "fitScript_"+fName+".sh"
 
-print directory
-print fName
+print(directory)
+print(fName)
 
 f = open(directory+"/"+fName, 'w')
 f.write(script)
 f.close()
 
-print
-print script
-print
-print "cd %s && chmod +x %s && ./%s "%(directory,fName,fName)
-print
+print()
+print(script)
+print()
+print("cd %s && chmod +x %s && ./%s "%(directory,fName,fName))
+print()
 
 # Run the script file
 
 os.system("cd %s && chmod +x %s && ./%s "%(directory,fName,fName))
 #aaa = os.popen("cd %s && source %s > log"%(directory,fName))
 #aaa.read()
-print
+print()
 
 

@@ -21,7 +21,7 @@ outdir=args.workspace
 model=importlib.import_module(args.model)
 samples=model.samples
 from labelDict import *  
-year="+".join(model.data.keys())
+year="+".join(list(model.data.keys()))
 lumi = "%2.1f fb^{-1}" 
 from math import *
 from array import array
@@ -104,7 +104,7 @@ def setStyle(h, isRatio=False) :
         h.GetYaxis().SetTitleOffset(0.5)
 #        h.GetXaxis().SetTitle(str(h.GetName()).split("___")[0])
 	xKey = str(h.GetName()).split("___")[0]                                              
-	h.GetXaxis().SetTitle(labelVariable[xKey] if xKey in labelVariable.keys() else xKey) 
+	h.GetXaxis().SetTitle(labelVariable[xKey] if xKey in list(labelVariable.keys()) else xKey) 
     else :
         binWidht = str(h.GetBinWidth(1))[:4]
         if binWidht.endswith(".") : binWidht = binWidht[:3]
@@ -135,7 +135,7 @@ def findSyst(hn,sy,f, silent=False) :
     if h3 in allh:
 	 hnForSys[hn][sy]=h3
 	 return h3
-    if not silent: print "none matching",hn,sy,f
+    if not silent: print("none matching",hn,sy,f)
     return ""
 
 def writeYields(ftxt, gr, integral, error, dataEvents) :
@@ -264,7 +264,7 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSamples, alphaUp = +
     histoNom  =  f[nominalSample].Get(hn).Clone(histoNameNom)
     histoUp   =  f[altSampleUp].  Get(hn).Clone(histoNameUp)
     histoDown =  f[altSampleDown].Get(hn).Clone(histoNameDown)
-    if hn.split("___")[0] in model.rebin.keys(): 
+    if hn.split("___")[0] in list(model.rebin.keys()): 
             histoNom  = (histoNom.Rebin( len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]])))
             histoUp   = (histoUp.Rebin(  len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]])))
             histoDown = (histoDown.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]])))
@@ -280,7 +280,7 @@ def makeAlternativeShape(hn,sy,f, nominalSample, alternativeSamples, alphaUp = +
     if "Up" in sy: alpha = alphaUp
     ## down = ratio^alpha_down * nom
     elif "Down" in sy: alpha = alphaDown
-    else: print "No alternative sample for %s"%d
+    else: print("No alternative sample for %s"%d)
     if alpha: histoSyst.Multiply( powerHisto( ratio, alpha ) )
 #    print "Making %s using %s %s %s %s %s %f"%(sy, nominalSample, alternativeSamples, str(alpha), hn, histoNameSyst, histoSyst.GetMean()/histoNom.GetMean())
     return copy.copy(histoSyst)
@@ -310,7 +310,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     envelopeFunctionRange = model.systematicDetail[sy_base]["envelopeFunctionRange"]
     if not "envelopeBinning" in model.systematicDetail[sy_base]:  model.systematicDetail[sy_base]["envelopeBinning"]={}
 #uncomment if you want to use the standard binning (ie. ignore "envelopeNBins")
-    if hn.split("___")[0] in model.rebin.keys(): 
+    if hn.split("___")[0] in list(model.rebin.keys()): 
         model.systematicDetail[sy_base]["envelopeBinning"][(hn, d)] = model.rebin[hn.split("___")[0]]
     
     nomHistoRebinned = f[d].Get(hn).Clone("nomHistoRebinned")
@@ -325,15 +325,15 @@ def makeEnvelopeShape(hn,sy,f, d, model):
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
-        print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn) 
+        print("makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn)) 
         return
     
     try:
         LHApdf_min = f[d].Get("LHApdf_down").GetVal()
         LHApdf_max = f[d].Get("LHApdf_up").GetVal()
     except:
-        print "WARNING makeEnvelopeShape: LHApdf_down not found", hn,sy,f, d, model
-        print "I will consider ", pdf
+        print("WARNING makeEnvelopeShape: LHApdf_down not found", hn,sy,f, d, model)
+        print("I will consider ", pdf)
         LHApdf_min = -1
         LHApdf_max = -1
     
@@ -369,12 +369,12 @@ def makeEnvelopeShape(hn,sy,f, d, model):
             par2 += (funct.GetParameter(envelopeFunctionParameter) - envelopeFunctionParameterValues[envelopeFunctionParameter])**2
         else:
             badFit += 1
-            print "BAD Fit", hn,sy,f, d, model, funct.GetParameter(0), funct.GetParameter(1), 
+            print("BAD Fit", hn,sy,f, d, model, funct.GetParameter(0), funct.GetParameter(1), end=' ') 
         i = i + 1
         hs=f[d].Get(findSyst(hn,pdf+str(i),f[d]))
     
     if not ((LHApdf_min < 0 and pdf == pdfHessian ) or LHApdf_min in [303000, 303200, 304200, 304400, 304600, 304800, 305800, 306000, 306200, 306400, 91400]) and (i-badFit)>0: ##if not hessian
-	print "REPLICAS, not HESSIAN for" , hn,sy, f, d,model
+	print("REPLICAS, not HESSIAN for" , hn,sy, f, d,model)
         par2 = (par2/(i-badFit))
     
     funct.SetParameters(*envelopeFunctionParameterValues)
@@ -386,7 +386,7 @@ def makeEnvelopeShape(hn,sy,f, d, model):
 
     nhisto = nomHistoRebinned.Clone(hn+sy)
     nhisto.Multiply(funct)
-    print "Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1]
+    print("Creating %s using %s"%(nhisto.GetName(),pdf),nhisto.Integral(),funct.GetParameters()[0],funct.GetParameters()[1])
     ### DEBUG: Save ratio plots
     if debug: 
         testFile = ROOT.TFile("debug/%s_%s_%s.root"%(hn,sy, d),"recreate")
@@ -428,15 +428,15 @@ def makeEnvelopeShapeOld(hn,sy,f, d, model):
     if f[d].Get(findSyst(hn,pdfHessian+"0",f[d], silent=True)): pdf = pdfHessian
     elif f[d].Get(findSyst(hn,pdfReplica+"0",f[d], silent=True)): pdf = pdfReplica
     else:
-        print "makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn) 
+        print("makeEnvelopeShape - Warning: neither LHEPdfHessian nor LHEPdfReplica found for %s %s"%(d, hn)) 
         return
     
     try:
         LHApdf_min = f[d].Get("LHApdf_down").GetVal()
         LHApdf_max = f[d].Get("LHApdf_up").GetVal()
     except:
-        print "WARNING makeEnvelopeShape: LHApdf_down not found", hn,sy,f, d, model
-        print "I will consider ", pdf
+        print("WARNING makeEnvelopeShape: LHApdf_down not found", hn,sy,f, d, model)
+        print("I will consider ", pdf)
         LHApdf_min = -1
         LHApdf_max = -1
     
@@ -475,7 +475,7 @@ def makeEnvelopeShapeOld(hn,sy,f, d, model):
     meanrms/=ngood if ngood !=0 else 1 
     funct = ROOT.TF1("funct",envelopeFunction.format(up=(1. if "Up" in sy else -1.),rms=meanrms,xmin=nomHistoRebinned.GetXaxis().GetXmin(),xmax=nomHistoRebinned.GetXaxis().GetXmax()),nomHistoRebinned.GetXaxis().GetXmin(),nomHistoRebinned.GetXaxis().GetXmax())
     nhisto = f[d].Get(hn).Clone(hn+sy)
-    if hn.split("___")[0] in model.rebin.keys(): nhisto = (nhisto.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
+    if hn.split("___")[0] in list(model.rebin.keys()): nhisto = (nhisto.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hn+"rebinned")
     copyhisto = nhisto.Clone("copya")
     for bin_ in range(len(nhisto)-1):
         x = nhisto.GetBinCenter(bin_)
@@ -506,7 +506,7 @@ for group in model.data :
  #       f[d]=ROOT.TFile.Open("out/%sHistos.root"%d)
         f[d]=ROOT.TFile.Open(folder+"/%sHistos.root"%d)
 
-histoNames=list(set([x.GetName() for y in f.keys() for x in f[y].GetListOfKeys() ]))
+histoNames=list(set([x.GetName() for y in list(f.keys()) for x in f[y].GetListOfKeys() ]))
 
 canvas={}
 datastack={}
@@ -552,10 +552,10 @@ postFit = postfitPlot.PostFit()
 
 def addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) :
 #    print "Adding %s with integral %f"%(hs.GetName(), hs.Integral())
-    if sy not in stackSys[hn].keys() : stackSys[hn][sy]=hs.Clone()
+    if sy not in list(stackSys[hn].keys()) : stackSys[hn][sy]=hs.Clone()
     else : stackSys[hn][sy].Add(hs)
     
-    if sy not in integral[gr].keys() : integral[gr][sy]=hs.Integral(0,hs.GetNbinsX()+1)
+    if sy not in list(integral[gr].keys()) : integral[gr][sy]=hs.Integral(0,hs.GetNbinsX()+1)
     else : integral[gr][sy]+=hs.Integral(0,hs.GetNbinsX()+1)
     
     if makeWorkspace : all_histo_all_syst[hn][d][sy]=hs.Clone()
@@ -581,14 +581,14 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
         h=f[d].Get(hn)
         histoSingleSyst[hn][d] = {}
         if  h:
-            if hn.split("___")[0] in model.rebin.keys() : 
+            if hn.split("___")[0] in list(model.rebin.keys()) : 
                 #print "Rebin",hn
                 h = (h.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew",array('d',model.rebin[hn.split("___")[0]])))
             h = h.Clone(hn+"rebinned")
             if data : h.SetMarkerStyle(10)
             else : 
                 #if postfit : addFitVariation( h, fitVariation(model, f, d, hn, h, histoSingleSyst))
-		print h.GetSumOfWeights(),h.GetEntries(),lumi*samples[d]["xsec"],d
+		print(h.GetSumOfWeights(),h.GetEntries(),lumi*samples[d]["xsec"],d)
                 h.Scale(samples[d]["xsec"]*lumi)
                 error_b = ROOT.Double(0)
                 integral[gr]["nom"]+=h.IntegralAndError(0,h.GetNbinsX()+1,error_b)
@@ -605,23 +605,23 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                                 hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSamples"][d], model.systematicDetail[sy_base]["powerUp"], model.systematicDetail[sy_base]["powerDown"])
                             else: 
                                 hs = f[d].Get(hn).Clone(hn+sy)
-                                if hs and hn.split("___")[0] in model.rebin.keys() : 
+                                if hs and hn.split("___")[0] in list(model.rebin.keys()) : 
                                     hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName()+"rebinned")
                         elif sy_base in model.systematicDetail and "envelope" in model.systematicDetail[sy_base]:
                             hs=makeEnvelopeShape(hn,sy,f, d, model)
                         else:
                             hs=f[d].Get(findSyst(hn,sy,f[d]))
-                            if hs and hn.split("___")[0] in model.rebin.keys() : 
+                            if hs and hn.split("___")[0] in list(model.rebin.keys()) : 
                                hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName()+"rebinned")
                         #if postfit : 
                             #hs=f[d].Get(hn).Clone()
                         if hs:
                             #if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
-                            if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
+                            if  sy_base in list(model.systematicDetail.keys()) and "normalizationType" in list(model.systematicDetail[sy_base].keys()) and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else :hs.Scale(samples[d]["xsec"]*lumi)
                             addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                         else :	
-			    print "missing",sy,"for",hn, gr,d 
+			    print("missing",sy,"for",hn, gr,d) 
                             addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
                         addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
@@ -634,24 +634,24 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                             hs=makeAlternativeShape(hn,sy,f, d, model.systematicDetail[sy_base]["alternativeSamples"][d], model.systematicDetail[sy_base]["powerUp"], model.systematicDetail[sy_base]["powerDown"])
                         else:
                             hs = f[d].Get(hn).Clone(hn+sy)
-                            if hs and hn.split("___")[0] in model.rebin.keys() : 
+                            if hs and hn.split("___")[0] in list(model.rebin.keys()) : 
                                 hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName()+"rebinned")
                     elif sy_base in model.systematicDetail and "envelope" in model.systematicDetail[sy_base]:
                         hs=makeEnvelopeShape(hn,sy,f, d, model)
                     else:
                         hs=f[d].Get(findSyst(hn,sy,f[d]))
-                        if hs and hn.split("___")[0] in model.rebin.keys() : 
+                        if hs and hn.split("___")[0] in list(model.rebin.keys()) : 
                             hs = (hs.Rebin(len(model.rebin[hn.split("___")[0]])-1,"hnew"+sy,array('d',model.rebin[hn.split("___")[0]]))).Clone(hs.GetName()+"rebinned")
                     #if postfit : 
                         #hs=f[d].Get(hn).Clone()
                     if hs:
                         #if postfit : addFitVariation( hs, fitVariation(model, f, d, hn, h, histoSingleSyst, sy))
                         if not data : 
-                            if  sy_base in model.systematicDetail.keys() and "normalizationType" in model.systematicDetail[sy_base].keys() and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
+                            if  sy_base in list(model.systematicDetail.keys()) and "normalizationType" in list(model.systematicDetail[sy_base].keys()) and model.systematicDetail[sy_base]["normalizationType"] == "shapeOnly" and hs.Integral(0,hs.GetNbinsX()+1)>0: hs.Scale(h.Integral(0,h.GetNbinsX()+1)/hs.Integral(0,hs.GetNbinsX()+1))
                             else : hs.Scale(samples[d]["xsec"]*lumi)
                         addHistoInTStack (hs, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
                     else :
-                        print "missing",sy,"for",hn, gr,d 
+                        print("missing",sy,"for",hn, gr,d) 
                         addHistoInTStack (h, stackSys, all_histo_all_syst, gr, hn, sy, d, makeWorkspace) 
             stack[hn].Add(h)
             #if n==0 : stack[hn].Add(h)
@@ -660,10 +660,10 @@ def fill_datasum(f, gr, samplesToPlot, SumTH1, stack, stackSys, hn, myLegend, ft
                 #stack[hn].GetStack().Last().Add(h)
             if makeWorkspace : all_histo_all_syst[hn][d]["nom"]=h.Clone()
         else:
-            print "Cannot open",d,hn
+            print("Cannot open",d,hn)
             exit(1)
         if gr in model.signal : 
-            if gr not in histosSignal[hn].keys() : histosSignal[hn][gr] = h.Clone()
+            if gr not in list(histosSignal[hn].keys()) : histosSignal[hn][gr] = h.Clone()
             else : histosSignal[hn][gr].Add(h)
     if not data : writeYields(ftxt, gr, integral, error, datasum[hn].Integral(0,datasum[hn].GetNbinsX()+1))
     #if not data : 
@@ -711,16 +711,16 @@ def makeplot(hn,saveintegrals=True):
 
    lumitot=0
    lumis = {}
-   print("model.data=", model.data)
+   print(("model.data=", model.data))
    for gr in model.data:
      for d in model.data[gr]:
        lumitot+=samples[d]["lumi"]
-       print "lumitot=%f"%lumitot
+       print("lumitot=%f"%lumitot)
        yr = getYear(d)
        if yr in lumis: lumis[yr] += samples[d]["lumi"]
        else: lumis[yr] = samples[d]["lumi"]
    
-   print ("lumis=",lumis)
+   print(("lumis=",lumis))
    
    histoSingleSyst[hn] = {}
    histosSignal[hn]={} 
@@ -804,7 +804,7 @@ def makeplot(hn,saveintegrals=True):
    datasum[hn].Draw("E P same")
    for gr in model.signal:     histosSignal[hn][gr].Draw("hist same")                                                
                                                                          
-   t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in labelRegion.keys() else hn.split("___")[1], 61)  
+   t0 = makeText(0.65,0.85,labelRegion[hn.split("___")[1]] if hn.split("___")[1] in list(labelRegion.keys()) else hn.split("___")[1], 61)  
    t1 = makeText(0.15,0.91,"CMS", 61)                                                           
    t2 = makeText(0.32,0.91,str(year), 42)                                                       
    t3 = makeText(0.90,0.91,lumi%(lumitot/1000.)+"  (13 TeV)", 42)                                
@@ -878,21 +878,21 @@ systematicsSetToUse.sort()
 postfit = False
 postfit = args.postfit
 
-print "makeWorkspace", makeWorkspace
-print "variablesToFit", variablesToFit
+print("makeWorkspace", makeWorkspace)
+print("variablesToFit", variablesToFit)
 
 
 
 his=[x for x in histoNames if "__syst__" not in x and "sumWeight" not in x]
-print his[0]
+print(his[0])
 makeplot(variablesToFit[0] if makeWorkspace else his[0],True) #do once for caching normalizations and to dump integrals
 
 if not makeWorkspace :
- print "Preload"
+ print("Preload")
  for ff in f:
    for h in histoNames :
      f[ff].Get(h)
- print "Preload-done"
+ print("Preload-done")
 
 if makeWorkspace:
     for hn in variablesToFit[1:] :  
@@ -903,7 +903,7 @@ if makeWorkspace:
             all_histo_all_syst[hn]["data"+year] = {}
             for group in model.data :
                 for d in model.data[group] :
-                    for syst in all_histo_all_syst[hn][d].keys():
+                    for syst in list(all_histo_all_syst[hn][d].keys()):
                         if not syst in all_histo_all_syst[hn]["data"+year]: 
                             all_histo_all_syst[hn]["data"+year][syst] = all_histo_all_syst[hn][d][syst].Clone()
                         else: 
@@ -921,4 +921,4 @@ tot=0
 for s in totevCount:
   tot+=totevSkim[s]
 
-print tot, "input events" 
+print(tot, "input events") 

@@ -43,7 +43,7 @@ table += '  \n'
 
 
 groupsOrder = ["EWKZ",'VBF H',"gg H","ZH","WH","ttH","Top","DY0J","DY1J","DY2J","DY","DYVBF","Other"]
-allGroups = groups.keys()
+allGroups = list(groups.keys())
 
 for group in groupsOrder:
     if group in groups:
@@ -52,7 +52,7 @@ for group in groupsOrder:
             for label in labels: 
                 models = globals()["models"+label]
                 sampleWithYear = sample.replace("_","_"+label[:4])
-                print sample,sampleWithYear, models.background , models.signal
+                print(sample,sampleWithYear, models.background , models.signal)
                 if (group in models.background and sampleWithYear in models.background[group]) or (group in models.signal and sampleWithYear in models.signal[group]):
 #                    table += sampleWithYear+'\t'
                     table += ' X \t'
@@ -62,7 +62,7 @@ for group in groupsOrder:
         allGroups.remove(group)
 
 if len(allGroups)==0:
-    print table
+    print(table)
     fil = open('sampleTable.txt','w')
     fil.write(table)
     fil.close()
